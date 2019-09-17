@@ -1,35 +1,38 @@
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.File;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class LoginTest {
     @Test
-    void loginTest() {
-        RestAssured.baseURI = "https://conduit.productionready.io/api";
-        RequestSpecification request = RestAssured.given();
+    void logUser() {
+        String url = "https://conduit.productionready.io/api/users/login";
+        File userJson = new File("/home/ferm/IdeaProjects/conduitAnother/user.json");
 
-        JSONObject requestParams = new JSONObject();
-        requestParams.put("name", "adam1234io");
-        requestParams.put("password", "adam1234");
+        given().
+                contentType("application/json").
+                body(userJson).
+                when().
+                post(url).
+                then().
+                statusCode(200);
 
-        JSONObject uberParams = new JSONObject();
-        uberParams.put("user", requestParams);
+    }
 
-        request.header("Content-Type", "application/json");
-        request.body(uberParams);
+    @Test
+    void logUserAndCheckBody() {
+        String url = "https://conduit.productionready.io/api/users/login";
+        File userJson = new File("/home/ferm/IdeaProjects/conduitAnother/user.json");
 
-        Response response = request.post("/users/login");
-
-        String successBody = response.toString();
-        System.out.println(successBody);
-
-        int statusCode = response.getStatusCode();
-        assertEquals(statusCode, 200);
-
+        given().
+                contentType("application/json").
+                body(userJson).
+                when().
+                post(url).
+                then().
+                body("user.id", equalTo(66512)).and().statusCode(200).log();
 
     }
 }
