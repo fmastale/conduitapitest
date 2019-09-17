@@ -1,0 +1,8 @@
+{
+  "article": {
+    "title": "How to automate test in restAssured",
+    "description": "Ever wonder how?",
+    "body": "first of all read documentation!!",
+    "tagList": ["dragons", "more", "dragons"]
+  }
+}
