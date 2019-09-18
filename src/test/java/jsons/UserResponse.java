@@ -1,6 +1,6 @@
-package serializationtest;
+package jsons;
 
-public class User {
+public class UserResponse {
   private int id;
   private String email;
   private String createdAt;
@@ -76,7 +76,7 @@ public class User {
 
   @Override
   public String toString() {
-    return "UserResponse{" +
+    return "UserRequest{" +
         "id=" + id +
         ", email='" + email + '\'' +
         ", createdAt='" + createdAt + '\'' +

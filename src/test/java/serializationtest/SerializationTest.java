@@ -7,8 +7,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.io.File;
+import jsons.UserRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wrappers.UserRequestWrapper;
+import wrappers.UserResponseWrapper;
 
 public class SerializationTest {
   private static String url = "https://conduit.productionready.io/api";
@@ -34,26 +37,25 @@ public class SerializationTest {
   @Test
   @DisplayName("Deserialize json")
   void deserializeTest() {
-    File userJson = new File("user.json");
-    AuthenticationUser autenticationUser= new AuthenticationUser();
-    autenticationUser.setEmail("adam@mail.com");
-    autenticationUser.setPassword("adam1234");
+    UserRequest userRequest = new UserRequest();
+    userRequest.setEmail("adam@mail.com");
+    userRequest.setPassword("adam1234");
+    UserRequestWrapper requestWrapper = new UserRequestWrapper();
+    requestWrapper.setUserRequest(userRequest);
 
-    AuthenticationUserWrapper autenticationUserWrapper = new AuthenticationUserWrapper();
-    autenticationUserWrapper.setAutenticationUser(autenticationUser);
 
     RestAssured.baseURI = url;
     RequestSpecification request = RestAssured.given();
 
     Response response = request
         .contentType("application/json; charset=UTF-8")
-        .body(autenticationUserWrapper)
+        .body(requestWrapper)
         .post(url + "/users/login");
 
     System.out.println(response.asString());
 
-    UserWrapper urw = response.as(UserWrapper.class);
+    UserResponseWrapper responseWrapper = response.as(UserResponseWrapper.class);
 
-    System.out.println(urw.getUser().getBio());
+    System.out.println(responseWrapper.getUserResponse().getBio());
   }
 }
