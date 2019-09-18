@@ -1,8 +1,13 @@
 package jsons;
 
 public class UserRequest {
-  private String email;
-  private String password;
+  public String email;
+  public String password;
+
+  public UserRequest(String email, String password) {
+    this.email = email;
+    this.password = password;
+  }
 
   public String getEmail() {
     return email;
@@ -18,13 +23,5 @@ public class UserRequest {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  @Override
-  public String toString() {
-    return "AutenticationUser{" +
-        "email='" + email + '\'' +
-        ", password='" + password + '\'' +
-        '}';
   }
 }

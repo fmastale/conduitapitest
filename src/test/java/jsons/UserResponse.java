@@ -1,14 +1,29 @@
 package jsons;
 
 public class UserResponse {
-  private int id;
-  private String email;
-  private String createdAt;
-  private String updatedAt;
-  private String username;
-  private String bio;
-  private String image;
-  private String token;
+  public int id;
+  public String email;
+  public String createdAt;
+  public String updatedAt;
+  public String username;
+  public String bio;
+  public String image;
+  public String token;
+
+  public UserResponse() {
+  }
+
+  public UserResponse(int id, String email, String createdAt, String updatedAt,
+      String username, String bio, String image, String token) {
+    this.id = id;
+    this.email = email;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.username = username;
+    this.bio = bio;
+    this.image = image;
+    this.token = token;
+  }
 
   public int getId() {
     return id;
@@ -72,19 +87,5 @@ public class UserResponse {
 
   public void setToken(String token) {
     this.token = token;
-  }
-
-  @Override
-  public String toString() {
-    return "UserRequest{" +
-        "id=" + id +
-        ", email='" + email + '\'' +
-        ", createdAt='" + createdAt + '\'' +
-        ", updatedAt='" + updatedAt + '\'' +
-        ", username='" + username + '\'' +
-        ", bio='" + bio + '\'' +
-        ", image='" + image + '\'' +
-        ", token='" + token + '\'' +
-        '}';
   }
 }

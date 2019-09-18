@@ -5,7 +5,11 @@ import jsons.UserRequest;
 
 public class UserRequestWrapper {
   @JsonProperty("user")
-  private UserRequest userRequest;
+  public UserRequest userRequest;
+
+  public UserRequestWrapper(UserRequest userRequest) {
+    this.userRequest = userRequest;
+  }
 
   public UserRequest getUserRequest() {
     return userRequest;
@@ -13,12 +17,5 @@ public class UserRequestWrapper {
 
   public void setUserRequest(UserRequest userRequest) {
     this.userRequest = userRequest;
-  }
-
-  @Override
-  public String toString() {
-    return "UserRequestWrapper{" +
-        "userRequest=" + userRequest +
-        '}';
   }
 }
