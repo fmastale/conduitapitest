@@ -1,3 +1,5 @@
+package v1tests;
+
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,7 +52,7 @@ public class BasicTest {
 
   // test is using token in header
   @Test
-  @DisplayName("Get Current UserResponse - check user email and status code")
+  @DisplayName("Get Current UserResponseBody - check user email and status code")
   void getUserCheckEmailAndStatus() {
 
     given()
@@ -84,7 +86,7 @@ public class BasicTest {
   }
 
   @Test
-  @DisplayName("Update UserResponse Profile - update and check bio, then check the status code ")
+  @DisplayName("Update UserResponseBody Profile - update and check bio, then check the status code ")
   void updateUserProfile() {
     myGiven()
         .body(updatedUserJson)

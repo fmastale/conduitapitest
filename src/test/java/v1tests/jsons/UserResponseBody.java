@@ -1,6 +1,6 @@
-package jsons;
+package v1tests.jsons;
 
-public class UserResponse {
+public class UserResponseBody {
   public int id;
   public String email;
   public String createdAt;
@@ -10,10 +10,10 @@ public class UserResponse {
   public String image;
   public String token;
 
-  public UserResponse() {
+  public UserResponseBody() {
   }
 
-  public UserResponse(int id, String email, String createdAt, String updatedAt,
+  public UserResponseBody(int id, String email, String createdAt, String updatedAt,
       String username, String bio, String image, String token) {
     this.id = id;
     this.email = email;

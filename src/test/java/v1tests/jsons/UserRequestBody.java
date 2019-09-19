@@ -1,10 +1,10 @@
-package jsons;
+package v1tests.jsons;
 
-public class UserRequest {
+public class UserRequestBody {
   public String email;
   public String password;
 
-  public UserRequest(String email, String password) {
+  public UserRequestBody(String email, String password) {
     this.email = email;
     this.password = password;
   }
