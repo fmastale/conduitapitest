@@ -1,7 +1,7 @@
-package v2tests.jsonwrappers;
+package api.v2tests.jsonswrappers;
 
+import api.v2tests.jsons.UserRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import v2tests.jsons.UserRequest;
 
 public class UserRequestWrapper {
   @JsonProperty("user")

@@ -1,28 +1,24 @@
-package v2tests.utils;
+package api.v2tests.utils;
 
-import static v2tests.utils.ApiAddressesUtil.URI;
-import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
-import static v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
-
+import api.v2tests.jsons.UserRequest;
+import api.v2tests.jsonswrappers.UserRequestWrapper;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
-import v2tests.jsons.UserRequest;
-import v2tests.jsonwrappers.UserRequestWrapper;
-import v2tests.jsonwrappers.UserResponseWrapper;
+import api.v2tests.jsonswrappers.UserResponseWrapper;
 
 public class TestUtils {
   private UserResponseWrapper response;
 
   public UserResponseWrapper logUser(String email, String password) {
-    RestAssured.baseURI = URI;
+    RestAssured.baseURI = ApiAddressesUtil.URI;
     UserRequest userRequest = new UserRequest(email, password);
     UserRequestWrapper requestBody = new UserRequestWrapper(userRequest);
 
     RequestSpecification requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON).body(requestBody);
+        RestAssured.given().contentType(RequestSpecificationDetails.APPLICATION_JSON).body(requestBody);
 
     UserResponseWrapper response =
-        requestSpecification.post(USERS_LOGIN).as(UserResponseWrapper.class);
+        requestSpecification.post(ApiAddressesUtil.USERS_LOGIN).as(UserResponseWrapper.class);
 
     return response;
   }

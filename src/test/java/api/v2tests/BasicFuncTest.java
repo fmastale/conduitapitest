@@ -1,17 +1,17 @@
-package v2tests;
+package api.v2tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
 
+import api.v2tests.jsons.UserRequest;
+import api.v2tests.jsonswrappers.UserRequestWrapper;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import v2tests.jsons.UserRequest;
-import v2tests.jsonwrappers.UserRequestWrapper;
-import v2tests.jsonwrappers.UserResponseWrapper;
-import v2tests.utils.TestUtils;
+import api.v2tests.jsonswrappers.UserResponseWrapper;
+import api.v2tests.utils.TestUtils;
 
 public class BasicFuncTest {
   //todo: move uri to properties file

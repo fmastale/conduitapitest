@@ -1,4 +1,4 @@
-package v2tests.utils;
+package api.v2tests.utils;
 
 public class RequestSpecificationDetails {
   public final static String APPLICATION_JSON = "application/json";

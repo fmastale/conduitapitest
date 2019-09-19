@@ -1,4 +1,4 @@
-package v2tests.utils;
+package api.v2tests.utils;
 
 public class TestDataProvider {
   private String email = "adam@mail.com";

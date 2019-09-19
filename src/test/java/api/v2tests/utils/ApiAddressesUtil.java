@@ -1,4 +1,4 @@
-package v2tests.utils;
+package api.v2tests.utils;
 
 public class ApiAddressesUtil {
   public static final String URI = "https://conduit.productionready.io/api";

@@ -1,4 +1,4 @@
-package v2tests.jsons;
+package api.v2tests.jsons;
 
 public class UserRequest {
   public String email;

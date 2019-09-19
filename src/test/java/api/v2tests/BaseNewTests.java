@@ -1,27 +1,26 @@
-package v2tests;
+package api.v2tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static v2tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
-import static v2tests.utils.ApiAddressesUtil.URI;
-import static v2tests.utils.ApiAddressesUtil.USER;
-import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
-import static v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
-import static v2tests.utils.RequestSpecificationDetails.AUTHORIZATION;
-import static v2tests.utils.RequestSpecificationDetails.USERNAME;
-import static v2tests.utils.StatusCodes.CODE_200;
+import static api.v2tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
+import static api.v2tests.utils.ApiAddressesUtil.URI;
+import static api.v2tests.utils.ApiAddressesUtil.USER;
+import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
 
+import api.v2tests.jsons.UserRequest;
+import api.v2tests.jsonswrappers.ProfileWrapper;
+import api.v2tests.jsonswrappers.UserRequestWrapper;
+import api.v2tests.utils.RequestSpecificationDetails;
+import api.v2tests.utils.StatusCodes;
+import api.v2tests.utils.TestDataProvider;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import v2tests.jsons.UserRequest;
-import v2tests.jsonwrappers.ProfileWrapper;
-import v2tests.jsonwrappers.UserRequestWrapper;
-import v2tests.jsonwrappers.UserResponseWrapper;
-import v2tests.utils.TestDataProvider;
-import v2tests.utils.TestUtils;
+import api.v2tests.jsonswrappers.UserResponseWrapper;
+import api.v2tests.utils.TestUtils;
 
 public class BaseNewTests {
   private static String TOKEN;
@@ -45,7 +44,7 @@ public class BaseNewTests {
 
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(APPLICATION_JSON)
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
         .body(requestBody);
 
     //WHEN
@@ -63,8 +62,8 @@ public class BaseNewTests {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN);
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
+        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN);
 
     //WHEN
     Response response = requestSpecification.get(USER);
@@ -75,7 +74,7 @@ public class BaseNewTests {
     //THEN
     assertEquals(DATA.getBio(), responseBody.user.bio,
         "Expected user bio is different");
-    assertEquals(CODE_200, statusCode,
+    Assertions.assertEquals(StatusCodes.CODE_200, statusCode,
         "Status code different than expected");
   }
 
@@ -85,16 +84,16 @@ public class BaseNewTests {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN)
-        .pathParam(USERNAME, DATA.getUsername());
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
+        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN)
+        .pathParam(RequestSpecificationDetails.USERNAME, DATA.getUsername());
 
     //WHEN
     Response response = requestSpecification.get(PROFILES_USERNAME);
     ProfileWrapper responseBody = response.as(ProfileWrapper.class);
 
     //THEN
-    assertEquals(DATA.getUsername(), responseBody.profile.username,
+    Assertions.assertEquals(DATA.getUsername(), responseBody.profile.username,
         "Username is different than expected");
   }
   
@@ -107,8 +106,8 @@ public class BaseNewTests {
 
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN)
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
+        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN)
         .body(requestBody);
 
     //WHEN
