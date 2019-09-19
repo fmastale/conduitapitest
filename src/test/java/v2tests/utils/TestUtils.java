@@ -1,4 +1,8 @@
-package v2tests.testutils;
+package v2tests.utils;
+
+import static v2tests.utils.ApiAddressesUtil.URI;
+import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -7,29 +11,24 @@ import v2tests.jsonwrappers.UserRequestWrapper;
 import v2tests.jsonwrappers.UserResponseWrapper;
 
 public class TestUtils {
-  //todo: move uri to properties file
-  private static final String URI = "https://conduit.productionready.io/api";
   private UserResponseWrapper response;
 
-  private final String email = "adam@mail.com";
-  private final String password = "adam1234";
-
-  public UserResponseWrapper loginUser(String email, String password) {
+  public UserResponseWrapper logUser(String email, String password) {
     RestAssured.baseURI = URI;
     UserRequest userRequest = new UserRequest(email, password);
     UserRequestWrapper requestBody = new UserRequestWrapper(userRequest);
 
     RequestSpecification requestSpecification =
-        RestAssured.given().contentType("application/json").body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON).body(requestBody);
 
     UserResponseWrapper response =
-        requestSpecification.post("/users/login").as(UserResponseWrapper.class);
+        requestSpecification.post(USERS_LOGIN).as(UserResponseWrapper.class);
 
     return response;
   }
 
-  public String getToken() {
-    this.response = loginUser(email, password);
+  public String getToken(String email, String password) {
+    this.response = logUser(email, password);
     return response.user.token;
   }
 }

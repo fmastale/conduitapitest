@@ -1,7 +1,7 @@
 package v2tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static v2tests.testutils.ApiAddresses.usersLogin;
+import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import v2tests.jsons.UserRequest;
 import v2tests.jsonwrappers.UserRequestWrapper;
 import v2tests.jsonwrappers.UserResponseWrapper;
-import v2tests.testutils.TestUtils;
+import v2tests.utils.TestUtils;
 
 public class BasicFuncTest {
   //todo: move uri to properties file
@@ -22,7 +22,7 @@ public class BasicFuncTest {
   @BeforeAll
   @DisplayName("Get token for all tests")
   static void getToken() {
-    TOKEN = utils.getToken();
+    TOKEN = utils.getToken("adam@mail.com", "adam1234");
   }
 
   @Test
@@ -63,7 +63,7 @@ public class BasicFuncTest {
     String password = "adam1234";
 
     //WHEN
-    UserResponseWrapper response = utils.loginUser(email, password);
+    UserResponseWrapper response = utils.logUser(email, password);
 
     //THEN
     assertEquals("adam1234io", response.user.username,
@@ -90,7 +90,7 @@ public class BasicFuncTest {
   }
 
   private UserResponseWrapper getUserResponseWrapper(RequestSpecification requestSpecification) {
-    return requestSpecification.post(usersLogin).as(UserResponseWrapper.class);
+    return requestSpecification.post(USERS_LOGIN).as(UserResponseWrapper.class);
   }
 
   private RequestSpecification getRequestSpecification(UserRequestWrapper requestBody) {

@@ -1,10 +1,14 @@
 package v2tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static v2tests.testutils.ApiAddresses.profilesUsername;
-import static v2tests.testutils.ApiAddresses.user;
-import static v2tests.testutils.ApiAddresses.usersLogin;
-import static v2tests.testutils.StatusCode.*;
+import static v2tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
+import static v2tests.utils.ApiAddressesUtil.URI;
+import static v2tests.utils.ApiAddressesUtil.USER;
+import static v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
+import static v2tests.utils.RequestSpecificationDetails.AUTHORIZATION;
+import static v2tests.utils.RequestSpecificationDetails.USERNAME;
+import static v2tests.utils.StatusCodes.CODE_200;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -12,51 +16,45 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import v2tests.jsons.Profile;
 import v2tests.jsons.UserRequest;
-import v2tests.jsons.UserResponse;
 import v2tests.jsonwrappers.ProfileWrapper;
 import v2tests.jsonwrappers.UserRequestWrapper;
 import v2tests.jsonwrappers.UserResponseWrapper;
-import v2tests.testutils.TestUtils;
+import v2tests.utils.TestDataProvider;
+import v2tests.utils.TestUtils;
 
 public class BaseNewTests {
-  private static final String URI = "https://conduit.productionready.io/api";
   private static String TOKEN;
-  private static TestUtils utils = new TestUtils();
-  private String email = "adam@mail.com";
-  private String password = "adam1234";
-  private String username = "adam1234io";
-  private String bio = "I like to eat cookies";
-  private String updatedBio = "I like to ride on skateboard";
-  private String parameter = "username";
-  private String applicationJson = "application/json";
-  private String authorization = "Authorization";
-
+  private static TestDataProvider DATA = new TestDataProvider();
 
   @BeforeAll
   @DisplayName("Environment setup - getting valid token and setting base URI")
   static void envSetup() {
-    TOKEN = "Token " + utils.getToken();
     RestAssured.baseURI = URI;
+
+    TestUtils testUtil = new TestUtils();
+    TOKEN = "Token " + testUtil.getToken(DATA.getEmail(), DATA.getPassword());
   }
 
   @Test
-  @DisplayName("Authentication - log user, check his ID and status code")
-  void logUserAndCheckId() {
+  @DisplayName("Authentication - log user, check his ID")
+  void logUser() {
     //GIVEN
-    UserRequest userRequest = new UserRequest(email, password);
-    UserRequestWrapper requestBody = new UserRequestWrapper(userRequest);
+    UserRequest userBody = new UserRequest(DATA.getEmail(), DATA.getPassword());
+    UserRequestWrapper requestBody = new UserRequestWrapper(userBody);
 
     RequestSpecification requestSpecification =
-        RestAssured.given().contentType(applicationJson).body(requestBody);
+        RestAssured.given()
+        .contentType(APPLICATION_JSON)
+        .body(requestBody);
 
     //WHEN
-    Response response = requestSpecification.post(usersLogin);
+    Response response = requestSpecification.post(USERS_LOGIN);
+    UserResponseWrapper responseBody= response.as(UserResponseWrapper.class);
 
     // THEN
-    UserResponseWrapper responseBody= response.as(UserResponseWrapper.class);
-    assertEquals(username, responseBody.user.username,"Expected and actual should be equal");
+    assertEquals(DATA.getUsername(), responseBody.user.username,
+        "Username is different than expected");
   }
   
   @Test
@@ -65,18 +63,20 @@ public class BaseNewTests {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-            .contentType(applicationJson)
-            .header(authorization, TOKEN);
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN);
+
     //WHEN
-    Response response = requestSpecification.get(user);
-    UserResponseWrapper userResponseWrapper = response.as(UserResponseWrapper.class);
+    Response response = requestSpecification.get(USER);
+    UserResponseWrapper responseBody = response.as(UserResponseWrapper.class);
 
     int statusCode = response.statusCode();
-    //THEN
 
-    assertEquals(bio, userResponseWrapper.user.bio,
-        "Messages not equal");
-    assertEquals(code200, statusCode, "Status codes not equal");
+    //THEN
+    assertEquals(DATA.getBio(), responseBody.user.bio,
+        "Expected user bio is different");
+    assertEquals(CODE_200, statusCode,
+        "Status code different than expected");
   }
 
   @Test
@@ -85,36 +85,38 @@ public class BaseNewTests {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(applicationJson)
-        .header(authorization, TOKEN)
-        .pathParam(parameter, username);
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN)
+        .pathParam(USERNAME, DATA.getUsername());
 
     //WHEN
-    Response response = requestSpecification.get(profilesUsername);
-    ProfileWrapper profileWrapper = response.as(ProfileWrapper.class);
+    Response response = requestSpecification.get(PROFILES_USERNAME);
+    ProfileWrapper responseBody = response.as(ProfileWrapper.class);
 
     //THEN
-    assertEquals(username, profileWrapper.profile.username, "Username not the same");
+    assertEquals(DATA.getUsername(), responseBody.profile.username,
+        "Username is different than expected");
   }
   
   @Test
   @DisplayName("Update User")
   void updateUser() {
     //GIVEN
-    UserRequest requestBody = new UserRequest(username, email, updatedBio);
-    UserRequestWrapper requestWrapper = new UserRequestWrapper(requestBody);
+    UserRequest userBody = new UserRequest(DATA.getUsername(), DATA.getEmail(), DATA.getUpdatedBio());
+    UserRequestWrapper requestBody = new UserRequestWrapper(userBody);
 
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(applicationJson)
-        .header(authorization, TOKEN)
-        .body(requestWrapper);
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN)
+        .body(requestBody);
 
     //WHEN
-    Response response = requestSpecification.put(user);
-    UserResponseWrapper responseWrapper = response.as(UserResponseWrapper.class);
+    Response response = requestSpecification.put(USER);
+    UserResponseWrapper responseBody = response.as(UserResponseWrapper.class);
 
     //THEN
-    assertEquals(updatedBio, responseWrapper.user.bio, "Expected and actual not the same");
+    assertEquals(DATA.getUpdatedBio(), responseBody.user.bio,
+        "Expected user bio is different");
   }
 }
