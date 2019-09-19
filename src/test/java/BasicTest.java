@@ -50,7 +50,7 @@ public class BasicTest {
 
   // test is using token in header
   @Test
-  @DisplayName("Get Current User - check user email and status code")
+  @DisplayName("Get Current UserResponse - check user email and status code")
   void getUserCheckEmailAndStatus() {
 
     given()
@@ -84,7 +84,7 @@ public class BasicTest {
   }
 
   @Test
-  @DisplayName("Update User Profile - update and check bio, then check the status code ")
+  @DisplayName("Update UserResponse Profile - update and check bio, then check the status code ")
   void updateUserProfile() {
     myGiven()
         .body(updatedUserJson)
