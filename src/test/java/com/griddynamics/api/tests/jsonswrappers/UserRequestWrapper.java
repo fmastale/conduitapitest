@@ -1,10 +1,10 @@
 package com.griddynamics.api.tests.jsonswrappers;
 
-import com.griddynamics.api.tests.jsons.UserRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.griddynamics.api.tests.jsons.UserRequest;
 
 public class UserRequestWrapper {
-  @JsonProperty("user")
+  @JsonProperty
   private UserRequest user;
 
   public UserRequestWrapper(UserRequest user) {
