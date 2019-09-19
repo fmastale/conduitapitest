@@ -86,8 +86,8 @@ public class BasicTest {
   }
 
   @Test
-  @DisplayName("Update UserResponseBody Profile - update and check bio, then check the status code ")
-  void updateUserProfile() {
+  @DisplayName("Update User - update and check bio, then check the status code ")
+  void updateUser() {
     myGiven()
         .body(updatedUserJson)
         .when()

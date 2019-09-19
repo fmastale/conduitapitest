@@ -45,6 +45,17 @@ public class BasicFuncTest {
   }
 
   @Test
+  @DisplayName("test")
+  void anotherTestMethod() {
+    //GIVEN
+
+    //WHEN
+
+    //THEN
+
+  }
+
+  @Test
   @DisplayName("Authentication test - login user with valid email and password")
   void loginUserWithValidCredentials() {
     //GIVEN
