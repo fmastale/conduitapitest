@@ -1,3 +1,5 @@
+package api.oldTests;
+
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,10 +11,10 @@ import java.io.File;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-public class BasicTest {
+public class BasicTests {
   private static String url = "https://conduit.productionready.io/api";
-  private static File userJson = new File("user.json");
-  private static File updatedUserJson = new File("updatedUser.json");
+  private static File userJson = new File("src/test/java/api/oldTests/user.json");
+  private static File updatedUserJson = new File("src/test/java/api/oldTests/updatedUser.json");
   private static String TOKEN;
 
   @BeforeAll

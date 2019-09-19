@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import api.v2tests.jsonswrappers.UserResponseWrapper;
 import api.v2tests.utils.TestUtils;
 
-public class BaseNewTests {
+public class ApiTests {
   private static String TOKEN;
   private static TestDataProvider DATA = new TestDataProvider();
 

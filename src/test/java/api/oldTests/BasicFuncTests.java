@@ -1,4 +1,4 @@
-package api.v2tests;
+package api.oldTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import api.v2tests.jsonswrappers.UserResponseWrapper;
 import api.v2tests.utils.TestUtils;
 
-public class BasicFuncTest {
+public class BasicFuncTests {
   //todo: move uri to properties file
   private static final String URI = "https://conduit.productionready.io/api";
   private static String TOKEN;
@@ -42,17 +42,6 @@ public class BasicFuncTest {
 
     // THEN
     assertEquals("adam1234io", response.user.username,"Expected and actual should be equal");
-  }
-
-  @Test
-  @DisplayName("test")
-  void anotherTestMethod() {
-    //GIVEN
-
-    //WHEN
-
-    //THEN
-
   }
 
   @Test
