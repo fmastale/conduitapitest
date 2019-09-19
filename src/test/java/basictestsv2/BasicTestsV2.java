@@ -16,10 +16,9 @@ public class BasicTestsV2 {
   private static String TOKEN;
 
   @Test
-  @DisplayName(
-      "Authentication - log user, check his ID and status code, but with using ObjectMapper")
+  @DisplayName("Authentication - log user, check his ID and status code, but with using ObjectMapper")
   void logUserCheckIdAndStatusWithObjectMapper() throws IOException {
-    // GIVEN
+
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
