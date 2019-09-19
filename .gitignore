@@ -121,5 +121,11 @@ buildNumber.properties
 
 # End of https://www.gitignore.io/api/java,maven,intellijcodnduit-api-test.iml
 codnduitapitest.iml
-codnduit-api-test.iml.idea/
+codnduit-api-test.iml
 /.idea/*
+.idea/.name
+.idea/codeStyles/
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
