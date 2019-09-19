@@ -1,17 +1,21 @@
 package api.v2tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static api.v2tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
 import static api.v2tests.utils.ApiAddressesUtil.URI;
 import static api.v2tests.utils.ApiAddressesUtil.USER;
 import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static api.v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
+import static api.v2tests.utils.RequestSpecificationDetails.AUTHORIZATION;
+import static api.v2tests.utils.RequestSpecificationDetails.USERNAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import api.v2tests.jsons.UserRequest;
 import api.v2tests.jsonswrappers.ProfileWrapper;
 import api.v2tests.jsonswrappers.UserRequestWrapper;
-import api.v2tests.utils.RequestSpecificationDetails;
+import api.v2tests.jsonswrappers.UserResponseWrapper;
 import api.v2tests.utils.StatusCodes;
 import api.v2tests.utils.TestDataProvider;
+import api.v2tests.utils.TestUtils;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -19,8 +23,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import api.v2tests.jsonswrappers.UserResponseWrapper;
-import api.v2tests.utils.TestUtils;
 
 public class ApiTests {
   private static String TOKEN;
@@ -36,15 +38,15 @@ public class ApiTests {
   }
 
   @Test
-  @DisplayName("Authentication - log user, check his ID")
-  void logUser() {
+  @DisplayName("Authentication - check if user will be logged and then check his ID")
+  void logUserAndGetHisId() {
     //GIVEN
     UserRequest userBody = new UserRequest(DATA.getEmail(), DATA.getPassword());
     UserRequestWrapper requestBody = new UserRequestWrapper(userBody);
 
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
+        .contentType(APPLICATION_JSON)
         .body(requestBody);
 
     //WHEN
@@ -57,13 +59,13 @@ public class ApiTests {
   }
   
   @Test
-  @DisplayName("Get User - check bio and status code")
+  @DisplayName("Get User - get user, then check his bio and response status code")
   void getUserCheckBioAndStatusCode() {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
-        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN);
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN);
 
     //WHEN
     Response response = requestSpecification.get(USER);
@@ -79,14 +81,14 @@ public class ApiTests {
   }
 
   @Test
-  @DisplayName("Get Profile")
+  @DisplayName("Get Profile - get user profile and check if username is the same as in query")
   void getProfileCheckUsername() {
     // GIVEN
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
-        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN)
-        .pathParam(RequestSpecificationDetails.USERNAME, DATA.getUsername());
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN)
+        .pathParam(USERNAME, DATA.getUsername());
 
     //WHEN
     Response response = requestSpecification.get(PROFILES_USERNAME);
@@ -98,16 +100,16 @@ public class ApiTests {
   }
   
   @Test
-  @DisplayName("Update User")
-  void updateUser() {
+  @DisplayName("Update User - update user bio and check if it was updated")
+  void updateUserBioAndCheckIfUpdated() {
     //GIVEN
     UserRequest userBody = new UserRequest(DATA.getUsername(), DATA.getEmail(), DATA.getUpdatedBio());
     UserRequestWrapper requestBody = new UserRequestWrapper(userBody);
 
     RequestSpecification requestSpecification =
         RestAssured.given()
-        .contentType(RequestSpecificationDetails.APPLICATION_JSON)
-        .header(RequestSpecificationDetails.AUTHORIZATION, TOKEN)
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN)
         .body(requestBody);
 
     //WHEN
