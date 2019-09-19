@@ -1,4 +1,4 @@
-package api.v2tests.utils;
+package com.griddynamics.api.tests.utils;
 
 public class ApiAddressesUtil {
   public static final String URI = "https://conduit.productionready.io/api";

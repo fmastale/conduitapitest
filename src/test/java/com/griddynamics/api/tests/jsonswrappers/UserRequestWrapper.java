@@ -1,6 +1,6 @@
-package api.v2tests.jsonswrappers;
+package com.griddynamics.api.tests.jsonswrappers;
 
-import api.v2tests.jsons.UserRequest;
+import com.griddynamics.api.tests.jsons.UserRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserRequestWrapper {

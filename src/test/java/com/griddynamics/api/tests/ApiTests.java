@@ -1,21 +1,21 @@
-package api.v2tests;
+package com.griddynamics.api.tests;
 
-import static api.v2tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
-import static api.v2tests.utils.ApiAddressesUtil.URI;
-import static api.v2tests.utils.ApiAddressesUtil.USER;
-import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
-import static api.v2tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
-import static api.v2tests.utils.RequestSpecificationDetails.AUTHORIZATION;
-import static api.v2tests.utils.RequestSpecificationDetails.USERNAME;
+import static com.griddynamics.api.tests.utils.ApiAddressesUtil.PROFILES_USERNAME;
+import static com.griddynamics.api.tests.utils.ApiAddressesUtil.URI;
+import static com.griddynamics.api.tests.utils.ApiAddressesUtil.USER;
+import static com.griddynamics.api.tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static com.griddynamics.api.tests.utils.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.api.tests.utils.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.api.tests.utils.RequestSpecificationDetails.USERNAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import api.v2tests.jsons.UserRequest;
-import api.v2tests.jsonswrappers.ProfileWrapper;
-import api.v2tests.jsonswrappers.UserRequestWrapper;
-import api.v2tests.jsonswrappers.UserResponseWrapper;
-import api.v2tests.utils.StatusCodes;
-import api.v2tests.utils.TestDataProvider;
-import api.v2tests.utils.TestUtils;
+import com.griddynamics.api.tests.jsons.UserRequest;
+import com.griddynamics.api.tests.jsonswrappers.ProfileWrapper;
+import com.griddynamics.api.tests.jsonswrappers.UserRequestWrapper;
+import com.griddynamics.api.tests.jsonswrappers.UserResponseWrapper;
+import com.griddynamics.api.tests.utils.StatusCodes;
+import com.griddynamics.api.tests.utils.TestDataProvider;
+import com.griddynamics.api.tests.utils.TestUtils;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;

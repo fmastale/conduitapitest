@@ -1,17 +1,17 @@
-package api.oldTests;
+package com.oldTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static api.v2tests.utils.ApiAddressesUtil.USERS_LOGIN;
+import static com.griddynamics.api.tests.utils.ApiAddressesUtil.USERS_LOGIN;
 
-import api.v2tests.jsons.UserRequest;
-import api.v2tests.jsonswrappers.UserRequestWrapper;
+import com.griddynamics.api.tests.jsons.UserRequest;
+import com.griddynamics.api.tests.jsonswrappers.UserRequestWrapper;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import api.v2tests.jsonswrappers.UserResponseWrapper;
-import api.v2tests.utils.TestUtils;
+import com.griddynamics.api.tests.jsonswrappers.UserResponseWrapper;
+import com.griddynamics.api.tests.utils.TestUtils;
 
 public class BasicFuncTests {
   //todo: move uri to properties file

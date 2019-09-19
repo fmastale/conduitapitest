@@ -1,10 +1,10 @@
-package api.v2tests.utils;
+package com.griddynamics.api.tests.utils;
 
-import api.v2tests.jsons.UserRequest;
-import api.v2tests.jsonswrappers.UserRequestWrapper;
+import com.griddynamics.api.tests.jsons.UserRequest;
+import com.griddynamics.api.tests.jsonswrappers.UserRequestWrapper;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
-import api.v2tests.jsonswrappers.UserResponseWrapper;
+import com.griddynamics.api.tests.jsonswrappers.UserResponseWrapper;
 
 public class TestUtils {
   private UserResponseWrapper response;

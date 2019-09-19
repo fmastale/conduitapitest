@@ -1,4 +1,4 @@
-package api.v2tests.jsons;
+package com.griddynamics.api.tests.jsons;
 
 public class UserRequest {
   public String email;

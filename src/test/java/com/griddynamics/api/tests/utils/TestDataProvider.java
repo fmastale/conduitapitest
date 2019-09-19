@@ -1,4 +1,4 @@
-package api.v2tests.utils;
+package com.griddynamics.api.tests.utils;
 
 public class TestDataProvider {
   private String email = "adam@mail.com";

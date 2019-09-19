@@ -1,4 +1,4 @@
-package api.oldTests;
+package com.oldTests;
 
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
