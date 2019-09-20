@@ -9,7 +9,6 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
@@ -18,7 +17,8 @@ import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -46,8 +46,8 @@ public class BasicTests extends ApiTest {
     userResponseDto = response.as(UserResponseDto.class);
 
     // THEN
-    assertEquals(TEST_DATA_PROVIDER.getUsername(), userResponseDto.user.username,
-        "Username is different than expected");
+    MatcherAssert.assertThat("Username is different than expected",
+        userResponseDto.user.username, Matchers.equalTo(TEST_DATA_PROVIDER.getUsername()));
   }
   
   @Test
@@ -65,10 +65,11 @@ public class BasicTests extends ApiTest {
     statusCode = response.statusCode();
 
     //THEN
-    assertEquals(TEST_DATA_PROVIDER.getBio(), userResponseDto.user.bio,
-        "Expected user bio is different");
-    Assertions.assertEquals(CODE_200.getValue(), statusCode,
-        "Status code different than expected");
+    MatcherAssert.assertThat("Expected user bio is different",
+        TEST_DATA_PROVIDER.getBio(), Matchers.equalTo(userResponseDto.user.bio));
+
+    MatcherAssert.assertThat("Status code different than expected",
+        statusCode, Matchers.equalTo(CODE_200.getValue()));
   }
 
   @Test
@@ -85,15 +86,16 @@ public class BasicTests extends ApiTest {
     responseBody = response.as(ProfileDto.class);
 
     //THEN
-    Assertions.assertEquals(TEST_DATA_PROVIDER.getUsername(), responseBody.profile.username,
-        "Username is different than expected");
+    MatcherAssert.assertThat("Username is different than expected",
+        responseBody.profile.username, Matchers.equalTo(TEST_DATA_PROVIDER.getUsername()));
   }
   
   @Test
   @DisplayName("Update User - update user bio and check if it was updated")
   void updateUserBioAndCheckIfUpdated() {
     //GIVEN
-    userBody = new UserRequest(TEST_DATA_PROVIDER.getUsername(), TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER
+    userBody = new UserRequest(TEST_DATA_PROVIDER.getUsername(),
+        TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER
         .getUpdatedBio());
     requestBody = new UserRequestDto(userBody);
 
@@ -107,15 +109,15 @@ public class BasicTests extends ApiTest {
     userResponseDto = response.as(UserResponseDto.class);
 
     //THEN
-    assertEquals(TEST_DATA_PROVIDER.getUpdatedBio(), userResponseDto.user.bio,
-        "Expected user bio is different");
+    MatcherAssert.assertThat("Expected user bio is different",
+        userResponseDto.user.bio, Matchers.equalTo(TEST_DATA_PROVIDER.getUpdatedBio()));
   }
 
   @Test
   @DisplayName("Delete Article - remove article")
   void deleteArticleBySlug() {
     //GIVEN
-    String slug = "how-to-automate-test-in-restassured-shfi00";
+    String slug = "how-to-automate-test-in-restassured-862pmu";
 
     requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON.getDetail())
@@ -127,7 +129,7 @@ public class BasicTests extends ApiTest {
     statusCode = response.statusCode();
 
     //THEN
-    assertEquals(CODE_200.getValue(), statusCode, "Status code is different than expected");
-
+    MatcherAssert.assertThat("Status code is different than expected",
+        statusCode, Matchers.equalTo(CODE_200.getValue()));
   }
 }

@@ -4,8 +4,6 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
@@ -32,15 +30,16 @@ public class AuthenticationTest extends ApiTest {
     userBody = new UserRequest(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
     UserRequestDto requestBody = new UserRequestDto(userBody);
 
-    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
     // WHEN
     response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     userResponseDto = response.as(UserResponseDto.class);
 
     // THEN
-    assertEquals(TEST_DATA_PROVIDER.getUsername(), userResponseDto.user.username,
-        "Username is different than expected");
+    MatcherAssert.assertThat("Username is different than expected",
+        userResponseDto.user.username, Matchers.equalTo(TEST_DATA_PROVIDER.getUsername()));
   }
 
   @Test
@@ -50,16 +49,16 @@ public class AuthenticationTest extends ApiTest {
     userBody = new UserRequest(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getIncorrectPassword());
     requestBody = new UserRequestDto(userBody);
 
-    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
     //WHEN
     response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     statusCode = response.statusCode();
 
     //THEN
-    assertNotEquals(CODE_200, statusCode, "Actual status code is same as unexpected");
-
-    MatcherAssert.assertThat(statusCode, Matchers.equalTo(CODE_200));
+    MatcherAssert.assertThat("Actual status code is not the one we expected",
+        statusCode, Matchers.not(CODE_200.getValue()));
   }
 
 }
