@@ -1,11 +1,14 @@
 package com.griddynamics.conduit.test;
 
+import static com.griddynamics.conduit.test.utils.ApiAddressesUtil.ARTICLES_SLUG;
 import static com.griddynamics.conduit.test.utils.ApiAddressesUtil.PROFILES_USERNAME;
 import static com.griddynamics.conduit.test.utils.ApiAddressesUtil.USER;
 import static com.griddynamics.conduit.test.utils.ApiAddressesUtil.USERS_LOGIN;
 import static com.griddynamics.conduit.test.utils.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.test.utils.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.conduit.test.utils.RequestSpecificationDetails.SLUG;
 import static com.griddynamics.conduit.test.utils.RequestSpecificationDetails.USERNAME;
+import static com.griddynamics.conduit.test.utils.StatusCodes.CODE_200;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.griddynamics.conduit.test.jsons.UserRequest;
@@ -59,7 +62,7 @@ public class BasicTests extends ApiTest {
     //THEN
     assertEquals(DATA.getBio(), userResponseWrapper.user.bio,
         "Expected user bio is different");
-    Assertions.assertEquals(StatusCodes.CODE_200, statusCode,
+    Assertions.assertEquals(CODE_200, statusCode,
         "Status code different than expected");
   }
 
@@ -108,10 +111,19 @@ public class BasicTests extends ApiTest {
   @DisplayName("Delete Article - remove article")
   void deleteArticleBySlug() {
     //GIVEN
+    String slug = "how-to-automate-test-in-restassured-cshiu1";
+
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON)
+        .header(AUTHORIZATION, TOKEN)
+        .pathParam(SLUG, slug);
 
     //WHEN
+    response = requestSpecification.delete(ARTICLES_SLUG);
+    statusCode = response.statusCode();
 
     //THEN
+    assertEquals(CODE_200, statusCode, "Status code isn't 200");
 
   }
 }
