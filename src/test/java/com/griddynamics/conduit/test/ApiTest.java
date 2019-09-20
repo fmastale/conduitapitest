@@ -1,11 +1,13 @@
 package com.griddynamics.conduit.test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+
+import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
-import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
@@ -21,7 +23,7 @@ public class ApiTest {
   protected RequestSpecification requestSpecification;
 
   public ApiTest() {
-    RestAssured.baseURI = Endpoint.BASE_URI;
+    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
     TOKEN = getToken(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
   }
@@ -31,10 +33,10 @@ public class ApiTest {
     requestBody = new UserRequestDto(userBody);
 
     requestSpecification =
-        RestAssured.given().contentType(RequestSpecificationDetails.APPLICATION_JSON).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
     userResponseDto =
-        requestSpecification.post(Endpoint.USERS_LOGIN).as(UserResponseDto.class);
+        requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);
 
     return userResponseDto;
   }

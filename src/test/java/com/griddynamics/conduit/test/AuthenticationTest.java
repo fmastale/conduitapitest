@@ -1,5 +1,6 @@
 package com.griddynamics.conduit.test;
 
+
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
@@ -31,10 +32,10 @@ public class AuthenticationTest extends ApiTest {
     userBody = new UserRequest(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
     UserRequestDto requestBody = new UserRequestDto(userBody);
 
-    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON).body(requestBody);
+    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
     // WHEN
-    response = requestSpecification.post(USERS_LOGIN);
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     userResponseDto = response.as(UserResponseDto.class);
 
     // THEN
@@ -49,10 +50,10 @@ public class AuthenticationTest extends ApiTest {
     userBody = new UserRequest(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getIncorrectPassword());
     requestBody = new UserRequestDto(userBody);
 
-    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON).body(requestBody);
+    requestSpecification = RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
     //WHEN
-    response = requestSpecification.post(USERS_LOGIN);
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     statusCode = response.statusCode();
 
     //THEN

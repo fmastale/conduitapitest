@@ -38,11 +38,11 @@ public class BasicTests extends ApiTest {
     requestBody = new UserRequestDto(userBody);
 
     requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON)
+        .contentType(APPLICATION_JSON.getDetail())
         .body(requestBody);
 
     //WHEN
-    response = requestSpecification.post(USERS_LOGIN);
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     userResponseDto = response.as(UserResponseDto.class);
 
     // THEN
@@ -55,11 +55,11 @@ public class BasicTests extends ApiTest {
   void getUserCheckBioAndStatusCode() {
     // GIVEN
     requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN);
+        .contentType(APPLICATION_JSON.getDetail())
+        .header(AUTHORIZATION.getDetail(), TOKEN);
 
     //WHEN
-    response = requestSpecification.get(USER);
+    response = requestSpecification.get(USER.getEndpoint());
     userResponseDto = response.as(UserResponseDto.class);
 
     statusCode = response.statusCode();
@@ -67,7 +67,7 @@ public class BasicTests extends ApiTest {
     //THEN
     assertEquals(TEST_DATA_PROVIDER.getBio(), userResponseDto.user.bio,
         "Expected user bio is different");
-    Assertions.assertEquals(CODE_200, statusCode,
+    Assertions.assertEquals(CODE_200.getValue(), statusCode,
         "Status code different than expected");
   }
 
@@ -76,12 +76,12 @@ public class BasicTests extends ApiTest {
   void getProfileCheckUsername() {
     // GIVEN
     requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN)
-        .pathParam(USERNAME, TEST_DATA_PROVIDER.getUsername());
+        .contentType(APPLICATION_JSON.getDetail())
+        .header(AUTHORIZATION.getDetail(), TOKEN)
+        .pathParam(USERNAME.getDetail(), TEST_DATA_PROVIDER.getUsername());
 
     //WHEN
-    response = requestSpecification.get(PROFILES_USERNAME);
+    response = requestSpecification.get(PROFILES_USERNAME.getEndpoint());
     responseBody = response.as(ProfileDto.class);
 
     //THEN
@@ -98,12 +98,12 @@ public class BasicTests extends ApiTest {
     requestBody = new UserRequestDto(userBody);
 
     requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN)
+        .contentType(APPLICATION_JSON.getDetail())
+        .header(AUTHORIZATION.getDetail(), TOKEN)
         .body(requestBody);
 
     //WHEN
-    response = requestSpecification.put(USER);
+    response = requestSpecification.put(USER.getEndpoint());
     userResponseDto = response.as(UserResponseDto.class);
 
     //THEN
@@ -118,16 +118,16 @@ public class BasicTests extends ApiTest {
     String slug = "how-to-automate-test-in-restassured-shfi00";
 
     requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON)
-        .header(AUTHORIZATION, TOKEN)
-        .pathParam(SLUG, slug);
+        .contentType(APPLICATION_JSON.getDetail())
+        .header(AUTHORIZATION.getDetail(), TOKEN)
+        .pathParam(SLUG.getDetail(), slug);
 
     //WHEN
-    response = requestSpecification.delete(ARTICLES_SLUG);
+    response = requestSpecification.delete(ARTICLES_SLUG.getEndpoint());
     statusCode = response.statusCode();
 
     //THEN
-    assertEquals(CODE_200, statusCode, "Status code is different than expected");
+    assertEquals(CODE_200.getValue(), statusCode, "Status code is different than expected");
 
   }
 }
