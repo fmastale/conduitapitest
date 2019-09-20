@@ -1,4 +1,4 @@
-package api.oldTests;
+package com.old.test;
 
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
@@ -13,8 +13,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class BasicTests {
   private static String url = "https://conduit.productionready.io/api";
-  private static File userJson = new File("src/test/java/api/oldTests/user.json");
-  private static File updatedUserJson = new File("src/test/java/api/oldTests/updatedUser.json");
+  private static File userJson = new File("src/main/resources/user.json");
+  private static File updatedUserJson = new File("src/main/resources/updatedUser.json");
   private static String TOKEN;
 
   @BeforeAll

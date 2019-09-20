@@ -1,4 +1,4 @@
-package api.v2tests.jsons;
+package com.griddynamics.conduit.test.jsons;
 
 public class UserResponse {
   public int id;
