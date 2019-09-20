@@ -1,17 +1,16 @@
 package com.old.test;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.specification.RequestSpecification;
+import java.io.File;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-
-public class BasicTests {
+public class OldBasicTests {
   private static String url = "https://conduit.productionready.io/api";
   private static File userJson = new File("src/main/resources/user.json");
   private static File updatedUserJson = new File("src/main/resources/updatedUser.json");
