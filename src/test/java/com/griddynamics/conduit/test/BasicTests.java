@@ -1,33 +1,41 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.utils.Endpoint.ARTICLES_SLUG;
-import static com.griddynamics.conduit.utils.Endpoint.PROFILES_USERNAME;
-import static com.griddynamics.conduit.utils.Endpoint.USER;
-import static com.griddynamics.conduit.utils.Endpoint.USERS_LOGIN;
-import static com.griddynamics.conduit.utils.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.utils.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.utils.RequestSpecificationDetails.SLUG;
-import static com.griddynamics.conduit.utils.RequestSpecificationDetails.USERNAME;
-import static com.griddynamics.conduit.utils.StatusCode.CODE_200;
+import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES_SLUG;
+import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME;
+import static com.griddynamics.conduit.helpers.Endpoint.USER;
+import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
+import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.griddynamics.conduit.jsons.UserRequest;
-import com.griddynamics.conduit.jsonswrappers.ProfileWrapper;
-import com.griddynamics.conduit.jsonswrappers.UserRequestWrapper;
-import com.griddynamics.conduit.jsonswrappers.UserResponseWrapper;
+import com.griddynamics.conduit.jsonsdtos.ProfileDto;
+import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
+import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class BasicTests extends ApiTest {
+  protected Response response;
+  protected UserRequest userBody;
+  protected ProfileDto responseBody;
+  protected UserRequestDto requestBody;
+  protected UserResponseDto userResponseDto;
+  protected RequestSpecification requestSpecification;
 
   @Test
   @DisplayName("Authentication - check if user will be logged and then check his ID")
   void logUserAndGetHisId() {
     //GIVEN
     userBody = new UserRequest(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
-    requestBody = new UserRequestWrapper(userBody);
+    requestBody = new UserRequestDto(userBody);
 
     requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
@@ -35,10 +43,10 @@ public class BasicTests extends ApiTest {
 
     //WHEN
     response = requestSpecification.post(USERS_LOGIN);
-    userResponseWrapper = response.as(UserResponseWrapper.class);
+    userResponseDto = response.as(UserResponseDto.class);
 
     // THEN
-    assertEquals(TEST_DATA_PROVIDER.getUsername(), userResponseWrapper.user.username,
+    assertEquals(TEST_DATA_PROVIDER.getUsername(), userResponseDto.user.username,
         "Username is different than expected");
   }
   
@@ -52,12 +60,12 @@ public class BasicTests extends ApiTest {
 
     //WHEN
     response = requestSpecification.get(USER);
-    userResponseWrapper = response.as(UserResponseWrapper.class);
+    userResponseDto = response.as(UserResponseDto.class);
 
     statusCode = response.statusCode();
 
     //THEN
-    assertEquals(TEST_DATA_PROVIDER.getBio(), userResponseWrapper.user.bio,
+    assertEquals(TEST_DATA_PROVIDER.getBio(), userResponseDto.user.bio,
         "Expected user bio is different");
     Assertions.assertEquals(CODE_200, statusCode,
         "Status code different than expected");
@@ -74,7 +82,7 @@ public class BasicTests extends ApiTest {
 
     //WHEN
     response = requestSpecification.get(PROFILES_USERNAME);
-    responseBody = response.as(ProfileWrapper.class);
+    responseBody = response.as(ProfileDto.class);
 
     //THEN
     Assertions.assertEquals(TEST_DATA_PROVIDER.getUsername(), responseBody.profile.username,
@@ -87,7 +95,7 @@ public class BasicTests extends ApiTest {
     //GIVEN
     userBody = new UserRequest(TEST_DATA_PROVIDER.getUsername(), TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER
         .getUpdatedBio());
-    requestBody = new UserRequestWrapper(userBody);
+    requestBody = new UserRequestDto(userBody);
 
     requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
@@ -96,10 +104,10 @@ public class BasicTests extends ApiTest {
 
     //WHEN
     response = requestSpecification.put(USER);
-    userResponseWrapper = response.as(UserResponseWrapper.class);
+    userResponseDto = response.as(UserResponseDto.class);
 
     //THEN
-    assertEquals(TEST_DATA_PROVIDER.getUpdatedBio(), userResponseWrapper.user.bio,
+    assertEquals(TEST_DATA_PROVIDER.getUpdatedBio(), userResponseDto.user.bio,
         "Expected user bio is different");
   }
 
@@ -107,7 +115,7 @@ public class BasicTests extends ApiTest {
   @DisplayName("Delete Article - remove article")
   void deleteArticleBySlug() {
     //GIVEN
-    String slug = "how-to-automate-test-in-restassured-cshiu1";
+    String slug = "how-to-automate-test-in-restassured-shfi00";
 
     requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)

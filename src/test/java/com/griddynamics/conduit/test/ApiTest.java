@@ -1,14 +1,12 @@
 package com.griddynamics.conduit.test;
 
 import com.griddynamics.conduit.jsons.UserRequest;
-import com.griddynamics.conduit.jsonswrappers.ProfileWrapper;
-import com.griddynamics.conduit.jsonswrappers.UserRequestWrapper;
-import com.griddynamics.conduit.jsonswrappers.UserResponseWrapper;
-import com.griddynamics.conduit.utils.Endpoint;
-import com.griddynamics.conduit.utils.RequestSpecificationDetails;
-import com.griddynamics.conduit.utils.TestDataProvider;
+import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
+import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
+import com.griddynamics.conduit.helpers.TestDataProvider;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class ApiTest {
@@ -17,11 +15,9 @@ public class ApiTest {
 
   protected int statusCode;
 
-  protected Response response;
   protected UserRequest userBody;
-  protected ProfileWrapper responseBody;
-  protected UserRequestWrapper requestBody;
-  protected UserResponseWrapper userResponseWrapper;
+  protected UserRequestDto requestBody;
+  protected UserResponseDto userResponseDto;
   protected RequestSpecification requestSpecification;
 
   public ApiTest() {
@@ -30,21 +26,21 @@ public class ApiTest {
     TOKEN = getToken(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
   }
 
-  protected UserResponseWrapper logUser(String email, String password) {
+  protected UserResponseDto logUser(String email, String password) {
     userBody = new UserRequest(email, password);
-    requestBody = new UserRequestWrapper(userBody);
+    requestBody = new UserRequestDto(userBody);
 
     requestSpecification =
         RestAssured.given().contentType(RequestSpecificationDetails.APPLICATION_JSON).body(requestBody);
 
-    userResponseWrapper =
-        requestSpecification.post(Endpoint.USERS_LOGIN).as(UserResponseWrapper.class);
+    userResponseDto =
+        requestSpecification.post(Endpoint.USERS_LOGIN).as(UserResponseDto.class);
 
-    return userResponseWrapper;
+    return userResponseDto;
   }
 
   private String getToken(String email, String password) {
-    this.userResponseWrapper = logUser(email, password);
-    return "Token " + userResponseWrapper.user.token;
+    this.userResponseDto = logUser(email, password);
+    return "Token " + userResponseDto.user.token;
   }
 }
