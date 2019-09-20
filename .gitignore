@@ -129,5 +129,3 @@ codnduit-api-test.iml
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
-src/main/
-src/test/java/api/v2tests/api/
