@@ -1,22 +1,19 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.test.utils.ApiAddressesUtil.URI;
-import static io.restassured.RestAssured.*;
-
-import com.griddynamics.conduit.test.jsons.UserRequest;
-import com.griddynamics.conduit.test.jsonswrappers.ProfileWrapper;
-import com.griddynamics.conduit.test.jsonswrappers.UserRequestWrapper;
-import com.griddynamics.conduit.test.jsonswrappers.UserResponseWrapper;
-import com.griddynamics.conduit.test.utils.ApiAddressesUtil;
-import com.griddynamics.conduit.test.utils.RequestSpecificationDetails;
-import com.griddynamics.conduit.test.utils.TestDataProvider;
+import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.jsonswrappers.ProfileWrapper;
+import com.griddynamics.conduit.jsonswrappers.UserRequestWrapper;
+import com.griddynamics.conduit.jsonswrappers.UserResponseWrapper;
+import com.griddynamics.conduit.utils.Endpoint;
+import com.griddynamics.conduit.utils.RequestSpecificationDetails;
+import com.griddynamics.conduit.utils.TestDataProvider;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class ApiTest {
   protected static String TOKEN;
-  protected static TestDataProvider DATA;
+  protected static final TestDataProvider TEST_DATA_PROVIDER = new TestDataProvider();
 
   protected int statusCode;
 
@@ -28,14 +25,12 @@ public class ApiTest {
   protected RequestSpecification requestSpecification;
 
   public ApiTest() {
-    baseURI = URI;
+    RestAssured.baseURI = Endpoint.BASE_URI;
 
-    DATA = new TestDataProvider();
-
-    TOKEN = getToken(DATA.getEmail(), DATA.getPassword());
+    TOKEN = getToken(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
   }
 
-  public UserResponseWrapper logUser(String email, String password) {
+  protected UserResponseWrapper logUser(String email, String password) {
     userBody = new UserRequest(email, password);
     requestBody = new UserRequestWrapper(userBody);
 
@@ -43,12 +38,12 @@ public class ApiTest {
         RestAssured.given().contentType(RequestSpecificationDetails.APPLICATION_JSON).body(requestBody);
 
     userResponseWrapper =
-        requestSpecification.post(ApiAddressesUtil.USERS_LOGIN).as(UserResponseWrapper.class);
+        requestSpecification.post(Endpoint.USERS_LOGIN).as(UserResponseWrapper.class);
 
     return userResponseWrapper;
   }
 
-  public String getToken(String email, String password) {
+  private String getToken(String email, String password) {
     this.userResponseWrapper = logUser(email, password);
     return "Token " + userResponseWrapper.user.token;
   }
