@@ -15,7 +15,6 @@ import com.griddynamics.conduit.test.jsons.UserRequest;
 import com.griddynamics.conduit.test.jsonswrappers.ProfileWrapper;
 import com.griddynamics.conduit.test.jsonswrappers.UserRequestWrapper;
 import com.griddynamics.conduit.test.jsonswrappers.UserResponseWrapper;
-import com.griddynamics.conduit.test.utils.StatusCodes;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +29,7 @@ public class BasicTests extends ApiTest {
     userBody = new UserRequest(DATA.getEmail(), DATA.getPassword());
     requestBody = new UserRequestWrapper(userBody);
 
-    requestSpecification =
-        RestAssured.given()
+    requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
         .body(requestBody);
 
@@ -48,8 +46,7 @@ public class BasicTests extends ApiTest {
   @DisplayName("Get User - get user, then check his bio and response status code")
   void getUserCheckBioAndStatusCode() {
     // GIVEN
-    requestSpecification =
-        RestAssured.given()
+    requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
         .header(AUTHORIZATION, TOKEN);
 
@@ -70,8 +67,7 @@ public class BasicTests extends ApiTest {
   @DisplayName("Get Profile - get user profile and check if username is the same as in query")
   void getProfileCheckUsername() {
     // GIVEN
-    requestSpecification =
-        RestAssured.given()
+    requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
         .header(AUTHORIZATION, TOKEN)
         .pathParam(USERNAME, DATA.getUsername());
@@ -92,8 +88,7 @@ public class BasicTests extends ApiTest {
     userBody = new UserRequest(DATA.getUsername(), DATA.getEmail(), DATA.getUpdatedBio());
     requestBody = new UserRequestWrapper(userBody);
 
-    requestSpecification =
-        RestAssured.given()
+    requestSpecification = RestAssured.given()
         .contentType(APPLICATION_JSON)
         .header(AUTHORIZATION, TOKEN)
         .body(requestBody);
@@ -123,7 +118,7 @@ public class BasicTests extends ApiTest {
     statusCode = response.statusCode();
 
     //THEN
-    assertEquals(CODE_200, statusCode, "Status code isn't 200");
+    assertEquals(CODE_200, statusCode, "Status code is different than expected");
 
   }
 }

@@ -6,6 +6,7 @@ public class TestDataProvider {
   private String username = "adam1234io";
   private String bio = "I like to eat cookies";
   private String updatedBio = "I like to ride on skateboard";
+  private String incorrectPassword = "thisPasswordIsNotValid";
 
   public String getEmail() {
     return email;
@@ -25,5 +26,9 @@ public class TestDataProvider {
 
   public String getUpdatedBio() {
     return updatedBio;
+  }
+
+  public String getIncorrectPassword() {
+    return incorrectPassword;
   }
 }
