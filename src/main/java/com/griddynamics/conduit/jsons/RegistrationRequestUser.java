@@ -10,4 +10,8 @@ public class RegistrationRequestUser {
     this.email = email;
     this.password = password;
   }
+
+  public RegistrationRequestUser() {
+
+  }
 }

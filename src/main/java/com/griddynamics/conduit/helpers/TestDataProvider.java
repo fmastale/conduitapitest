@@ -1,6 +1,9 @@
 package com.griddynamics.conduit.helpers;
 
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
+import java.util.Locale;
 
 public class TestDataProvider {
   private String email = "adam@mail.com";
@@ -9,6 +12,8 @@ public class TestDataProvider {
   private String bio = "I like to eat cookies";
   private String updatedBio = "I like to ride on skateboard";
   private String incorrectPassword = "thisPasswordIsNotValid";
+
+
 
   public String getEmail() {
     return email;
@@ -34,11 +39,18 @@ public class TestDataProvider {
     return incorrectPassword;
   }
 
-  public RegistrationRequestUser getRegistrationUser() {
-    String username = "username";
-    String email = "email";
-    String password = "password";
+  public RegistrationRequestUser getValidRegistrationUser() {
+    FakeValuesService fakeValuesService =
+        new FakeValuesService(new Locale("en-US"), new RandomService());
 
-    return new RegistrationRequestUser(username, email, password);
+    String username = fakeValuesService.bothify("????##");
+    String email = fakeValuesService.bothify("????##@mail.com");
+    String password = fakeValuesService.bothify("????####");
+
+    System.out.println(username + " " + email + " " + password);
+
+    RegistrationRequestUser user = new RegistrationRequestUser(username, email, password);
+
+    return user;
   }
 }
