@@ -1,5 +1,7 @@
 package com.griddynamics.conduit.helpers;
 
+import com.griddynamics.conduit.jsons.RegistrationRequestUser;
+
 public class TestDataProvider {
   private String email = "adam@mail.com";
   private String password = "adam1234";
@@ -30,5 +32,13 @@ public class TestDataProvider {
 
   public String getIncorrectPassword() {
     return incorrectPassword;
+  }
+
+  public RegistrationRequestUser getRegistrationUser() {
+    String username = "username";
+    String email = "email";
+    String password = "password";
+
+    return new RegistrationRequestUser(username, email, password);
   }
 }

@@ -5,6 +5,7 @@ public enum Endpoint {
   BASE_URI("https://conduit.productionready.io/api"),
   USERS_LOGIN("/users/login"),
   USER("/user"),
+  USERS("/users"),
   PROFILES_USERNAME("/profiles/{username}"),
   ARTICLES_SLUG("/articles/{slug}");
 

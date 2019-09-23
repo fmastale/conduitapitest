@@ -8,7 +8,6 @@ import static com.griddynamics.conduit.helpers.StatusCode.CODE_422;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
-import com.griddynamics.conduit.jsons.UnprocessableEntityError;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
@@ -110,7 +109,6 @@ public class AuthenticationTest {
     //THEN
     MatcherAssert.assertThat("Expected status code is different than actual",
         statusCode, Matchers.equalTo(CODE_422.getValue()));
-
   }
 
   @Test
@@ -129,6 +127,5 @@ public class AuthenticationTest {
     //THEN
     MatcherAssert.assertThat("Expected error message is different than actual",
         errorBody.errors.emailOrPassword, Matchers.hasItemInArray("is invalid"));
-
   }
 }
