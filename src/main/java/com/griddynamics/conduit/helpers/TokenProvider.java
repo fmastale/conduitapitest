@@ -1,17 +1,16 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.helpers;
 
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 
-import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
-public class ApiTest {
+
+public class TokenProvider {
   protected static String TOKEN;
   protected static final TestDataProvider TEST_DATA_PROVIDER = new TestDataProvider();
 
@@ -22,7 +21,7 @@ public class ApiTest {
   protected UserResponseDto userResponseDto;
   protected RequestSpecification requestSpecification;
 
-  public ApiTest() {
+  public TokenProvider() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
     TOKEN = getToken(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
