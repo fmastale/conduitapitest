@@ -10,6 +10,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
 
+import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
@@ -22,7 +23,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BasicTests extends ApiTest {
+public class BasicTests extends TokenProvider {
   protected Response response;
   protected UserRequest userBody;
   protected ProfileDto responseBody;
