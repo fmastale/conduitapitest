@@ -6,6 +6,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLI
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
+import com.griddynamics.conduit.jsons.UnprocessableEntityError;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
@@ -34,7 +35,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Registration - register user with valid data and check if usernames are equal")
+  @DisplayName("Register user with valid data and check if usernames are equal")
   void registerUserWithValidData() {
     // GIVEN
     user = testDataProvider.getValidRegistrationUser();
@@ -52,10 +53,12 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Registration - try to register user with username which is already taken, then check error message")
+  @DisplayName("Try to register user with username which is already taken, then check error message")
   void registerUserWithIncorrectData() {
     // GIVEN
-    user = new RegistrationRequestUser("adam1234io", testDataProvider.getEmail(), testDataProvider.getPassword());
+    user =
+        new RegistrationRequestUser(
+            "adam1234io", testDataProvider.getEmail(), testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -65,17 +68,20 @@ public class RegistrationTest {
     response = requestSpecification.post(USERS.getEndpoint());
     errorBody = response.as(UnprocessableEntityErrorDto.class);
 
-    //THEN
-    MatcherAssert.assertThat("Expected error message is different than actual",
-        errorBody.errors.username, Matchers.hasItemInArray("has already been taken"));
-
+    // THEN
+    MatcherAssert.assertThat(
+        "Expected error message is different than actual",
+        errorBody.errors.username,
+        Matchers.hasItemInArray("has already been taken"));
   }
 
   @Test
-  @DisplayName("Registration - try to register user with empty username")
+  @DisplayName("Try to register user with empty username")
   void registerUserWithEmptyUsername() {
-    //GIVEN
-    user = new RegistrationRequestUser("", testDataProvider.getEmail(), testDataProvider.getPassword());
+    // GIVEN
+    user =
+        new RegistrationRequestUser(
+            "", testDataProvider.getEmail(), testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -85,17 +91,22 @@ public class RegistrationTest {
     response = requestSpecification.post(USERS.getEndpoint());
     errorBody = response.as(UnprocessableEntityErrorDto.class);
 
-    //THEN
-    MatcherAssert.assertThat("Expected error messages are different than actual",
-        errorBody.errors.username, Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
-
+    // THEN
+    MatcherAssert.assertThat(
+        "Expected error messages are different than actual",
+        errorBody.errors.username,
+        Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
   }
 
   @Test
-  @DisplayName("Registration - try to register user with 20 chars username")
+  @DisplayName("Try to register user with 20 chars username")
   void registerUserWithMaxUsernameLength() {
-    //GIVEN
-    user = new RegistrationRequestUser(testDataProvider.getMaxUsername(), testDataProvider.getEmail(), testDataProvider.getPassword());
+    // GIVEN
+    user =
+        new RegistrationRequestUser(
+            testDataProvider.getMaxUsername(),
+            testDataProvider.getEmail(),
+            testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -105,16 +116,22 @@ public class RegistrationTest {
     response = requestSpecification.post(USERS.getEndpoint());
     UserResponseDto responseBody = response.as(UserResponseDto.class);
 
-    //THEN
-    MatcherAssert.assertThat("Expected username is different than actual",
-        responseBody.user.username, Matchers.equalTo(user.username));
+    // THEN
+    MatcherAssert.assertThat(
+        "Expected username is different than actual",
+        responseBody.user.username,
+        Matchers.equalTo(user.username));
   }
 
   @Test
-  @DisplayName("Registration - try to register user with 21 chars username")
+  @DisplayName("Try to register user with 21 chars username")
   void registerUserWithMaxPlusOneUsernameLength() {
-    //GIVEN
-    user = new RegistrationRequestUser(testDataProvider.getMaxPlusOneUsername(), testDataProvider.getEmail(), testDataProvider.getPassword());
+    // GIVEN
+    user =
+        new RegistrationRequestUser(
+            testDataProvider.getMaxPlusOneUsername(),
+            testDataProvider.getEmail(),
+            testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -124,24 +141,28 @@ public class RegistrationTest {
     response = requestSpecification.post(USERS.getEndpoint());
     errorBody = response.as(UnprocessableEntityErrorDto.class);
 
-    //THEN
-    MatcherAssert.assertThat("Expected error message is different than actual",
-        errorBody.errors.username, Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
+    // THEN
+    MatcherAssert.assertThat(
+        "Expected error message is different than actual",
+        errorBody.errors.username,
+        Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
   }
 
   @Test
-  @DisplayName("Registration - register user with email which is not containing '@' character")
-  void registerUserWithEmailWithoutAT() {
+  @DisplayName("Register user with email is incorrectly formatted")
+  void registerUserWithIncorretlyFormattedEmail() {
 
-    //todo: use iterration over array or split each invalid format to different test case?
+    // todo: use iteration over array or split and put each invalid format to different test case
+    //  method?
     List<String> incorrectEmails = testDataProvider.getIncorrectlyFormattedEmails();
 
     for (int i = 0; i < incorrectEmails.size(); i++) {
-      //GIVEN
-      user = new RegistrationRequestUser(
-          testDataProvider.getUsername(),
-          testDataProvider.getIncorrectlyFormattedEmails().get(i),
-          testDataProvider.getPassword());
+      // GIVEN
+      user =
+          new RegistrationRequestUser(
+              testDataProvider.getUsername(),
+              testDataProvider.getIncorrectlyFormattedEmails().get(i),
+              testDataProvider.getPassword());
 
       requestBody = new RegistrationRequestUserDto(user);
 
@@ -152,10 +173,43 @@ public class RegistrationTest {
       response = requestSpecification.post(USERS.getEndpoint());
       errorBody = response.as(UnprocessableEntityErrorDto.class);
 
-      //THEN
-      MatcherAssert.assertThat("Expected error message is different than expected",
-          errorBody.errors.email, Matchers.hasItemInArray("is invalid"));
+      // THEN
+      MatcherAssert.assertThat(
+          "Expected error message is different than expected",
+          errorBody.errors.email,
+          Matchers.hasItemInArray("is invalid"));
     }
   }
 
+  @Test
+  @DisplayName("Register user with email which is already taken")
+  void registerUserWithTakenEmailAddress() {
+    // GIVEN
+    registerUser();
+
+    user = testDataProvider.getValidRegistrationUser();
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    UnprocessableEntityErrorDto responseError = response.as(UnprocessableEntityErrorDto.class);
+
+    // THEN
+    MatcherAssert.assertThat("Expected and actual error messages are not the same",
+        responseError.errors.email, Matchers.hasItemInArray("has already been taken"));
+  }
+
+  private void registerUser() {
+    user = testDataProvider.getValidRegistrationUser();
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    response = requestSpecification.post(USERS.getEndpoint());
+    responseBody = response.as(UserResponseDto.class);
+  }
 }

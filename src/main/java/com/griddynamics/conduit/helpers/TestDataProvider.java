@@ -22,7 +22,6 @@ public class TestDataProvider {
   private FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-US"), new RandomService());
 
   public TestDataProvider() {
-    //todo: move generating values to get methods?
     this.username = fakeValuesService.bothify("????##");
     this.email = fakeValuesService.bothify("????##@mail.com");
     this.password = fakeValuesService.bothify("????####");
@@ -30,6 +29,7 @@ public class TestDataProvider {
     this.updatedBio = fakeValuesService.regexify("[a-zA-Z1-9]{30}");
     this.incorrectPassword = fakeValuesService.bothify("####????");
     this.maxUsername = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
+    this.incorrectlyFormattedEmails = generateIncorrectlyFormattedEmails();
   }
 
   public String getEmail() {
@@ -69,6 +69,10 @@ public class TestDataProvider {
   }
 
   public List<String> getIncorrectlyFormattedEmails() {
+    return incorrectlyFormattedEmails;
+  }
+
+  private List<String> generateIncorrectlyFormattedEmails() {
     //todo: different incorrect formats?!
 
     // ? == letter, # == number
