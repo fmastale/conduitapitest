@@ -4,6 +4,7 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
+import static com.griddynamics.conduit.helpers.StatusCode.CODE_422;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -75,7 +76,7 @@ public class AuthenticationTest {
   }
   
   @Test
-  @DisplayName("Authentication - check if user with correct email and empty password will be logged into app")
+  @DisplayName("Authentication - check if user with correct email and empty password can be logged into app")
   void logUserWithEmptyPassword() {
     // GIVEN
     userBody = new UserRequest(testDataProvider.getEmail(), "");
@@ -86,10 +87,48 @@ public class AuthenticationTest {
 
     // WHEN
     response = requestSpecification.post(USERS_LOGIN.getEndpoint());
+    statusCode = response.getStatusCode();
+
+    //THEN
+    MatcherAssert.assertThat("Expected status code is different than actual",
+        statusCode, Matchers.equalTo(CODE_422.getValue()));
+  }
+
+  @Test
+  @DisplayName("Authentication - check if user with correct email can be logged withoud specyfing password")
+  void logUserWithoutPassword() {
+    userBody = new UserRequest(testDataProvider.getEmail());
+    requestBody = new UserRequestDto(userBody);
+
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
+    statusCode = response.getStatusCode();
+
+    //THEN
+    MatcherAssert.assertThat("Expected status code is different than actual",
+        statusCode, Matchers.equalTo(CODE_422.getValue()));
+
+  }
+
+  @Test
+  @DisplayName("Authentication - check error message if user with empty body will be send")
+  void checkErrorMessageForUserWithEmptyBody() {
+    userBody = new UserRequest();
+    requestBody = new UserRequestDto(userBody);
+
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
     UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
 
     //THEN
-    MatcherAssert.assertThat("", errorBody.errors.emailOrPassword, Matchers.hasItemInArray("is invalid"));
+    MatcherAssert.assertThat("Expected error message is different than actual",
+        errorBody.errors.emailOrPassword, Matchers.hasItemInArray("is invalid"));
 
   }
 }

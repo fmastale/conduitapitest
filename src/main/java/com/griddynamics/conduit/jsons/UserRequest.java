@@ -17,4 +17,12 @@ public class UserRequest {
     this.email = email;
     this.bio = bio;
   }
+
+  public UserRequest(String email) {
+
+  }
+
+  public UserRequest() {
+
+  }
 }
