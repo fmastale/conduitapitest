@@ -12,6 +12,7 @@ import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +23,7 @@ public class RegistrationTest {
   private Response response;
   private UserResponseDto responseBody;
   private RegistrationRequestUser user;
+  private UnprocessableEntityErrorDto errorBody;
   private RegistrationRequestUserDto requestBody;
   private RequestSpecification requestSpecification;
   private TestDataProvider testDataProvider = new TestDataProvider();
@@ -61,7 +63,7 @@ public class RegistrationTest {
 
     // WHEN
     response = requestSpecification.post(USERS.getEndpoint());
-    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+    errorBody = response.as(UnprocessableEntityErrorDto.class);
 
     //THEN
     MatcherAssert.assertThat("Expected error message is different than actual",
@@ -81,7 +83,7 @@ public class RegistrationTest {
 
     // WHEN
     response = requestSpecification.post(USERS.getEndpoint());
-    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+    errorBody = response.as(UnprocessableEntityErrorDto.class);
 
     //THEN
     MatcherAssert.assertThat("Expected error messages are different than actual",
@@ -120,11 +122,40 @@ public class RegistrationTest {
 
     // WHEN
     response = requestSpecification.post(USERS.getEndpoint());
-    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+    errorBody = response.as(UnprocessableEntityErrorDto.class);
 
     //THEN
     MatcherAssert.assertThat("Expected error message is different than actual",
         errorBody.errors.username, Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
+  }
+
+  @Test
+  @DisplayName("Registration - register user with email which is not containing '@' character")
+  void registerUserWithEmailWithoutAT() {
+
+    //todo: use iterration over array or split each invalid format to different test case?
+    List<String> incorrectEmails = testDataProvider.getIncorrectlyFormattedEmails();
+
+    for (int i = 0; i < incorrectEmails.size(); i++) {
+      //GIVEN
+      user = new RegistrationRequestUser(
+          testDataProvider.getUsername(),
+          testDataProvider.getIncorrectlyFormattedEmails().get(i),
+          testDataProvider.getPassword());
+
+      requestBody = new RegistrationRequestUserDto(user);
+
+      requestSpecification =
+          RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+      // WHEN
+      response = requestSpecification.post(USERS.getEndpoint());
+      errorBody = response.as(UnprocessableEntityErrorDto.class);
+
+      //THEN
+      MatcherAssert.assertThat("Expected error message is different than expected",
+          errorBody.errors.email, Matchers.hasItemInArray("is invalid"));
+    }
   }
 
 }
