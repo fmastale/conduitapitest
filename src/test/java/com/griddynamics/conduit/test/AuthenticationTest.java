@@ -7,7 +7,9 @@ import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
+import com.griddynamics.conduit.jsons.UnprocessableEntityError;
 import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
@@ -71,5 +73,23 @@ public class AuthenticationTest {
     MatcherAssert.assertThat("Actual status code is not the one we expected",
         statusCode, Matchers.not(CODE_200.getValue()));
   }
+  
+  @Test
+  @DisplayName("Authentication - check if user with correct email and empty password will be logged into app")
+  void logUserWithEmptyPassword() {
+    // GIVEN
+    userBody = new UserRequest(testDataProvider.getEmail(), "");
+    requestBody = new UserRequestDto(userBody);
 
+    requestSpecification = RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
+    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+
+    //THEN
+    MatcherAssert.assertThat("", errorBody.errors.emailOrPassword, Matchers.hasItemInArray("is invalid"));
+
+  }
 }
