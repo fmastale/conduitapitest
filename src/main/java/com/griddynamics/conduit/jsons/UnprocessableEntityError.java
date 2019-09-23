@@ -11,4 +11,7 @@ public class UnprocessableEntityError {
 
   @JsonProperty("username")
   public String[] username;
+
+  @JsonProperty("password")
+  public String[] password;
 }

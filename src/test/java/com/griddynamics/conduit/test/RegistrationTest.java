@@ -6,7 +6,6 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLI
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
-import com.griddynamics.conduit.jsons.UnprocessableEntityError;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
@@ -53,7 +52,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Try to register user with username which is already taken, then check error message")
+  @DisplayName("Register user with username which is already taken, then check error message")
   void registerUserWithIncorrectData() {
     // GIVEN
     user =
@@ -76,7 +75,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Try to register user with empty username")
+  @DisplayName("Register user with empty username, check error message")
   void registerUserWithEmptyUsername() {
     // GIVEN
     user =
@@ -99,7 +98,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Try to register user with 20 chars username")
+  @DisplayName("Register user with 20 chars username, check usernames match")
   void registerUserWithMaxUsernameLength() {
     // GIVEN
     user =
@@ -107,6 +106,7 @@ public class RegistrationTest {
             testDataProvider.getMaxUsername(),
             testDataProvider.getEmail(),
             testDataProvider.getPassword());
+
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -124,7 +124,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Try to register user with 21 chars username")
+  @DisplayName("Register user with 21 chars username, check error message")
   void registerUserWithMaxPlusOneUsernameLength() {
     // GIVEN
     user =
@@ -132,6 +132,7 @@ public class RegistrationTest {
             testDataProvider.getMaxPlusOneUsername(),
             testDataProvider.getEmail(),
             testDataProvider.getPassword());
+
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -149,8 +150,8 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with email is incorrectly formatted")
-  void registerUserWithIncorretlyFormattedEmail() {
+  @DisplayName("Register user with email which is incorrectly formatted, check error message")
+  void registerUserWithIncorrectlyFormattedEmail() {
 
     // todo: use iteration over array or split and put each invalid format to different test case
     //  method?
@@ -182,7 +183,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with email which is already taken")
+  @DisplayName("Register user with email which is already taken, check error message")
   void registerUserWithTakenEmailAddress() {
     // GIVEN
     registerUser();
@@ -198,8 +199,30 @@ public class RegistrationTest {
     UnprocessableEntityErrorDto responseError = response.as(UnprocessableEntityErrorDto.class);
 
     // THEN
+    MatcherAssert.assertThat(
+        "Expected and actual error messages are not the same",
+        responseError.errors.email,
+        Matchers.hasItemInArray("has already been taken"));
+  }
+
+  @Test
+  @DisplayName("Register user with empty body, check error message")
+  void registerUserWithEmptyBody() {
+    //GIVEN
+    user = new RegistrationRequestUser();
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    UnprocessableEntityErrorDto responseError = response.as(UnprocessableEntityErrorDto.class);
+
+    //THEN
     MatcherAssert.assertThat("Expected and actual error messages are not the same",
-        responseError.errors.email, Matchers.hasItemInArray("has already been taken"));
+        responseError.errors.email, Matchers.hasItemInArray("can't be blank"));
+
   }
 
   private void registerUser() {

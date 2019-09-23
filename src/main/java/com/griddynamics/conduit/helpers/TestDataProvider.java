@@ -17,8 +17,7 @@ public class TestDataProvider {
   private String updatedBio;
   private String maxUsername;
   private String incorrectPassword;
-  private String invalidFormatEmail;
-  private List<String> incorrectlyFormattedEmails = new ArrayList<>();
+  private List<String> incorrectlyFormattedEmails;
   private FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-US"), new RandomService());
 
   public TestDataProvider() {
