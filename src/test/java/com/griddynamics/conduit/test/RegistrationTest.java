@@ -97,6 +97,33 @@ public class RegistrationTest {
         Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
   }
 
+  /*
+  //todo: this test is giving me back error according to too long username
+  @Test
+  @DisplayName("Register user without specifying username, check error message")
+  void registerUserWithoutUsername() {
+    // GIVEN
+    user = new RegistrationRequestUser(testDataProvider.getEmail(), testDataProvider.getPassword());
+    requestBody = new RegistrationRequestUserDto(user);
+
+    System.out.println(user.username);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    errorBody = response.as(UnprocessableEntityErrorDto.class);
+
+    System.out.println(errorBody.errors.username);
+    // THEN
+    MatcherAssert.assertThat(
+        "Expected error messages are different than actual",
+        errorBody.errors.username,
+        Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
+
+  }*/
+
   @Test
   @DisplayName("Register user with max chars username, check username match")
   void registerUserWithMaxUsernameLength() {
