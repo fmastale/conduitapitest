@@ -4,7 +4,6 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_422;
 
 import com.griddynamics.conduit.helpers.Endpoint;
@@ -45,7 +44,7 @@ public class AuthenticationTest {
   }
 
   @Test
-  @DisplayName("Authentication - check if user will be logged and then check his ID")
+  @DisplayName("Log user with valid credentials, check if ID match")
   void logUserAndGetHisId() {
     // GIVEN
     userBody = new UserRequest(user.email, user.password);
@@ -64,7 +63,7 @@ public class AuthenticationTest {
   }
 
   @Test
-  @DisplayName("Authentication - check if user with incorrect password can be log into app")
+  @DisplayName("Log user with incorrect password, check status code equals to 422")
   void logUserWithIncorrectPassword() {
     // GIVEN
     userBody = new UserRequest(user.email, testDataProvider.getIncorrectPassword());
@@ -79,11 +78,11 @@ public class AuthenticationTest {
 
     //THEN
     MatcherAssert.assertThat("Actual status code is not the one we expected",
-        statusCode, Matchers.not(CODE_200.getValue()));
+        statusCode, Matchers.equalTo(CODE_422.getValue()));
   }
   
   @Test
-  @DisplayName("Authentication - check if user with correct email and empty password can be logged into app")
+  @DisplayName("Log user with correct email and empty password, check status code equals to 422")
   void logUserWithEmptyPassword() {
     // GIVEN
     userBody = new UserRequest(user.email, "");
@@ -102,7 +101,7 @@ public class AuthenticationTest {
   }
 
   @Test
-  @DisplayName("Authentication - check if user with correct email can be logged withoud specyfing password")
+  @DisplayName("Log user with correct email and empty password, check status code equals to 422")
   void logUserWithoutPassword() {
     userBody = new UserRequest(user.email);
     requestBody = new UserRequestDto(userBody);
@@ -120,7 +119,7 @@ public class AuthenticationTest {
   }
 
   @Test
-  @DisplayName("Authentication - check error message if user with empty body will be send")
+  @DisplayName("Log user with empty body, check error message")
   void checkErrorMessageForUserWithEmptyBody() {
     userBody = new UserRequest();
     requestBody = new UserRequestDto(userBody);

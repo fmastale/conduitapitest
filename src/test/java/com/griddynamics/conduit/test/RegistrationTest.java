@@ -34,7 +34,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with valid data and check if usernames are equal")
+  @DisplayName("Register user with valid data, check if username match")
   void registerUserWithValidData() {
     // GIVEN
     user = testDataProvider.getValidRegistrationUser();
@@ -52,7 +52,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with username which is already taken, then check error message")
+  @DisplayName("Register user with username which is already taken, check error message")
   void registerUserWithIncorrectData() {
     // GIVEN
     user =
@@ -98,7 +98,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with 20 chars username, check usernames match")
+  @DisplayName("Register user with max chars username, check username match")
   void registerUserWithMaxUsernameLength() {
     // GIVEN
     user =
@@ -124,7 +124,7 @@ public class RegistrationTest {
   }
 
   @Test
-  @DisplayName("Register user with 21 chars username, check error message")
+  @DisplayName("Register user with max+1 chars username, check error message")
   void registerUserWithMaxPlusOneUsernameLength() {
     // GIVEN
     user =
