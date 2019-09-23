@@ -6,7 +6,6 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLI
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
-import com.griddynamics.conduit.jsons.UnprocessableEntityError;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
@@ -20,12 +19,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationTest {
-  private TestDataProvider testDataProvider = new TestDataProvider();
   private Response response;
-  private RegistrationRequestUser user;
   private UserResponseDto responseBody;
+  private RegistrationRequestUser user;
   private RegistrationRequestUserDto requestBody;
   private RequestSpecification requestSpecification;
+  private TestDataProvider testDataProvider = new TestDataProvider();
 
   @BeforeAll
   static void beforeAll() {
@@ -54,7 +53,7 @@ public class RegistrationTest {
   @DisplayName("Registration - try to register user with username which is already taken, then check error message")
   void registerUserWithIncorrectData() {
     // GIVEN
-    user = new RegistrationRequestUser("adam1234io", "elo123456789a@mail.com", "adam1234");
+    user = new RegistrationRequestUser("adam1234io", testDataProvider.getEmail(), testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -69,4 +68,63 @@ public class RegistrationTest {
         errorBody.errors.username, Matchers.hasItemInArray("has already been taken"));
 
   }
+
+  @Test
+  @DisplayName("Registration - try to register user with empty username")
+  void registerUserWithEmptyUsername() {
+    //GIVEN
+    user = new RegistrationRequestUser("", testDataProvider.getEmail(), testDataProvider.getPassword());
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+
+    //THEN
+    MatcherAssert.assertThat("Expected error messages are different than actual",
+        errorBody.errors.username, Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
+
+  }
+
+  @Test
+  @DisplayName("Registration - try to register user with 20 chars username")
+  void registerUserWithMaxUsernameLength() {
+    //GIVEN
+    user = new RegistrationRequestUser(testDataProvider.getMaxUsername(), testDataProvider.getEmail(), testDataProvider.getPassword());
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    UserResponseDto responseBody = response.as(UserResponseDto.class);
+
+    //THEN
+    MatcherAssert.assertThat("Expected username is different than actual",
+        responseBody.user.username, Matchers.equalTo(user.username));
+  }
+
+  @Test
+  @DisplayName("Registration - try to register user with 21 chars username")
+  void registerUserWithMaxPlusOneUsernameLength() {
+    //GIVEN
+    user = new RegistrationRequestUser(testDataProvider.getMaxPlusOneUsername(), testDataProvider.getEmail(), testDataProvider.getPassword());
+    requestBody = new RegistrationRequestUserDto(user);
+
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+
+    // WHEN
+    response = requestSpecification.post(USERS.getEndpoint());
+    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+
+    //THEN
+    MatcherAssert.assertThat("Expected error message is different than actual",
+        errorBody.errors.username, Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
+  }
+
 }

@@ -32,10 +32,10 @@ public class AuthenticationTest {
 
 
   private int statusCode;
+
   private UserRequest userBody;
   private UserRequestDto requestBody;
   private TestDataProvider testDataProvider = new TestDataProvider();
-
 
   @BeforeAll
   static void beforeAll() {
@@ -43,7 +43,6 @@ public class AuthenticationTest {
 
     registerUser(user);
   }
-
 
   @Test
   @DisplayName("Authentication - check if user will be logged and then check his ID")

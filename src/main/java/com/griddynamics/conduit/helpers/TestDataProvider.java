@@ -6,14 +6,25 @@ import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import java.util.Locale;
 
 public class TestDataProvider {
-  private String email = "adam@mail.com";
-  private String password = "adam1234";
-  private String username = "adam1234io";
-  private String bio = "I like to eat cookies";
-  private String updatedBio = "I like to ride on skateboard";
-  private String incorrectPassword = "thisPasswordIsNotValid";
+  private String email;
+  private String password;
+  private String username;
+  private String bio;
+  private String updatedBio;
+  private String maxUsername;
+  private String incorrectPassword;
+  private FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-US"), new RandomService());
 
-
+  public TestDataProvider() {
+    //todo: move generating values to get methods?
+    this.username = fakeValuesService.bothify("????##");
+    this.email = fakeValuesService.bothify("????##@mail.com");
+    this.password = fakeValuesService.bothify("????####");
+    this.bio = fakeValuesService.regexify("[a-zA-Z1-9]{30}");
+    this.updatedBio = fakeValuesService.regexify("[a-zA-Z1-9]{30}");
+    this.incorrectPassword = fakeValuesService.bothify("####????");
+    this.maxUsername = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
+  }
 
   public String getEmail() {
     return email;
@@ -40,17 +51,15 @@ public class TestDataProvider {
   }
 
   public RegistrationRequestUser getValidRegistrationUser() {
-    FakeValuesService fakeValuesService =
-        new FakeValuesService(new Locale("en-US"), new RandomService());
+    return new RegistrationRequestUser(username, email, password);
+  }
 
-    String username = fakeValuesService.bothify("????##");
-    String email = fakeValuesService.bothify("????##@mail.com");
-    String password = fakeValuesService.bothify("????####");
+  public String getMaxUsername() {
+    return maxUsername;
+  }
 
-    System.out.println(username + " " + email + " " + password);
-
-    RegistrationRequestUser user = new RegistrationRequestUser(username, email, password);
-
-    return user;
+  public String getMaxPlusOneUsername() {
+    return maxUsername + fakeValuesService.regexify("[a-zA-Z1-9]{1}");
   }
 }
+
