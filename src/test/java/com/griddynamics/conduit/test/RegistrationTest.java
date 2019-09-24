@@ -24,18 +24,15 @@ public class RegistrationTest {
   private RequestSpecification requestSpecification;
   private TestDataProvider testDataProvider = new TestDataProvider();
 
-  //todo: special chars in username
-  // email: max/min length, special chars, space inside, empty
-  // password: max/min length, special chars, space inside, empty
-
   @BeforeAll
   static void beforeAll() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
   }
 
+  //todo: special chars in username
   //USERNAME
   @Test
-  @DisplayName("Register user with valid data, check if username match")
+  @DisplayName("Register user with all fields valid, check if username match")
   void registerUserWithValidData() {
 
     for (RegistrationRequestUser user : testDataProvider.getValidUsers()) {
@@ -123,12 +120,15 @@ public class RegistrationTest {
         Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
   }
 
+
+  //todo: special chars, empty
   //EMAIL
+  // I believe there is no such thing as too long email - I put 1800 chars into it and register user
+  // minimal email format is '*@*.*' but most of them already used, so it will be hard to generate
   @Test
   @DisplayName("Register user with special characters or in strange format, check status code")
   void registerUserWithStrangeEmail() {
 
-    // todo: same comment as above
     for (RegistrationRequestUser user : testDataProvider.getUsersWithStrangeEmailFormat()) {
       //GIVEN
       prepareRequestBody(user);
@@ -145,11 +145,27 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("Register user with space inside email, check error message")
+  void registerUserWithSpaceInEmail() {
+    //GIVEN
+    prepareRequestBody(testDataProvider.getUserWithSpaceInEmail());
+
+    //WHEN
+    errorBody =
+        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+
+    //THEN
+    MatcherAssert.assertThat(
+        "Expected error message is different than expected",
+        errorBody.errors.email,
+        Matchers.hasItemInArray("is invalid"));
+
+  }
+
+  @Test
   @DisplayName("Register user with email which is incorrectly formatted, check error message")
   void registerUserWithIncorrectlyFormattedEmail() {
 
-    // todo: use iteration over array or split and put each invalid format to different test case
-    //  method?
     for (RegistrationRequestUser user : testDataProvider.getUsersWithWrongEmailFormat()) {
       // GIVEN
       prepareRequestBody(user);
@@ -188,7 +204,25 @@ public class RegistrationTest {
         errorBody.errors.email,
         Matchers.hasItemInArray("has already been taken"));
   }
+  
+  @Test
+  @DisplayName("Register user with empty email in request body, check error message")
+  void registerUserWithEmptyEmail() {
+    //GIVEN
+    prepareRequestBody(testDataProvider.getUserWithEmptyEmail());
 
+    //WHEN
+    errorBody =
+        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+
+    //THEN
+    MatcherAssert.assertThat(
+        "Expected error message is different than expected",
+        errorBody.errors.email,
+        Matchers.hasItemInArray("can't be blank"));
+  }
+
+  // todo: password max/min length, special chars, space inside, empty
   //PASSWORD
   @Test
   @DisplayName("Check password")

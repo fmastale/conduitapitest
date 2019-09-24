@@ -104,7 +104,7 @@ public class TestDataProvider {
 
   public List<RegistrationRequestUser> getUsersWithStrangeEmailFormat() {
 
-    // todo: test email in format: '[\W]{5}@mail.com' -> '!#$%^&@mail.com'
+    // todo: add and test email in format: '[\W]{5}@mail.com' -> '!#$%^&@mail.com'
     // ? == letter, # == number
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
@@ -117,12 +117,20 @@ public class TestDataProvider {
     return usersWithStrangeEmailFormat;
   }
 
-
   private String getNewUsername() {
     return fakeValuesService.bothify("????????##");
   }
 
   private String getNewEmail() {
     return fakeValuesService.bothify("????##@mail.com");
+  }
+
+  public RegistrationRequestUser getUserWithSpaceInEmail() {
+    return new RegistrationRequestUser(
+        getNewUsername(), fakeValuesService.bothify("????? ???@mail.com"), password);
+  }
+
+  public RegistrationRequestUser getUserWithEmptyEmail() {
+    return new RegistrationRequestUser(getNewUsername(), "", password);
   }
 }
