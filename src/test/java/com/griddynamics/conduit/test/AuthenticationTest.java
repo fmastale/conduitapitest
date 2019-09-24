@@ -15,7 +15,6 @@ import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -24,11 +23,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class AuthenticationTest {
-  private static Response response;
-  private static UserResponseDto userResponseDto;
   private static RequestSpecification requestSpecification;
   private static RegistrationRequestUser user = new TestDataProvider().getValidRegistrationUser();
-
 
   private int statusCode;
 
@@ -47,53 +43,38 @@ public class AuthenticationTest {
   @DisplayName("Log user with valid credentials, check if ID match")
   void logUserAndGetHisId() {
     // GIVEN
-    userBody = new UserRequest(user.email, user.password);
-    UserRequestDto requestBody = new UserRequestDto(userBody);
-
-    requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    prepareRequest(user.email, user.password);
 
     // WHEN
-    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
-    userResponseDto = response.as(UserResponseDto.class);
+    UserResponseDto responseBody = makeApiCall();
 
     // THEN
     MatcherAssert.assertThat("Username is different than expected",
-        userResponseDto.user.username, Matchers.equalTo(user.username));
+        responseBody.user.username, Matchers.equalTo(user.username));
   }
 
   @Test
   @DisplayName("Log user with incorrect password, check status code equals to 422")
   void logUserWithIncorrectPassword() {
     // GIVEN
-    userBody = new UserRequest(user.email, testDataProvider.getIncorrectPassword());
-    requestBody = new UserRequestDto(userBody);
-
-    requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    prepareRequest(user.email, testDataProvider.getIncorrectPassword());
 
     //WHEN
-    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
-    statusCode = response.statusCode();
+    statusCode = getStatusFromApiCall();
 
     //THEN
     MatcherAssert.assertThat("Actual status code is not the one we expected",
         statusCode, Matchers.equalTo(CODE_422.getValue()));
   }
-  
+
   @Test
   @DisplayName("Log user with correct email and empty password, check status code equals to 422")
   void logUserWithEmptyPassword() {
     // GIVEN
-    userBody = new UserRequest(user.email, "");
-    requestBody = new UserRequestDto(userBody);
-
-    requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    prepareRequest(user.email, "");
 
     // WHEN
-    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
-    statusCode = response.getStatusCode();
+    statusCode = getStatusFromApiCall();
 
     //THEN
     MatcherAssert.assertThat("Expected status code is different than actual",
@@ -103,15 +84,11 @@ public class AuthenticationTest {
   @Test
   @DisplayName("Log user with correct email and empty password, check status code equals to 422")
   void logUserWithoutPassword() {
-    userBody = new UserRequest(user.email);
-    requestBody = new UserRequestDto(userBody);
-
-    requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    // GIVEN
+    prepareRequest(user.email);
 
     // WHEN
-    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
-    statusCode = response.getStatusCode();
+    statusCode = getStatusFromApiCall();
 
     //THEN
     MatcherAssert.assertThat("Expected status code is different than actual",
@@ -121,20 +98,17 @@ public class AuthenticationTest {
   @Test
   @DisplayName("Log user with empty body, check error message")
   void checkErrorMessageForUserWithEmptyBody() {
-    userBody = new UserRequest();
-    requestBody = new UserRequestDto(userBody);
-
-    requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    // GIVEN
+    prepareRequest();
 
     // WHEN
-    response = requestSpecification.post(USERS_LOGIN.getEndpoint());
-    UnprocessableEntityErrorDto errorBody = response.as(UnprocessableEntityErrorDto.class);
+    UnprocessableEntityErrorDto errorBody = getErrorBodyFromApiCall();
 
     //THEN
     MatcherAssert.assertThat("Expected error message is different than actual",
         errorBody.errors.emailOrPassword, Matchers.hasItemInArray("is invalid"));
   }
+
 
   private static void registerUser(RegistrationRequestUser user) {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
@@ -142,8 +116,58 @@ public class AuthenticationTest {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
-    response = requestSpecification.post(USERS.getEndpoint());
-    userResponseDto = response.as(UserResponseDto.class);
+    UserResponseDto responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+  }
+
+
+  private void prepareRequest(String email, String password) {
+    prepareRequestBody(email, password);
+    prepareRequestSpecification();
+  }
+
+  private void prepareRequest(String email) {
+    prepareRequestBody(email);
+    prepareRequestSpecification();
+  }
+
+  private void prepareRequest() {
+    prepareRequestBody();
+    prepareRequestSpecification();
+  }
+
+  private UserResponseDto makeApiCall() {
+    return requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);
+  }
+
+
+  private void prepareRequestBody(String email, String password) {
+    userBody = new UserRequest(email, password);
+    requestBody = new UserRequestDto(userBody);
+  }
+
+  private void prepareRequestBody(String email) {
+    userBody = new UserRequest(email);
+    requestBody = new UserRequestDto(userBody);
+  }
+
+  private void prepareRequestBody() {
+    userBody = new UserRequest();
+    requestBody = new UserRequestDto(userBody);
+  }
+
+
+  private UnprocessableEntityErrorDto getErrorBodyFromApiCall() {
+    return requestSpecification.post(USERS_LOGIN.getEndpoint())
+            .as(UnprocessableEntityErrorDto.class);
+  }
+
+  private int getStatusFromApiCall() {
+    return requestSpecification.post(USERS_LOGIN.getEndpoint()).statusCode();
+  }
+
+  private void prepareRequestSpecification() {
+    requestSpecification = RestAssured.given()
+            .contentType(APPLICATION_JSON.getDetail()).body(requestBody);
   }
 }
 
