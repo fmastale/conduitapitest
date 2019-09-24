@@ -18,11 +18,7 @@ public class UserRequest {
     this.bio = bio;
   }
 
-  public UserRequest(String email) {
+  public UserRequest(String email) {}
 
-  }
-
-  public UserRequest() {
-
-  }
+  public UserRequest() {}
 }

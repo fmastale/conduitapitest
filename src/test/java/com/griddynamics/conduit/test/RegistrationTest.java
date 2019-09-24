@@ -153,6 +153,25 @@ public class RegistrationTest {
   }
 
   @Test
+  @DisplayName("Register user with special characters or in strange format, check status code")
+  void registerUserWithStrangeEmail() {
+
+    for (RegistrationRequestUser user : testDataProvider.getUserWithStrangeEmail()) {
+      //GIVEN
+      prepareRequestBody(user);
+
+      //WHEN
+      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+
+      //THEN
+      MatcherAssert.assertThat(
+          "Expected username is different than actual",
+          responseBody.user.username,
+          Matchers.equalTo(requestBody.user.username));
+    }
+  }
+
+  @Test
   @DisplayName("Register user with email which is already taken, check error message")
   void registerUserWithTakenEmailAddress() {
     // GIVEN
@@ -197,4 +216,5 @@ public class RegistrationTest {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
   }
+
 }

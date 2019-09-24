@@ -11,9 +11,7 @@ public class RegistrationRequestUser {
     this.password = password;
   }
 
-  public RegistrationRequestUser() {
-
-  }
+  public RegistrationRequestUser() {}
 
   public RegistrationRequestUser(String email, String password) {
     this.email = email;

@@ -17,6 +17,7 @@ public class TestDataProvider {
   private String maxUsername;
   private String incorrectPassword;
   private List<RegistrationRequestUser> usersWithWrongEmailFormat;
+  private List<RegistrationRequestUser> usersWithStrangeEmailFormat;
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
@@ -30,6 +31,7 @@ public class TestDataProvider {
     this.incorrectPassword = fakeValuesService.bothify("####????");
     this.maxUsername = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
     this.usersWithWrongEmailFormat = createUsersWithWrongEmailFormat();
+    this.usersWithStrangeEmailFormat = createUsersWithStrangeEmailFormat();
   }
 
   public String getEmail() {
@@ -92,12 +94,14 @@ public class TestDataProvider {
     return new RegistrationRequestUser(getMaxPlusOneUsername(), email, password);
   }
 
-  private List<RegistrationRequestUser> createUsersWithWrongEmailFormat() {
-    // todo: different incorrect formats?!
-    // todo: this user got same username and password
+  public List<RegistrationRequestUser> getUserWithStrangeEmail() {
+    return usersWithStrangeEmailFormat;
+  }
 
+  private List<RegistrationRequestUser> createUsersWithWrongEmailFormat() {
+
+    // todo: different incorrect formats?!
     // ? == letter, # == number
-    // app allow to make email in format '????@??.###'
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
           createNewUsername(), fakeValuesService.regexify("[a-zA-z1-9]{10}"), password),
@@ -109,6 +113,20 @@ public class TestDataProvider {
     usersWithWrongEmailFormat = Arrays.asList(array);
 
     return usersWithWrongEmailFormat;
+  }
+
+  private List<RegistrationRequestUser> createUsersWithStrangeEmailFormat() {
+
+    // todo: test email in format: '[\W]{5}@mail.com' -> '!#$%^&@mail.com'
+    // ? == letter, # == number
+    RegistrationRequestUser[] array = {
+      new RegistrationRequestUser(
+          createNewUsername(), fakeValuesService.bothify("?????@???.###"), password),
+      new RegistrationRequestUser(
+          createNewUsername(), fakeValuesService.bothify("?????@###.???"), password)
+    };
+
+    return usersWithStrangeEmailFormat = Arrays.asList(array);
   }
 
   private String createNewUsername() {
