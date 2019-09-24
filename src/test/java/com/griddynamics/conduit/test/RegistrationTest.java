@@ -97,7 +97,6 @@ public class RegistrationTest {
         Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
   }
 
-  /*
   //todo: this test is giving me back error according to too long username
   @Test
   @DisplayName("Register user without specifying username, check error message")
@@ -105,8 +104,6 @@ public class RegistrationTest {
     // GIVEN
     user = new RegistrationRequestUser(testDataProvider.getEmail(), testDataProvider.getPassword());
     requestBody = new RegistrationRequestUserDto(user);
-
-    System.out.println(user.username);
 
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
@@ -122,7 +119,7 @@ public class RegistrationTest {
         errorBody.errors.username,
         Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
 
-  }*/
+  }
 
   @Test
   @DisplayName("Register user with max chars username, check username match")
