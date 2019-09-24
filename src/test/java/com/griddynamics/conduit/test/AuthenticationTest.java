@@ -33,9 +33,8 @@ public class AuthenticationTest {
   private TestDataProvider testDataProvider = new TestDataProvider();
 
   @BeforeAll
-  static void beforeAll() {
+  static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
-
     registerUser(user);
   }
 

@@ -24,25 +24,33 @@ public class RegistrationTest {
   private RequestSpecification requestSpecification;
   private TestDataProvider testDataProvider = new TestDataProvider();
 
+  //todo: special chars in username
+  // email: max/min length, special chars, space inside, empty
+  // password: max/min length, special chars, space inside, empty
+
   @BeforeAll
   static void beforeAll() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
   }
 
+  //USERNAME
   @Test
   @DisplayName("Register user with valid data, check if username match")
   void registerUserWithValidData() {
-    // GIVEN
-    prepareRequestBody(testDataProvider.getValidRegistrationUser());
 
-    // WHEN
-    responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    for (RegistrationRequestUser user : testDataProvider.getValidUsers()) {
+      // GIVEN
+      prepareRequestBody(user);
 
-    // THEN
-    MatcherAssert.assertThat(
-        "Expected username is different than actual",
-        responseBody.user.username,
-        Matchers.equalTo(requestBody.user.username));
+      // WHEN
+      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+
+      // THEN
+      MatcherAssert.assertThat(
+          "Expected username is different than actual",
+          responseBody.user.username,
+          Matchers.equalTo(user.username));
+    }
   }
 
   @Test
@@ -79,7 +87,6 @@ public class RegistrationTest {
         Matchers.arrayContaining("can't be blank", "is too short (minimum is 1 character)"));
   }
 
-  // todo: this test is giving me back error according to too long username
   @Test
   @DisplayName("Register user without specifying username, check error message")
   void registerUserWithoutUsername() {
@@ -91,26 +98,12 @@ public class RegistrationTest {
         requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
 
     // THEN
+    // todo: in response I've got error connected to too long username - because it is taking
+    //  String full name and read it's chars
     MatcherAssert.assertThat(
         "Expected error messages are different than actual",
         errorBody.errors.username,
         Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
-  }
-
-  @Test
-  @DisplayName("Register user with max chars username, check username match")
-  void registerUserWithMaxUsernameLength() {
-    // GIVEN
-    prepareRequestBody(testDataProvider.getUserWithMaxName());
-
-    // WHEN
-    responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
-
-    // THEN
-    MatcherAssert.assertThat(
-        "Expected username is different than actual",
-        responseBody.user.username,
-        Matchers.equalTo(requestBody.user.username));
   }
 
   @Test
@@ -130,13 +123,34 @@ public class RegistrationTest {
         Matchers.hasItemInArray("is too long (maximum is 20 characters)"));
   }
 
+  //EMAIL
+  @Test
+  @DisplayName("Register user with special characters or in strange format, check status code")
+  void registerUserWithStrangeEmail() {
+
+    // todo: same comment as above
+    for (RegistrationRequestUser user : testDataProvider.getUsersWithStrangeEmailFormat()) {
+      //GIVEN
+      prepareRequestBody(user);
+
+      //WHEN
+      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+
+      //THEN
+      MatcherAssert.assertThat(
+          "Expected username is different than actual",
+          responseBody.user.username,
+          Matchers.equalTo(user.username));
+    }
+  }
+
   @Test
   @DisplayName("Register user with email which is incorrectly formatted, check error message")
   void registerUserWithIncorrectlyFormattedEmail() {
 
     // todo: use iteration over array or split and put each invalid format to different test case
     //  method?
-    for (RegistrationRequestUser user : testDataProvider.getUserWithWrongEmailFormat()) {
+    for (RegistrationRequestUser user : testDataProvider.getUsersWithWrongEmailFormat()) {
       // GIVEN
       prepareRequestBody(user);
 
@@ -149,25 +163,6 @@ public class RegistrationTest {
           "Expected error message is different than expected",
           errorBody.errors.email,
           Matchers.hasItemInArray("is invalid"));
-    }
-  }
-
-  @Test
-  @DisplayName("Register user with special characters or in strange format, check status code")
-  void registerUserWithStrangeEmail() {
-
-    for (RegistrationRequestUser user : testDataProvider.getUserWithStrangeEmail()) {
-      //GIVEN
-      prepareRequestBody(user);
-
-      //WHEN
-      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
-
-      //THEN
-      MatcherAssert.assertThat(
-          "Expected username is different than actual",
-          responseBody.user.username,
-          Matchers.equalTo(requestBody.user.username));
     }
   }
 
@@ -194,6 +189,20 @@ public class RegistrationTest {
         Matchers.hasItemInArray("has already been taken"));
   }
 
+  //PASSWORD
+  @Test
+  @DisplayName("Check password")
+  void registerUserWithPassword() {
+    //GIVEN
+
+    //WHEN
+
+    //THEN
+
+  }
+
+
+  //GENERAL
   @Test
   @DisplayName("Register user with empty body, check error message")
   void registerUserWithEmptyBody() {

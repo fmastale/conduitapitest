@@ -8,50 +8,32 @@ import java.util.List;
 import java.util.Locale;
 
 public class TestDataProvider {
+  private String username;
+  private String maxLengthName;
+  private String nameWithNumbers;
+  private String usernameWithSpace;
+  private String nameWithSpecialChars;
 
   private String email;
+
   private String password;
-  private String username;
-  private String bio;
-  private String updatedBio;
-  private String maxUsername;
   private String incorrectPassword;
-  private List<RegistrationRequestUser> usersWithWrongEmailFormat;
-  private List<RegistrationRequestUser> usersWithStrangeEmailFormat;
+
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
   public TestDataProvider() {
     // todo: move declaration + creation to get methods?
-    this.username = createNewUsername();
+    this.username = getNewUsername();
+    this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
+    this.nameWithNumbers = fakeValuesService.numerify("##########");
+    this.nameWithSpecialChars = fakeValuesService.regexify("[^a-zA-Z0-9_]{10}");
+    this.usernameWithSpace = fakeValuesService.bothify("????# ????#");
+
     this.email = fakeValuesService.bothify("????##@mail.com");
+
     this.password = fakeValuesService.bothify("????####");
-    this.bio = fakeValuesService.regexify("[a-zA-Z1-9]{30}");
-    this.updatedBio = fakeValuesService.regexify("[a-zA-Z1-9]{30}");
     this.incorrectPassword = fakeValuesService.bothify("####????");
-    this.maxUsername = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
-    this.usersWithWrongEmailFormat = createUsersWithWrongEmailFormat();
-    this.usersWithStrangeEmailFormat = createUsersWithStrangeEmailFormat();
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getBio() {
-    return bio;
-  }
-
-  public String getUpdatedBio() {
-    return updatedBio;
   }
 
   public String getIncorrectPassword() {
@@ -62,16 +44,8 @@ public class TestDataProvider {
     return new RegistrationRequestUser(username, email, password);
   }
 
-  public String getMaxUsername() {
-    return maxUsername;
-  }
-
   public String getMaxPlusOneUsername() {
-    return maxUsername + fakeValuesService.regexify("[a-zA-Z1-9]{1}");
-  }
-
-  public List<RegistrationRequestUser> getUserWithWrongEmailFormat() {
-    return usersWithWrongEmailFormat;
+    return maxLengthName + fakeValuesService.regexify("[a-zA-Z1-9]{1}");
   }
 
   public RegistrationRequestUser getUserWithDuplicatedName() {
@@ -87,49 +61,68 @@ public class TestDataProvider {
   }
 
   public RegistrationRequestUser getUserWithMaxName() {
-    return new RegistrationRequestUser(maxUsername, email, password);
+    return new RegistrationRequestUser(maxLengthName, email, password);
   }
 
   public RegistrationRequestUser getUserWithMaxPlusName() {
     return new RegistrationRequestUser(getMaxPlusOneUsername(), email, password);
   }
 
-  public List<RegistrationRequestUser> getUserWithStrangeEmail() {
-    return usersWithStrangeEmailFormat;
+  public String getRandomIncorrectUsername() {
+    return fakeValuesService.bothify("?#?#?#?#?#?#?#?#?#?#");
   }
 
-  private List<RegistrationRequestUser> createUsersWithWrongEmailFormat() {
+  public List<RegistrationRequestUser> getValidUsers() {
+
+    RegistrationRequestUser[] users = {
+      // todo: special chars which? all (\`>@攫`@`?) or regular ($%^&(***&^)?
+      // new RegistrationRequestUser(nameWithSpecialChars, getNewEmail(), password),
+      new RegistrationRequestUser(maxLengthName, getNewEmail(), password),
+      new RegistrationRequestUser(usernameWithSpace, getNewEmail(), password),
+      new RegistrationRequestUser(nameWithNumbers, getNewEmail(), password),
+    };
+
+    List<RegistrationRequestUser> validUserList = Arrays.asList(users);
+    return validUserList;
+  }
+
+  public List<RegistrationRequestUser> getUsersWithWrongEmailFormat() {
 
     // todo: different incorrect formats?!
     // ? == letter, # == number
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
-          createNewUsername(), fakeValuesService.regexify("[a-zA-z1-9]{10}"), password),
+          getNewUsername(), fakeValuesService.regexify("[a-zA-z1-9]{10}"), password),
+      new RegistrationRequestUser(getNewUsername(), fakeValuesService.bothify("@???.??"), password),
       new RegistrationRequestUser(
-          createNewUsername(), fakeValuesService.bothify("@???.??"), password),
-      new RegistrationRequestUser(
-          createNewUsername(), fakeValuesService.bothify("????##@??."), password)
+          getNewUsername(), fakeValuesService.bothify("????##@??."), password)
     };
-    usersWithWrongEmailFormat = Arrays.asList(array);
 
+    List<RegistrationRequestUser> usersWithWrongEmailFormat = Arrays.asList(array);
     return usersWithWrongEmailFormat;
   }
 
-  private List<RegistrationRequestUser> createUsersWithStrangeEmailFormat() {
+  public List<RegistrationRequestUser> getUsersWithStrangeEmailFormat() {
 
     // todo: test email in format: '[\W]{5}@mail.com' -> '!#$%^&@mail.com'
     // ? == letter, # == number
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
-          createNewUsername(), fakeValuesService.bothify("?????@???.###"), password),
+          getNewUsername(), fakeValuesService.bothify("?????@???.###"), password),
       new RegistrationRequestUser(
-          createNewUsername(), fakeValuesService.bothify("?????@###.???"), password)
+          getNewUsername(), fakeValuesService.bothify("?????@###.???"), password)
     };
 
-    return usersWithStrangeEmailFormat = Arrays.asList(array);
+    List<RegistrationRequestUser> usersWithStrangeEmailFormat = Arrays.asList(array);
+    return usersWithStrangeEmailFormat;
   }
 
-  private String createNewUsername() {
-    return fakeValuesService.bothify("????##");
+
+  private String getNewUsername() {
+    return fakeValuesService.bothify("????????##");
+  }
+
+  private String getNewEmail() {
+    return fakeValuesService.bothify("????##@mail.com");
   }
 }

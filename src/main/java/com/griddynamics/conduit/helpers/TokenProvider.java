@@ -23,8 +23,7 @@ public class TokenProvider {
 
   public TokenProvider() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
-
-    TOKEN = getToken(TEST_DATA_PROVIDER.getEmail(), TEST_DATA_PROVIDER.getPassword());
+    TOKEN = getToken("adam@mail.com", "adam1234");
   }
 
   protected UserResponseDto logUser(String email, String password) {
