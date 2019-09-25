@@ -29,7 +29,6 @@ public class RegistrationTest {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
   }
 
-  //todo: special chars in username
   //USERNAME
   @Test
   @DisplayName("Register user with all fields valid, check if username match")
@@ -121,14 +120,14 @@ public class RegistrationTest {
   }
 
 
-  //todo: special chars, empty
+  //todo: empty
   //EMAIL
   // I believe there is no such thing as too long email - I put 1800 chars into it and register user
   // minimal email format is '*@*.*' but most of them already used, so it will be hard to generate
   @Test
-  @DisplayName("Register user with special characters or in strange format, check status code")
+  @DisplayName("Register user with in strange format, check status code")
   void registerUserWithStrangeEmail() {
-
+    //todo: re-work this method and it's data provider
     for (RegistrationRequestUser user : testDataProvider.getUsersWithStrangeEmailFormat()) {
       //GIVEN
       prepareRequestBody(user);
@@ -142,6 +141,25 @@ public class RegistrationTest {
           responseBody.user.username,
           Matchers.equalTo(user.username));
     }
+  }
+
+  @Test
+  @DisplayName("Register user with special characters in email, check status code")
+  void registerUserWithSpecialCharsInEmail() {
+    //GIVEN
+    // todo: change method so it will be returning requestBody?!
+    // todo:  stable: '!#$%^&@mail.com' vs random: '攫攫攫攫@mail.com'
+    prepareRequestBody(testDataProvider.getUserWithSpecialCharsEmail());
+
+    // WHEN
+    responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+
+    //THEN
+    MatcherAssert.assertThat(
+        "Expected username is different than actual",
+        responseBody.user.username,
+        Matchers.equalTo(requestBody.user.username));
+
   }
 
   @Test

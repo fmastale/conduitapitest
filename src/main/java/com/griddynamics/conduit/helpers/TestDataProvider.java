@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class TestDataProvider {
+
   private String username;
   private String maxLengthName;
-  private String nameWithNumbers;
   private String usernameWithSpace;
-  private String nameWithSpecialChars;
 
   private String email;
 
@@ -22,31 +21,38 @@ public class TestDataProvider {
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
-  // todo: clean this class
+  // todo: clean up this class
   public TestDataProvider() {
-    // todo: move declaration + creation to get methods?
     this.username = getNewUsername();
     this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
-    this.nameWithNumbers = fakeValuesService.numerify("##########");
-    this.nameWithSpecialChars = fakeValuesService.regexify("[^a-zA-Z0-9_]{10}");
+    // todo: regex with space inside
     this.usernameWithSpace = fakeValuesService.bothify("????# ????#");
 
-    this.email = fakeValuesService.bothify("????##@mail.com");
+    this.email = getNewEmail();
 
-    this.password = fakeValuesService.bothify("????####");
-    this.incorrectPassword = fakeValuesService.bothify("####????");
+    this.password = getNewPassword();
+    this.incorrectPassword = fakeValuesService.regexify("[a-zA-Z1-9]{7}");
   }
 
   public String getIncorrectPassword() {
     return incorrectPassword;
   }
 
-  public RegistrationRequestUser getValidRegistrationUser() {
-    return new RegistrationRequestUser(username, email, password);
-  }
-
   public String getMaxPlusOneUsername() {
     return maxLengthName + fakeValuesService.regexify("[a-zA-Z1-9]{1}");
+  }
+
+  public String getRandomIncorrectUsername() {
+    return getNewUsername();
+  }
+
+  public String getSpecialCharsEmail() {
+    return specialCharsString() + "@mail.com";
+  }
+
+
+  public RegistrationRequestUser getValidRegistrationUser() {
+    return new RegistrationRequestUser(username, email, password);
   }
 
   public RegistrationRequestUser getUserWithDuplicatedName() {
@@ -69,18 +75,27 @@ public class TestDataProvider {
     return new RegistrationRequestUser(getMaxPlusOneUsername(), email, password);
   }
 
-  public String getRandomIncorrectUsername() {
-    return fakeValuesService.bothify("?#?#?#?#?#?#?#?#?#?#");
+  public RegistrationRequestUser getUserWithSpaceInEmail() {
+    return new RegistrationRequestUser(
+        getNewUsername(), fakeValuesService.bothify("????? ???@mail.com"), password);
   }
+
+  public RegistrationRequestUser getUserWithEmptyEmail() {
+    return new RegistrationRequestUser(getNewUsername(), "", password);
+  }
+
+  public RegistrationRequestUser getUserWithSpecialCharsEmail() {
+    return new RegistrationRequestUser(getNewUsername(), getSpecialCharsEmail(), password);
+  }
+
 
   public List<RegistrationRequestUser> getValidUsers() {
 
+    // todo: using special chars - which? all-random-passing (\`>@攫`@`?) or regular ($%^&(***&^)?
     RegistrationRequestUser[] users = {
-      // todo: special chars which? all (\`>@攫`@`?) or regular ($%^&(***&^)?
-      // new RegistrationRequestUser(nameWithSpecialChars, getNewEmail(), password),
+      new RegistrationRequestUser(getNameWithSpecialChars(), getNewEmail(), password),
       new RegistrationRequestUser(maxLengthName, getNewEmail(), password),
       new RegistrationRequestUser(usernameWithSpace, getNewEmail(), password),
-      new RegistrationRequestUser(nameWithNumbers, getNewEmail(), password),
     };
 
     List<RegistrationRequestUser> validUserList = Arrays.asList(users);
@@ -89,8 +104,6 @@ public class TestDataProvider {
 
   public List<RegistrationRequestUser> getUsersWithWrongEmailFormat() {
 
-    // todo: different incorrect formats?!
-    // ? == letter, # == number
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
           getNewUsername(), fakeValuesService.regexify("[a-zA-z1-9]{10}"), password),
@@ -105,8 +118,7 @@ public class TestDataProvider {
 
   public List<RegistrationRequestUser> getUsersWithStrangeEmailFormat() {
 
-    // todo: add and test email in format: '[\W]{5}@mail.com' -> '!#$%^&@mail.com'
-    // ? == letter, # == number
+    // todo: search for valid but unusual email formats
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
           getNewUsername(), fakeValuesService.bothify("?????@???.###"), password),
@@ -118,20 +130,24 @@ public class TestDataProvider {
     return usersWithStrangeEmailFormat;
   }
 
+
+  private String getNameWithSpecialChars() {
+    return specialCharsString();
+  }
+
   private String getNewUsername() {
-    return fakeValuesService.bothify("????????##");
+    return fakeValuesService.regexify("[a-zA-Z1-9]{15}");
   }
 
   private String getNewEmail() {
-    return fakeValuesService.bothify("????##@mail.com");
+    return getNewUsername() + "@mail.com";
   }
 
-  public RegistrationRequestUser getUserWithSpaceInEmail() {
-    return new RegistrationRequestUser(
-        getNewUsername(), fakeValuesService.bothify("????? ???@mail.com"), password);
+  private String specialCharsString() {
+    return fakeValuesService.regexify("['?/!#$%^&*()]{15}");
   }
 
-  public RegistrationRequestUser getUserWithEmptyEmail() {
-    return new RegistrationRequestUser(getNewUsername(), "", password);
+  private String getNewPassword() {
+    return fakeValuesService.regexify("[a-zA-Z1-9]{10}");
   }
 }
