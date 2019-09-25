@@ -96,7 +96,7 @@ public class RegistrationTest {
 
     // THEN
     // todo: in response I've got error connected to too long username - because it is taking
-    //  String full name and read it's chars
+    //  String full name and count it's letters
     MatcherAssert.assertThat(
         "Expected error messages are different than actual",
         errorBody.errors.username,
