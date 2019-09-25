@@ -128,8 +128,6 @@ public class TestDataProvider {
 
   public List<RegistrationRequestUser> getValidUsers() {
 
-    // todo: using special chars - which? all-random-passing (\`>@攫`@`?) or regular ($%^&(***&^)?!
-    //  how to work with that?!
     RegistrationRequestUser[] users = {
       new RegistrationRequestUser(getNameWithSpecialChars(), getNewEmail(), password),
       new RegistrationRequestUser(maxLengthName, getNewEmail(), password),

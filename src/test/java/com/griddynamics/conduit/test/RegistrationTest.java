@@ -35,13 +35,6 @@ public class RegistrationTest {
   @DisplayName("Register user with all fields valid, check if username match")
   void userWithValidData() {
 
-    //todo: should I add logger and log test data to external file?!
-    //todo: should I sent request with random fields in json file?!
-    //todo: I'm checking one thing at the time: max username, min username, max pass, min pass
-    // - should I mix those so I will test max username with min pass at the same time?
-    // should I combine those in one TC?
-
-    //todo: single test per single user (value) or multiple users (values) in loop?!
     for (RegistrationRequestUser user : testDataProvider.getValidUsers()) {
       // GIVEN
       prepareRequestBody(user);
@@ -102,8 +95,6 @@ public class RegistrationTest {
         requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
 
     // THEN
-    // todo: in response I've got error connected to too long username - because it is taking
-    //  String full name and count it's letters
     MatcherAssert.assertThat(
         "Expected error messages are different than actual",
         errorBody.errors.username,
@@ -153,9 +144,7 @@ public class RegistrationTest {
   @DisplayName("Register user with special characters in email, check username mathc")
   void userWithSpecialCharsInEmail() {
     //GIVEN
-    // todo: change method so it will be returning requestBody?! requestBody = prepareRequestBody(user)
-    //  so in assertion it will be more clear from where 'requestBody.user.username' came from ?!
-    // todo:  stable: '!#$%^&@mail.com' vs random: '攫攫攫攫@mail.com'
+    // todo: change it to 'requestBody = prepareRequestBody(user)'
     prepareRequestBody(testDataProvider.getUserWithSpecialCharsEmail());
 
     // WHEN
