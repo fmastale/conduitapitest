@@ -21,7 +21,6 @@ public class TestDataProvider {
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
-  // todo: clean up this class
   public TestDataProvider() {
     this.username = getNewUsername();
     this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
@@ -50,7 +49,6 @@ public class TestDataProvider {
     return specialCharsString() + "@mail.com";
   }
 
-
   public RegistrationRequestUser getValidRegistrationUser() {
     return new RegistrationRequestUser(username, email, password);
   }
@@ -63,8 +61,8 @@ public class TestDataProvider {
     return new RegistrationRequestUser("", email, password);
   }
 
-  public RegistrationRequestUser getUserWithNullName() {
-    return new RegistrationRequestUser(email, password);
+  public RegistrationRequestUser getUserWithoutName() {
+    return new RegistrationRequestUser(null, email, password);
   }
 
   public RegistrationRequestUser getUserWithMaxName() {
@@ -88,10 +86,50 @@ public class TestDataProvider {
     return new RegistrationRequestUser(getNewUsername(), getSpecialCharsEmail(), password);
   }
 
+  public RegistrationRequestUser getUserWithoutEmail() {
+    return new RegistrationRequestUser(getNewUsername(), null, password);
+  }
+
+  public RegistrationRequestUser getUserWithMinPassLength() {
+    return new RegistrationRequestUser(
+        getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{8}"));
+  }
+
+  public RegistrationRequestUser getUserWithLessThanMinPass() {
+    return new RegistrationRequestUser(
+        getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{7}"));
+  }
+
+  public RegistrationRequestUser getUserWithEmptyPass() {
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), "");
+  }
+
+  public RegistrationRequestUser getUserWithoutPassword() {
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), null);
+  }
+
+  public RegistrationRequestUser getUserWithMaxLengthPass() {
+    return new RegistrationRequestUser(
+        getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{72}"));
+  }
+
+  public RegistrationRequestUser getUserWithTooLongPass() {
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{73}"));
+  }
+
+  public RegistrationRequestUser getUserWithSpecCharsInPass() {
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), specialCharsString());
+  }
+
+  public RegistrationRequestUser getUserInSpaceInPass() {
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), fakeValuesService.bothify("##### ?????"));
+  }
+
 
   public List<RegistrationRequestUser> getValidUsers() {
 
-    // todo: using special chars - which? all-random-passing (\`>@攫`@`?) or regular ($%^&(***&^)?
+    // todo: using special chars - which? all-random-passing (\`>@攫`@`?) or regular ($%^&(***&^)?!
+    //  how to work with that?!
     RegistrationRequestUser[] users = {
       new RegistrationRequestUser(getNameWithSpecialChars(), getNewEmail(), password),
       new RegistrationRequestUser(maxLengthName, getNewEmail(), password),
@@ -129,7 +167,6 @@ public class TestDataProvider {
     List<RegistrationRequestUser> usersWithStrangeEmailFormat = Arrays.asList(array);
     return usersWithStrangeEmailFormat;
   }
-
 
   private String getNameWithSpecialChars() {
     return specialCharsString();
