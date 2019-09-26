@@ -3,6 +3,7 @@ package com.griddynamics.conduit.helpers;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
+import com.griddynamics.conduit.jsons.UserRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,7 @@ public class TestDataProvider {
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
+
   public TestDataProvider() {
     this.username = getNewUsername();
     this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
@@ -31,6 +33,15 @@ public class TestDataProvider {
 
     this.password = getNewPassword();
     this.incorrectPassword = fakeValuesService.regexify("[a-zA-Z1-9]{7}");
+  }
+
+
+  public String getTestUserUsername() {
+    return "adam1234io";
+  }
+
+  public UserRequest getTestUser() {
+    return new UserRequest("adam@mail.com", "adam1234");
   }
 
   public String getIncorrectPassword() {

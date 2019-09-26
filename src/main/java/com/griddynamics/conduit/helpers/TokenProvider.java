@@ -11,24 +11,21 @@ import io.restassured.specification.RequestSpecification;
 
 
 public class TokenProvider {
-  protected static String TOKEN;
-  protected static final TestDataProvider TEST_DATA_PROVIDER = new TestDataProvider();
-
-  protected int statusCode;
-
-  protected UserRequest userBody;
-  protected UserRequestDto requestBody;
-  protected UserResponseDto userResponseDto;
-  protected RequestSpecification requestSpecification;
+  private UserRequestDto requestBody;
+  private UserResponseDto userResponseDto;
+  private RequestSpecification requestSpecification;
 
   public TokenProvider() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
-    TOKEN = getToken("adam@mail.com", "adam1234");
   }
 
-  protected UserResponseDto logUser(String email, String password) {
-    userBody = new UserRequest(email, password);
-    requestBody = new UserRequestDto(userBody);
+  public String getTokenForUser(UserRequest user) {
+    this.userResponseDto = logUser(user);
+    return "Token " + userResponseDto.user.token;
+  }
+
+  private UserResponseDto logUser(UserRequest user) {
+    requestBody = new UserRequestDto(user);
 
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
@@ -37,10 +34,5 @@ public class TokenProvider {
         requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);
 
     return userResponseDto;
-  }
-
-  private String getToken(String email, String password) {
-    this.userResponseDto = logUser(email, password);
-    return "Token " + userResponseDto.user.token;
   }
 }
