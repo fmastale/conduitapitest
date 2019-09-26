@@ -243,7 +243,6 @@ public class RegistrationTest {
 
   }
 
-
   @Test
   @DisplayName("Register user with minimal password length, check status code")
   void userWithMinPassLength() {
@@ -340,7 +339,6 @@ public class RegistrationTest {
         Matchers.hasItemInArray("is too long (maximum is 72 characters)"));
   }
 
-
   @Test
   @DisplayName("Register user with regular special characters in password, check status code")
   void userWithRegularSpecialCharsInPass() {
@@ -357,8 +355,6 @@ public class RegistrationTest {
         Matchers.equalTo(CODE_200.getValue()));
   }
 
-
-  // space inside
   @Test
   @DisplayName("Register user with space inside password, check status code")
   void userWithSpaceInPass() {
@@ -376,7 +372,6 @@ public class RegistrationTest {
 
   }
 
-  //GENERAL
   @Test
   @DisplayName("Register user with empty body, check error message")
   void userWithEmptyBody() {
