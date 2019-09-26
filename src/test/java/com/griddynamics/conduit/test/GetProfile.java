@@ -26,6 +26,8 @@ public class GetProfile {
   private static UserResponseDto maxUsernameUser;
   private static RequestSpecification requestSpecification;
 
+  private ProfileDto responseBody;
+
   //todo: empty username, maxLength, special chars in username, space inside username
 
   @BeforeAll
@@ -44,7 +46,7 @@ public class GetProfile {
         RestAssured.given().pathParam(USERNAME.getDetail(), regularUser.user.username);
 
     // WHEN
-    ProfileDto responseBody =
+    responseBody =
         requestSpecification.get(PROFILES_USERNAME.getEndpoint()).as(ProfileDto.class);
 
     // THEN
@@ -62,7 +64,7 @@ public class GetProfile {
         RestAssured.given().pathParam(USERNAME.getDetail(), maxUsernameUser.user.username);
 
     // WHEN
-    ProfileDto responseBody =
+    responseBody =
         requestSpecification.get(PROFILES_USERNAME.getEndpoint()).as(ProfileDto.class);
 
     // THEN

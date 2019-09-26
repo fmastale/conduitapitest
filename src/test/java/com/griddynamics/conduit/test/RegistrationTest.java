@@ -40,7 +40,7 @@ public class RegistrationTest {
       prepareRequestBody(user);
 
       // WHEN
-      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+      responseBody = getApiCallResponseUser();
 
       // THEN
       MatcherAssert.assertThat(
@@ -57,8 +57,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithDuplicatedName());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -74,8 +73,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithEmptyName());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -91,8 +89,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithoutName());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -108,8 +105,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithMaxPlusName());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -130,7 +126,7 @@ public class RegistrationTest {
       prepareRequestBody(user);
 
       //WHEN
-      responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+      responseBody = getApiCallResponseUser();
 
       //THEN
       MatcherAssert.assertThat(
@@ -148,7 +144,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithSpecialCharsEmail());
 
     // WHEN
-    responseBody = requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    responseBody = getApiCallResponseUser();
 
     //THEN
     MatcherAssert.assertThat(
@@ -165,8 +161,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithSpaceInEmail());
 
     //WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     //THEN
     MatcherAssert.assertThat(
@@ -185,8 +180,7 @@ public class RegistrationTest {
       prepareRequestBody(user);
 
       // WHEN
-      errorBody =
-          requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+      errorBody = getApiCallResponseError();
 
       // THEN
       MatcherAssert.assertThat(
@@ -209,8 +203,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getValidRegistrationUser());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -226,8 +219,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithEmptyEmail());
 
     //WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     //THEN
     MatcherAssert.assertThat(
@@ -243,8 +235,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithoutEmail());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     //THEN
     MatcherAssert.assertThat("Expected error message is different than expected", errorBody.errors.email,
@@ -260,7 +251,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithMinPassLength());
 
     // WHEN
-    statusCode = requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+    statusCode = getApiCallResponseStatusCode();
 
     // THEN
     MatcherAssert.assertThat(
@@ -276,8 +267,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithLessThanMinPass());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -293,8 +283,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithEmptyPass());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -310,8 +299,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithoutPassword());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -327,7 +315,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithMaxLengthPass());
 
     //WHEN
-    statusCode = requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+    statusCode = getApiCallResponseStatusCode();
 
     // THEN
     MatcherAssert.assertThat(
@@ -343,7 +331,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithTooLongPass());
 
     //WHEN
-    errorBody = requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -360,7 +348,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserWithSpecCharsInPass());
 
     //WHEN
-    statusCode = requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+    statusCode = getApiCallResponseStatusCode();
 
     // THEN
     MatcherAssert.assertThat(
@@ -378,7 +366,7 @@ public class RegistrationTest {
     prepareRequestBody(testDataProvider.getUserInSpaceInPass());
 
     //WHEN
-    statusCode = requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+    statusCode = getApiCallResponseStatusCode();
 
     // THEN
     MatcherAssert.assertThat(
@@ -388,7 +376,6 @@ public class RegistrationTest {
 
   }
 
-
   //GENERAL
   @Test
   @DisplayName("Register user with empty body, check error message")
@@ -397,8 +384,7 @@ public class RegistrationTest {
     prepareRequestBody(new RegistrationRequestUser());
 
     // WHEN
-    errorBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    errorBody = getApiCallResponseError();
 
     // THEN
     MatcherAssert.assertThat(
@@ -407,10 +393,23 @@ public class RegistrationTest {
         Matchers.hasItemInArray("can't be blank"));
   }
 
+
   private void prepareRequestBody(RegistrationRequestUser user) {
     requestBody = new RegistrationRequestUserDto(user);
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
   }
 
+  private UserResponseDto getApiCallResponseUser() {
+    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+  }
+
+  private UnprocessableEntityErrorDto getApiCallResponseError() {
+    return requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+  }
+
+  private int getApiCallResponseStatusCode() {
+    return requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+  }
 }
+
