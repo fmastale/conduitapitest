@@ -12,6 +12,7 @@ import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import io.qameta.allure.Description;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class GetProfile {
+public class GetProfileTest {
   private static UserResponseDto regularUser;
   private static UserResponseDto maxLengthNameUser;
   private static RequestSpecification requestSpecification;
