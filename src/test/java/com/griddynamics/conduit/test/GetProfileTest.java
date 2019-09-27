@@ -13,6 +13,10 @@ import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -22,6 +26,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Epic("Regression tests")
+@Feature("Get Profile")
 public class GetProfileTest {
   private static UserResponseDto regularUser;
   private static UserResponseDto maxLengthNameUser;
@@ -30,7 +36,6 @@ public class GetProfileTest {
   private ProfileDto userProfile;
 
   // todo: special chars, space inside
-
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
@@ -39,9 +44,12 @@ public class GetProfileTest {
     maxLengthNameUser = registerUser(new TestDataProvider().getUserWithMaxName());
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description(
+      "Get profile of user using valid username in path, check if actual username is same as expected")
   @Test
   @DisplayName("Get profile for valid user, check username")
-  void getValidUserProfile() {
+  void validUsernameInPath() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(regularUser.user.username);
 
@@ -55,9 +63,12 @@ public class GetProfileTest {
         Matchers.equalTo(regularUser.user.username));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description(
+      "Get profile of user using valid username (with max length) in path, check if actual username is same as expected")
   @Test
   @DisplayName("Get profile for username with max length, check username")
-  void getProfileForUserWithMaxUsername() {
+  void maxUsernameInPath() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(maxLengthNameUser.user.username);
 
@@ -71,9 +82,12 @@ public class GetProfileTest {
         Matchers.equalTo(maxLengthNameUser.user.username));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description(
+      "Get profile of user using random and incorrect username in path, check if actual error message is same as expected")
   @Test
   @DisplayName("Get profile of user with random and incorrect username, check error message")
-  void getProfileForIncorrectUsername() {
+  void incorrectUsernameInPath() {
     // GIVEN
     requestSpecification =
         prepareRequestSpecification(new TestDataProvider().getRandomIncorrectUsername());
@@ -88,9 +102,12 @@ public class GetProfileTest {
         Matchers.equalTo("Not Found"));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description(
+      "Get profile of user by using empty username in path, check if actual error message is same as expected")
   @Test
   @DisplayName("Get profile of user with empty username, check error message")
-  void getProfileForEmptyUsername() {
+  void emptyUsernameInPath() {
     // GIVEN
     requestSpecification = prepareRequestSpecification("");
 

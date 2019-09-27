@@ -10,6 +10,11 @@ import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
@@ -18,6 +23,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Epic("Regression tests")
+@Feature("Get Current User")
 public class GetCurrentUserTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
@@ -34,6 +41,8 @@ public class GetCurrentUserTest {
     token = tokenProvider.getTokenForUser(user);
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Get current user by using correct token, check if username is same as expected")
   @Test
   @DisplayName("Get current user by using correct token, check username")
   void userWithCorrectToken() {
@@ -50,8 +59,10 @@ public class GetCurrentUserTest {
         Matchers.equalTo(username));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Get current user by using incorrect token, check if status code is 401")
   @Test
-  @DisplayName("Get current user by specifying incorrect token, check status code")
+  @DisplayName("Get current user by using incorrect token, check status code")
   void userWithIncorrectToken() {
     // GIVEN
     String incorrectToken = token + "AAA";
@@ -67,6 +78,8 @@ public class GetCurrentUserTest {
         Matchers.equalTo(CODE_401.getValue()));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Get current user without using andy token, check if status code is 401")
   @Test
   @DisplayName("Get current user without specifying token, check status code")
   void userWithoutToken() {
@@ -83,7 +96,6 @@ public class GetCurrentUserTest {
         Matchers.equalTo(CODE_401.getValue()));
   }
 
-
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.get(USER.getEndpoint()).statusCode();
   }
@@ -99,7 +111,6 @@ public class GetCurrentUserTest {
   }
 
   private RequestSpecification prepareRequestSpecification() {
-    return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail());
+    return RestAssured.given().contentType(APPLICATION_JSON.getDetail());
   }
 }

@@ -163,7 +163,7 @@ public class TestDataProvider {
     return usersWithWrongEmailFormat;
   }
 
-  public List<RegistrationRequestUser> getUsersWithStrangeEmailFormat() {
+  public List<RegistrationRequestUser> getUsersWithUnusualEmailFormat() {
 
     // todo: search for valid but unusual email formats
     RegistrationRequestUser[] array = {
