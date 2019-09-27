@@ -130,3 +130,4 @@ codnduit-api-test.iml
 .idea/modules.xml
 .idea/vcs.xml
 allure-results/
+.allure/
