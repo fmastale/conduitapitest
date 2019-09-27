@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 @Epic("Regression tests")
 @Feature("Get Profile")
 public class GetProfileTest {

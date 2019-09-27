@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 @Epic("Regression tests")
 @Feature("Authentication")
 public class AuthenticationTest {
@@ -38,6 +39,7 @@ public class AuthenticationTest {
   private UserRequest userBody;
   private UserRequestDto requestBody;
   private TestDataProvider testDataProvider = new TestDataProvider();
+
 
   @BeforeAll
   static void prepareEnvironment() {
