@@ -40,13 +40,12 @@ public class AuthenticationTest {
   private UserRequestDto requestBody;
   private TestDataProvider testDataProvider = new TestDataProvider();
 
-
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
     // registerUser(registeredUser);
     // todo: app stopped logging my randomly created user (security feature?!) so this is
-    // workaround:
+    //  workaround:
     registeredUser.email = "unodostres@mail.com";
     registeredUser.password = "unodostres1234";
     registeredUser.username = "unodostres";
@@ -172,18 +171,15 @@ public class AuthenticationTest {
   }
 
   private void prepareRequestBody(String email, String password) {
-    userBody = new UserRequest(email, password);
-    requestBody = new UserRequestDto(userBody);
+    requestBody = new UserRequestDto(new UserRequest(email, password));
   }
 
   private void prepareRequestBody(String email) {
-    userBody = new UserRequest(email);
-    requestBody = new UserRequestDto(userBody);
+    requestBody = new UserRequestDto(new UserRequest(email));
   }
 
   private void prepareRequestBody() {
-    userBody = new UserRequest();
-    requestBody = new UserRequestDto(userBody);
+    requestBody = new UserRequestDto(new UserRequest());
   }
 
   private UnprocessableEntityErrorDto getErrorBodyFromApiCall() {
