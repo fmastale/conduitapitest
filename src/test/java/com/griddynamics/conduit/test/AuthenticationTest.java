@@ -27,29 +27,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-@Epic("Regression tests")
+@Epic("Smoke tests")
 @Feature("Authentication")
 public class AuthenticationTest {
   private static RequestSpecification requestSpecification;
-  private static RegistrationRequestUser registeredUser =
-      new TestDataProvider().getValidRegistrationUser();
+  private static TestDataProvider testDataProvider = new TestDataProvider();
+  private static UserRequest registeredUser = testDataProvider.getTestUser();
 
   private int statusCode;
 
   private UserRequest userBody;
   private UserRequestDto requestBody;
-  private TestDataProvider testDataProvider = new TestDataProvider();
 
 
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    // todo: app stopped logging my randomly created user (security feature?!) so that's why
+    //  I'm using registeredUser which is provided from testDataProvider
     // registerUser(registeredUser);
-    // todo: app stopped logging my randomly created user (security feature?!) so this is
-    // workaround:
-    registeredUser.email = "unodostres@mail.com";
-    registeredUser.password = "unodostres1234";
-    registeredUser.username = "unodostres";
+
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -65,7 +62,7 @@ public class AuthenticationTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Username is different than expected",
+        "Actual username is different than expected",
         responseBody.user.username,
         Matchers.equalTo(registeredUser.username));
   }
@@ -83,7 +80,7 @@ public class AuthenticationTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Actual status code is not the one we expected",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_422.getValue()));
   }
@@ -101,7 +98,7 @@ public class AuthenticationTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_422.getValue()));
   }
@@ -119,7 +116,7 @@ public class AuthenticationTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_422.getValue()));
   }
@@ -137,7 +134,7 @@ public class AuthenticationTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected error message is different than actual",
+        "Actual error message is different than expected",
         errorBody.errors.emailOrPassword,
         Matchers.hasItemInArray("is invalid"));
   }

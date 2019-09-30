@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Epic("Regression tests")
+@Epic("Smoke tests")
 @Feature("Get Current User")
 public class GetCurrentUserTest {
   private static String token;
@@ -37,6 +37,7 @@ public class GetCurrentUserTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
+    System.out.println(user.username);
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(user);
   }
@@ -54,7 +55,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected username is different than actual",
+        "Actual username is different than expected",
         response.user.username,
         Matchers.equalTo(username));
   }
@@ -73,7 +74,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_401.getValue()));
   }
@@ -91,7 +92,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_401.getValue()));
   }

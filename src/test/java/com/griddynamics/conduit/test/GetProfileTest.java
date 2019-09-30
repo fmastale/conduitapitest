@@ -27,7 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-@Epic("Regression tests")
+@Epic("Smoke tests")
 @Feature("Get Profile")
 public class GetProfileTest {
   private static UserResponseDto regularUser;

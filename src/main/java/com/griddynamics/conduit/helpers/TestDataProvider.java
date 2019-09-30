@@ -41,7 +41,8 @@ public class TestDataProvider {
   }
 
   public UserRequest getTestUser() {
-    return new UserRequest("adam@mail.com", "adam1234");
+    return new UserRequest(
+        "adam@mail.com", "adam1234", "adam1234io", "I like to eat cookies", "no img");
   }
 
   public String getIncorrectPassword() {
@@ -194,6 +195,14 @@ public class TestDataProvider {
   }
 
   private String getNewPassword() {
+    return fakeValuesService.regexify("[a-zA-Z1-9]{10}");
+  }
+
+  public String getRandomBio() {
+    return fakeValuesService.regexify("[a-zA-Z1-9]{30}");
+  }
+
+  public String getRandomImg() {
     return fakeValuesService.regexify("[a-zA-Z1-9]{10}");
   }
 }
