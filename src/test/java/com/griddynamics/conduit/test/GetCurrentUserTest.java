@@ -45,7 +45,7 @@ public class GetCurrentUserTest {
   @Description("Get current user by using correct token, check if username is same as expected")
   @Test
   @DisplayName("Get current user by using correct token, check username")
-  void userWithCorrectToken() {
+  void getUserWithCorrectToken() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(token);
 
@@ -63,7 +63,7 @@ public class GetCurrentUserTest {
   @Description("Get current user by using incorrect token, check if status code is 401")
   @Test
   @DisplayName("Get current user by using incorrect token, check status code")
-  void userWithIncorrectToken() {
+  void cantGetUserWithIncorrectToken() {
     // GIVEN
     String incorrectToken = token + "AAA";
     requestSpecification = prepareRequestSpecification(incorrectToken);
@@ -82,7 +82,7 @@ public class GetCurrentUserTest {
   @Description("Get current user without using andy token, check if status code is 401")
   @Test
   @DisplayName("Get current user without specifying token, check status code")
-  void userWithoutToken() {
+  void cantGetUserWithoutToken() {
     // GIVEN
     requestSpecification = prepareRequestSpecification();
 

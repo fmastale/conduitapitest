@@ -56,7 +56,7 @@ public class AuthenticationTest {
   @Description("Authenticate user with valid credentials into app, check if ID is same as expected")
   @Test
   @DisplayName("Authenticate user with valid credentials, check ID")
-  void validUser() {
+  void authenticateValidUser() {
     // GIVEN
     prepareRequest(registeredUser.email, registeredUser.password);
 
@@ -74,7 +74,7 @@ public class AuthenticationTest {
   @Description("Authenticate user with incorrect password, check if response status code is 422")
   @Test
   @DisplayName("Authenticate user with incorrect password, check status code")
-  void userWithIncorrectPassword() {
+  void cantAuthenticateUserWithIncorrectPass() {
     // GIVEN
     prepareRequest(registeredUser.email, testDataProvider.getIncorrectPassword());
 
@@ -92,7 +92,7 @@ public class AuthenticationTest {
   @Description("Authenticate user with empty password, then check if status code is 422")
   @Test
   @DisplayName("Authenticate user with empty password, check status code")
-  void userWithEmptyPassword() {
+  void cantAuthenticateUserWithEmptyPass() {
     // GIVEN
     prepareRequest(registeredUser.email, "");
 
@@ -110,7 +110,7 @@ public class AuthenticationTest {
   @Description("Authenticate user without password, check if status code is 422")
   @Test
   @DisplayName("Authenticate user without password, check status code")
-  void userWithoutPassword() {
+  void cantAuthenticateUserWithoutPass() {
     // GIVEN
     prepareRequest(registeredUser.email);
 

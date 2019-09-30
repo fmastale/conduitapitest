@@ -50,7 +50,7 @@ public class GetProfileTest {
       "Get profile of user using valid username in path, check if actual username is same as expected")
   @Test
   @DisplayName("Get profile for valid user, check username")
-  void validUsernameInPath() {
+  void getProfileForValidUsername() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(regularUser.user.username);
 
@@ -69,7 +69,7 @@ public class GetProfileTest {
       "Get profile of user using valid username (with max length) in path, check if actual username is same as expected")
   @Test
   @DisplayName("Get profile for username with max length, check username")
-  void maxUsernameInPath() {
+  void getProfileForValidNameWithMaxLength() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(maxLengthNameUser.user.username);
 
@@ -88,7 +88,7 @@ public class GetProfileTest {
       "Get profile of user using random and incorrect username in path, check if actual error message is same as expected")
   @Test
   @DisplayName("Get profile of user with random and incorrect username, check error message")
-  void incorrectUsernameInPath() {
+  void cantGetProfileForIncorrectUsername() {
     // GIVEN
     requestSpecification =
         prepareRequestSpecification(new TestDataProvider().getRandomIncorrectUsername());
@@ -108,7 +108,7 @@ public class GetProfileTest {
       "Get profile of user by using empty username in path, check if actual error message is same as expected")
   @Test
   @DisplayName("Get profile of user with empty username, check error message")
-  void emptyUsernameInPath() {
+  void cantGetProfileForEmptyUsername() {
     // GIVEN
     requestSpecification = prepareRequestSpecification("");
 
