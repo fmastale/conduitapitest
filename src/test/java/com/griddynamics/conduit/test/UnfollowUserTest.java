@@ -3,6 +3,7 @@ package com.griddynamics.conduit.test;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
+import com.griddynamics.conduit.jsons.GenericError;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.griddynamics.conduit.helpers.Endpoint.*;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
+import static com.griddynamics.conduit.helpers.StatusCode.CODE_401;
 
 @Epic("Smoke tests")
 @Feature("Unfollow User")
@@ -62,6 +64,48 @@ public class UnfollowUserTest {
                 profile.profile.following, Matchers.equalTo(false));
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Stop following incorrect user , check error message")
+    @Test
+    @DisplayName("Stop following incorrect user, check error")
+    void unfollowIncorrectUserCheckError() {
+        // GIVEN
+        requestSpecification = prepareRequestBody(token, testDataProvider.getRandomIncorrectUsername());
+
+        // WHEN
+        GenericError error = getErrorFromApiCall(requestSpecification);
+
+        // THEN
+        MatcherAssert.assertThat("'Follow' field should be set to 'false', but was 'true'",
+                error.error, Matchers.equalTo("Not Found"));
+    }
+
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Stop following user without being authenticated, check status code")
+    @Test
+    @DisplayName("Stop following without being authenticated, check status code")
+    void unfollowUserWithoutwithoutBeingAuthenticated() {
+        // GIVEN
+        requestSpecification = prepareRequestBody(user);
+
+        // WHEN
+        int statusCode = getStatusCodeFromApiCall(requestSpecification);
+
+        // THEN
+        MatcherAssert.assertThat("'Follow' field should be set to 'false', but was 'true'",
+                statusCode, Matchers.equalTo(CODE_401.getValue()));
+    }
+
+    private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+        return requestSpecification.contentType("application/json")
+                .delete(PROFILES_USERNAME_FOLLOW.getEndpoint()).statusCode();
+    }
+
+    private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
+        return requestSpecification.contentType("application/json")
+                .delete(PROFILES_USERNAME_FOLLOW.getEndpoint()).as(GenericError.class);
+    }
+
     private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
         return requestSpecification.contentType("application/json")
                 .delete(PROFILES_USERNAME_FOLLOW.getEndpoint()).as(ProfileDto.class);
@@ -78,6 +122,14 @@ public class UnfollowUserTest {
 
     private static RequestSpecification prepareRequestBody(String token, UserResponseDto user) {
         return RestAssured.given().header(AUTHORIZATION.getDetail(), token).pathParam(USERNAME.getDetail(), user.user.username);
+    }
+
+    private static RequestSpecification prepareRequestBody(UserResponseDto user) {
+        return RestAssured.given().pathParam(USERNAME.getDetail(), user.user.username);
+    }
+
+    private static RequestSpecification prepareRequestBody(String token, String username) {
+        return RestAssured.given().header(AUTHORIZATION.getDetail(), token).pathParam(USERNAME.getDetail(), username);
     }
 
     private static ProfileDto followUserApiCall(RequestSpecification requestSpecification) {
