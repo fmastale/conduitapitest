@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Epic("Regression tests")
+@Epic("Smoke tests")
 @Feature("Get Current User")
 public class GetCurrentUserTest {
   private static String token;
@@ -37,6 +37,7 @@ public class GetCurrentUserTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
+    System.out.println(user.username);
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(user);
   }
@@ -45,7 +46,7 @@ public class GetCurrentUserTest {
   @Description("Get current user by using correct token, check if username is same as expected")
   @Test
   @DisplayName("Get current user by using correct token, check username")
-  void userWithCorrectToken() {
+  void getUserWithCorrectToken() {
     // GIVEN
     requestSpecification = prepareRequestSpecification(token);
 
@@ -54,7 +55,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected username is different than actual",
+        "Actual username is different than expected",
         response.user.username,
         Matchers.equalTo(username));
   }
@@ -63,7 +64,7 @@ public class GetCurrentUserTest {
   @Description("Get current user by using incorrect token, check if status code is 401")
   @Test
   @DisplayName("Get current user by using incorrect token, check status code")
-  void userWithIncorrectToken() {
+  void cantGetUserWithIncorrectToken() {
     // GIVEN
     String incorrectToken = token + "AAA";
     requestSpecification = prepareRequestSpecification(incorrectToken);
@@ -73,7 +74,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_401.getValue()));
   }
@@ -82,7 +83,7 @@ public class GetCurrentUserTest {
   @Description("Get current user without using andy token, check if status code is 401")
   @Test
   @DisplayName("Get current user without specifying token, check status code")
-  void userWithoutToken() {
+  void cantGetUserWithoutToken() {
     // GIVEN
     requestSpecification = prepareRequestSpecification();
 
@@ -91,7 +92,7 @@ public class GetCurrentUserTest {
 
     // THEN
     MatcherAssert.assertThat(
-        "Expected status code is different than actual",
+        "Actual status code is different than expected",
         statusCode,
         Matchers.equalTo(CODE_401.getValue()));
   }

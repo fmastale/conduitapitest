@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Epic("Regression tests")
+@Epic("Smoke tests")
 @Feature("Registration")
 public class RegistrationTest {
   private int statusCode;
@@ -42,7 +42,7 @@ public class RegistrationTest {
   @Description("Register user with all fields valid, check if actual username is same as expected")
   @Test
   @DisplayName("Register valid user, check username")
-  void validUser() {
+  void registerValidUser() {
 
     for (RegistrationRequestUser user : testDataProvider.getValidUsers()) {
       // GIVEN
@@ -63,7 +63,7 @@ public class RegistrationTest {
   @Description("Register user with taken username, check if actual error is same as expected")
   @Test
   @DisplayName("Register user with taken username, check error message")
-  void userWithIncorrectData() {
+  void cantRegisterUserWithIncorrectData() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithDuplicatedName());
 
@@ -81,7 +81,7 @@ public class RegistrationTest {
   @Description("Register user with empty username, check if actual error is same as expected")
   @Test
   @DisplayName("Register user with empty username, check error message")
-  void userWithEmptyUsername() {
+  void cantRegisterUserWithEmptyUsername() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithEmptyName());
 
@@ -100,7 +100,7 @@ public class RegistrationTest {
       "Register user without specifying username, check if actual error is same as expected")
   @Test
   @DisplayName("Register user without username, check error message")
-  void userWithoutUsername() {
+  void cantRegisterUserWithoutUsername() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithoutName());
 
@@ -122,7 +122,7 @@ public class RegistrationTest {
       "Register user which username is max + 1 length, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with username length max + 1, check error message")
-  void userWithMaxPlusOneUsernameLength() {
+  void cantRegisterUserWithMaxPlusOneNameLength() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithMaxPlusName());
 
@@ -143,7 +143,7 @@ public class RegistrationTest {
       "Register user with email in unusual format, check if actual username is same as expected")
   @Test
   @DisplayName("Register user with email in unusual format, check username match")
-  void userWithUnusualEmail() {
+  void registerUserWithUnusualEmail() {
 
     for (RegistrationRequestUser user : testDataProvider.getUsersWithUnusualEmailFormat()) {
       // GIVEN
@@ -165,9 +165,9 @@ public class RegistrationTest {
       "Register user with special characters in email, check if actual username is same as expected")
   @Test
   @DisplayName("Register user with special characters in email, check username")
-  void userWithSpecialCharsInEmail() {
+  void registerUserWithSpecialCharsInEmail() {
     // GIVEN
-    // todo: change it to 'requestBody = prepareRequestBody(user)'
+    // todo: change it to 'requestBody = prepareRequestBody(user)' ?
     prepareRequestBody(testDataProvider.getUserWithSpecialCharsEmail());
 
     // WHEN
@@ -185,7 +185,7 @@ public class RegistrationTest {
       "Register user with space inside an email, check if actual error is same as expected")
   @Test
   @DisplayName("Register user with space inside email, check error message")
-  void userWithSpaceInEmail() {
+  void cantRegisterUserWithSpaceInEmail() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithSpaceInEmail());
 
@@ -204,7 +204,7 @@ public class RegistrationTest {
       "Register user with email which is incorrectly formatted, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with email in incorrect format, check error message")
-  void userWithIncorrectlyFormattedEmail() {
+  void cantRegisterUserWithIncorrectEmailFormat() {
 
     for (RegistrationRequestUser user : testDataProvider.getUsersWithWrongEmailFormat()) {
       // GIVEN
@@ -226,7 +226,7 @@ public class RegistrationTest {
       "Register user with email which is already taken, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with taken email, check error message")
-  void userWithTakenEmailAddress() {
+  void cantRegisterUserWithTakenEmail() {
     // GIVEN
     requestBody = new RegistrationRequestUserDto(testDataProvider.getValidRegistrationUser());
     RestAssured.given()
@@ -251,7 +251,7 @@ public class RegistrationTest {
       "Register user with empty email in request body, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with empty email, check error message")
-  void userWithEmptyEmail() {
+  void cantRegisterUserWithEmptyEmail() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithEmptyEmail());
 
@@ -270,7 +270,7 @@ public class RegistrationTest {
       "Register user without email in body, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user without email, check error message")
-  void userWithoutEmail() {
+  void cantRegisterUserWithoutEmail() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithoutEmail());
 
@@ -288,7 +288,7 @@ public class RegistrationTest {
   @Description("Register user which use password with minimal length, check if status code is 200")
   @Test
   @DisplayName("Register user with minimal password length, check status code")
-  void userWithMinPassLength() {
+  void registerUserWithMinPassLength() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithMinPassLength());
 
@@ -307,7 +307,7 @@ public class RegistrationTest {
       "Register user with password length less than minimal, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with min-1 password length, check error message")
-  void userWithLessThanMinPass() {
+  void cantRegisterUserWithLessThanMinPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithLessThanMinPass());
 
@@ -326,7 +326,7 @@ public class RegistrationTest {
       "Register user with empty password, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with empty password, check error message")
-  void userWithEmptyPassword() {
+  void cantRegisterUserWithEmptyPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithEmptyPass());
 
@@ -345,7 +345,7 @@ public class RegistrationTest {
       "Register user without specifying password, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user without password, check error message")
-  void userWithoutPassword() {
+  void cantRegisterUserWithoutPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithoutPassword());
 
@@ -382,7 +382,7 @@ public class RegistrationTest {
       "Register user with password length higher than maximal, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with max + 1 password length, check error message")
-  void userWithTooLongPass() {
+  void cantRegisterUserWithTooLongPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithTooLongPass());
 
@@ -401,7 +401,7 @@ public class RegistrationTest {
       "Register user which use special characters in  password, check if status code is 200")
   @Test
   @DisplayName("Register user with special characters in password, check status code")
-  void userWithRegularSpecialCharsInPass() {
+  void registerUserWithRegularSpecialCharsInPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserWithSpecCharsInPass());
 
@@ -419,7 +419,7 @@ public class RegistrationTest {
   @Description("Register user with space inside password, check if status code is 200")
   @Test
   @DisplayName("Register user with space inside password, check status code")
-  void userWithSpaceInPass() {
+  void registerUserWithSpaceInPass() {
     // GIVEN
     prepareRequestBody(testDataProvider.getUserInSpaceInPass());
 
@@ -438,7 +438,7 @@ public class RegistrationTest {
       "Register user with empty body in request, check if actual error message is same as expected")
   @Test
   @DisplayName("Register user with empty body, check error message")
-  void userWithEmptyBody() {
+  void cantRegisterUserWithEmptyBody() {
     // GIVEN
     prepareRequestBody(new RegistrationRequestUser());
 
