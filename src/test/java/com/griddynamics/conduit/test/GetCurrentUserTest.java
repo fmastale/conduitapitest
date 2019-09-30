@@ -37,7 +37,6 @@ public class GetCurrentUserTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
-    System.out.println(user.username);
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(user);
   }

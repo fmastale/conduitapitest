@@ -30,7 +30,7 @@ public class UpdateUserTest {
   private static UserRequest user = testDataProvider.getTestUser();
 
   private RequestSpecification requestSpecification;
-  UserResponseDto userResponse;
+  private UserResponseDto userResponse;
 
   @BeforeAll
   static void prepareEnvironment() {
