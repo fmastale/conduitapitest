@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("List Articles")
 public class ListArticlesTest {
+  private RequestSpecification requestSpecification;
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -33,29 +34,49 @@ public class ListArticlesTest {
   @Description("Get list of articles, check if status code is equal to 200")
   @Test
   @DisplayName("Get list of articles, check status code")
-  void getListArticlesCheckStatusCode() {
+  void getListOfArticlesCheckStatusCode() {
     // GIVEN
-    RequestSpecification requestSpecification = RestAssured.given();
+    requestSpecification = RestAssured.given();
 
     // WHEN
-    int statusCode = requestSpecification.get(ARTICLES.getEndpoint()).statusCode();
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
     // todo: better way of validating list of articles?!
-    MatcherAssert.assertThat("", statusCode, Matchers.equalTo(CODE_200.getValue()));
+    MatcherAssert.assertThat(
+        "Actual status code is different than expected",
+        statusCode,
+        Matchers.equalTo(CODE_200.getValue()));
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Get list of articles limited to 5, check if list size is less or equal 5")
   @Test
-  @DisplayName("Get list of articles limited to 5, check if list size is less or equal 5")
-  void getLimitedListOfArticles() {
+  @DisplayName("Get limited list of articles, check size")
+  void getLimitedListOfArticlesCheckSize() {
     // GIVEN
     int number = 5;
-    RequestSpecification requestSpecification = RestAssured.given().pathParam(LIMIT_NUMBER.getDetails(), number );
+    requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.getDetails(), number);
 
     // WHEN
-    ArticlesDto articles = requestSpecification.get(ARTICLES_LIMIT.getEndpoint()).as(ArticlesDto.class);
+    ArticlesDto articles = getListArticlesFromApiCall(requestSpecification);
 
     // THEN
-    MatcherAssert.assertThat("", articles.articles.size() <= number, Matchers.equalTo(true));
+    MatcherAssert.assertThat(
+        "Actual list of articles is greater than expected",
+        articles.articles.size() <= number,
+        Matchers.equalTo(true));
+  }
+
+  private ArticlesDto getListArticlesFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.get(ARTICLES_LIMIT.getEndpoint()).as(ArticlesDto.class);
+  }
+
+  private RequestSpecification prepareRequestSpecification(String path, int number) {
+    return RestAssured.given().pathParam(path, number);
+  }
+
+  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.get(ARTICLES.getEndpoint()).statusCode();
   }
 }
