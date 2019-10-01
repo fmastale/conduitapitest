@@ -1,15 +1,12 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.USERS;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.StatusCode.CODE_422;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
-import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsons.UserRequest;
-import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
@@ -139,7 +136,7 @@ public class AuthenticationTest {
         Matchers.hasItemInArray("is invalid"));
   }
 
-  private static void registerUser(RegistrationRequestUser user) {
+  /*private static void registerUser(RegistrationRequestUser user) {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
@@ -147,7 +144,7 @@ public class AuthenticationTest {
 
     UserResponseDto responseBody =
         requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
-  }
+  }*/
 
   private void prepareRequest(String email, String password) {
     prepareRequestBody(email, password);
