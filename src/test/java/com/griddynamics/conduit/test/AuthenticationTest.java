@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 @Epic("Smoke tests")
 @Feature("Authentication")
 public class AuthenticationTest {
@@ -36,13 +35,9 @@ public class AuthenticationTest {
   private UserRequest userBody;
   private UserRequestDto requestBody;
 
-
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
-    // todo: app stopped logging my randomly created user (security feature?!) so that's why
-    //  I'm using registeredUser which is provided from testDataProvider
-     //registerUser(registeredUser);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -134,16 +129,6 @@ public class AuthenticationTest {
         errorBody.errors.emailOrPassword,
         Matchers.hasItemInArray("is invalid"));
   }
-
-  /*private static void registerUser(RegistrationRequestUser user) {
-    RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
-
-    requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
-
-    UserResponseDto responseBody =
-        requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
-  }*/
 
   private void prepareRequest(String email, String password) {
     prepareRequestBody(email, password);

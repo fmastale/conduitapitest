@@ -30,101 +30,115 @@ import static com.griddynamics.conduit.helpers.StatusCode.CODE_401;
 @Epic("Smoke tests")
 @Feature("Follow User")
 public class FollowUserTest {
-    private static String token;
-    private static TestDataProvider testDataProvider = new TestDataProvider();
-    private static UserRequest registeredUser = testDataProvider.getTestUser();
-    private static RequestSpecification requestSpecification;
-    private static UserResponseDto userToFollow;
+  private static String token;
+  private static TestDataProvider testDataProvider = new TestDataProvider();
+  private static UserRequest registeredUser = testDataProvider.getTestUser();
+  private static RequestSpecification requestSpecification;
+  private static UserResponseDto userToFollow;
 
-    @BeforeAll
-    static void prepareEnvironment() {
-        RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+  @BeforeAll
+  static void prepareEnvironment() {
+    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
 
-        TokenProvider tokenProvider = new TokenProvider();
-        token = tokenProvider.getTokenForUser(registeredUser);
+    TokenProvider tokenProvider = new TokenProvider();
+    token = tokenProvider.getTokenForUser(registeredUser);
 
-        // for every new user 'follow' is set to: false
-        userToFollow = registerUser(testDataProvider.getValidRegistrationUser());
-    }
+    // for every new user 'follow' is set to: false
+    userToFollow = registerUser(testDataProvider.getValidRegistrationUser());
+  }
 
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Start following valid user, check if 'follow' field is set to 'true'")
-    @Test
-    @DisplayName("Follow valid user, check 'follow' field")
-    void followValidUserGetFollowingTrue() {
-        // GIVEN
-        requestSpecification = prepareRequestBody(token, userToFollow.user.username);
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Start following valid user, check if 'follow' field is set to 'true'")
+  @Test
+  @DisplayName("Follow valid user, check 'follow' field")
+  void followValidUserGetFollowingTrue() {
+    // GIVEN
+    requestSpecification = prepareRequestBody(token, userToFollow.user.username);
 
-        // WHEN
-        ProfileDto response = getProfileFromApiCall(requestSpecification);
+    // WHEN
+    ProfileDto response = getProfileFromApiCall(requestSpecification);
 
-        // THEN
-        MatcherAssert.assertThat("'Follow' field should be set to 'true', but was 'false'",
-                response.profile.following, Matchers.equalTo(true));
-    }
+    // THEN
+    MatcherAssert.assertThat(
+        "'Follow' field should be set to 'true', but was 'false'",
+        response.profile.following,
+        Matchers.equalTo(true));
+  }
 
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Try to start following non existing user, check error message")
-    @Test
-    @DisplayName("Follow non existing user, check error message")
-    void followNonExistingUserGetFollowingFalse() {
-        // GIVEN
-        requestSpecification = prepareRequestBody(token, testDataProvider.getRandomIncorrectUsername());
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Try to start following non existing user, check error message")
+  @Test
+  @DisplayName("Follow non existing user, check error message")
+  void followNonExistingUserGetFollowingFalse() {
+    // GIVEN
+    requestSpecification = prepareRequestBody(token, testDataProvider.getRandomIncorrectUsername());
 
-        // WHEN
-        GenericError responseError = getErrorFromApiCall(requestSpecification);
+    // WHEN
+    GenericError responseError = getErrorFromApiCall(requestSpecification);
 
-        // THEN
-        MatcherAssert.assertThat("Actual error message is different than expected",
-                responseError.error, Matchers.equalTo("Not Found"));
-    }
+    // THEN
+    MatcherAssert.assertThat(
+        "Actual error message is different than expected",
+        responseError.error,
+        Matchers.equalTo("Not Found"));
+  }
 
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Try to start following existing user without being authenticated, check status code")
-    @Test
-    @DisplayName("Follow user without being authenticated, check status code")
-    void followValidUserWithoutBeingAuthenticated() {
-        // GIVEN
-        requestSpecification = prepareRequestBody(testDataProvider.getRandomIncorrectUsername());
+  @Severity(SeverityLevel.NORMAL)
+  @Description(
+      "Try to start following existing user without being authenticated, check status code")
+  @Test
+  @DisplayName("Follow user without being authenticated, check status code")
+  void followValidUserWithoutBeingAuthenticated() {
+    // GIVEN
+    requestSpecification = prepareRequestBody(testDataProvider.getRandomIncorrectUsername());
 
-        // WHEN
-        int statusCode = getStatusCodeFromApiCall(requestSpecification);
+    // WHEN
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
-        // THEN
-        MatcherAssert.assertThat("Actual status code is different than expected",
-                statusCode, Matchers.equalTo(CODE_401.getValue()));
-    }
+    // THEN
+    MatcherAssert.assertThat(
+        "Actual status code is different than expected",
+        statusCode,
+        Matchers.equalTo(CODE_401.getValue()));
+  }
 
+  private static UserResponseDto registerUser(RegistrationRequestUser user) {
+    RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
-    private static UserResponseDto registerUser(RegistrationRequestUser user) {
-        RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
+    requestSpecification =
+        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
 
-        requestSpecification =
-                RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+  }
 
-        return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
-    }
+  private RequestSpecification prepareRequestBody(String token, String username) {
+    return RestAssured.given()
+        .header(AUTHORIZATION.getDetail(), token)
+        .pathParam(USERNAME.getDetail(), username);
+  }
 
-    private RequestSpecification prepareRequestBody(String token, String username) {
-        return RestAssured.given().header(AUTHORIZATION.getDetail(), token).pathParam(USERNAME.getDetail(), username);
-    }
+  private RequestSpecification prepareRequestBody(String username) {
+    return RestAssured.given().pathParam(USERNAME.getDetail(), username);
+  }
 
-    private RequestSpecification prepareRequestBody(String username) {
-        return RestAssured.given().pathParam(USERNAME.getDetail(), username);
-    }
+  private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification
+        .contentType("application/json")
+        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .as(ProfileDto.class);
+  }
 
-    private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
-        return requestSpecification.contentType("application/json")
-                .post(PROFILES_USERNAME_FOLLOW.getEndpoint()).as(ProfileDto.class);
-    }
+  private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification
+        .contentType("application/json")
+        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .as(GenericError.class);
+  }
 
-    private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
-        return requestSpecification.contentType("application/json")
-                .post(PROFILES_USERNAME_FOLLOW.getEndpoint()).as(GenericError.class);
-    }
-
-    private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-        return requestSpecification.contentType("application/json")
-                .post(PROFILES_USERNAME_FOLLOW.getEndpoint()).statusCode();
-    }
+  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification
+        .contentType("application/json")
+        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .statusCode();
+  }
 }
