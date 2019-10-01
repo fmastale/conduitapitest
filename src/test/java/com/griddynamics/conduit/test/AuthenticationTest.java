@@ -42,8 +42,7 @@ public class AuthenticationTest {
     RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
     // todo: app stopped logging my randomly created user (security feature?!) so that's why
     //  I'm using registeredUser which is provided from testDataProvider
-    // registerUser(registeredUser);
-
+     //registerUser(registeredUser);
   }
 
   @Severity(SeverityLevel.NORMAL)

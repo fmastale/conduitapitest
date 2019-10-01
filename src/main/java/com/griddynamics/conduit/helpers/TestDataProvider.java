@@ -4,10 +4,13 @@ import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+// todo: split this class to couple different classes, make user (not string) argument of requestSpecification()
 public class TestDataProvider {
 
   private String username;
