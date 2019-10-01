@@ -5,6 +5,7 @@ public enum RequestSpecificationDetails {
   APPLICATION_JSON("application/json"),
   AUTHORIZATION("Authorization"),
   USERNAME("username"),
+  LIMIT_NUMBER("number"),
   SLUG("slug");
 
   private final String detail;
@@ -13,7 +14,7 @@ public enum RequestSpecificationDetails {
     this.detail = detail;
   }
 
-  public String getDetail() {
+  public String getDetails() {
     return detail;
   }
 }

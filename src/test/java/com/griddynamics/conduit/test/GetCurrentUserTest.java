@@ -106,11 +106,11 @@ public class GetCurrentUserTest {
 
   private RequestSpecification prepareRequestSpecification(String token) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail())
-        .header(AUTHORIZATION.getDetail(), token);
+        .contentType(APPLICATION_JSON.getDetails())
+        .header(AUTHORIZATION.getDetails(), token);
   }
 
   private RequestSpecification prepareRequestSpecification() {
-    return RestAssured.given().contentType(APPLICATION_JSON.getDetail());
+    return RestAssured.given().contentType(APPLICATION_JSON.getDetails());
   }
 }

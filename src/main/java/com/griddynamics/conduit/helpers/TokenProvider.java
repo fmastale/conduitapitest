@@ -28,7 +28,7 @@ public class TokenProvider {
     requestBody = new UserRequestDto(user);
 
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
     userResponseDto =
         requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);

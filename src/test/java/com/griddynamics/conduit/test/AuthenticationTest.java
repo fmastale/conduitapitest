@@ -176,6 +176,6 @@ public class AuthenticationTest {
 
   private void prepareRequestSpecification() {
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
   }
 }

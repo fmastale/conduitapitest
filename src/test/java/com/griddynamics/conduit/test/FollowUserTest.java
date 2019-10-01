@@ -106,19 +106,19 @@ public class FollowUserTest {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
     return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestBody(String token, String username) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetail(), token)
-        .pathParam(USERNAME.getDetail(), username);
+        .header(AUTHORIZATION.getDetails(), token)
+        .pathParam(USERNAME.getDetails(), username);
   }
 
   private RequestSpecification prepareRequestBody(String username) {
-    return RestAssured.given().pathParam(USERNAME.getDetail(), username);
+    return RestAssured.given().pathParam(USERNAME.getDetails(), username);
   }
 
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {

@@ -124,13 +124,13 @@ public class GetProfileTest {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetail()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
     return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestSpecification(String username) {
-    return RestAssured.given().pathParam(USERNAME.getDetail(), username);
+    return RestAssured.given().pathParam(USERNAME.getDetails(), username);
   }
 
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
@@ -143,7 +143,7 @@ public class GetProfileTest {
 
   private Response getResponseFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
-        .contentType(APPLICATION_JSON.getDetail())
+        .contentType(APPLICATION_JSON.getDetails())
         .get(PROFILES_USERNAME.getEndpoint());
   }
 }

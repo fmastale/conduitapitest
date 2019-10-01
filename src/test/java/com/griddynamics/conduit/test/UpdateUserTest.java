@@ -92,8 +92,8 @@ public class UpdateUserTest {
 
   private RequestSpecification prepareRequestSpecification(UserRequest user) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetail())
-        .header(AUTHORIZATION.getDetail(), token)
+        .contentType(APPLICATION_JSON.getDetails())
+        .header(AUTHORIZATION.getDetails(), token)
         .body(user);
   }
 

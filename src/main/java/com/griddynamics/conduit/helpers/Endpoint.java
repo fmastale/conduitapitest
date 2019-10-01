@@ -8,6 +8,8 @@ public enum Endpoint {
   USERS("/users"),
   PROFILES_USERNAME("/profiles/{username}"),
   PROFILES_USERNAME_FOLLOW("/profiles/{username}/follow"),
+  ARTICLES("/articles"),
+  ARTICLES_LIMIT("/articles?limit={number}"),
   ARTICLES_SLUG("/articles/{slug}");
 
   private final String endpoint;
