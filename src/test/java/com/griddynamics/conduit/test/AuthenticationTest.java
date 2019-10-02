@@ -37,7 +37,7 @@ public class AuthenticationTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -146,7 +146,7 @@ public class AuthenticationTest {
   }
 
   private UserResponseDto makeApiCall() {
-    return requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.post(USERS_LOGIN.get()).as(UserResponseDto.class);
   }
 
   private void prepareRequestBody(String email, String password) {
@@ -166,12 +166,12 @@ public class AuthenticationTest {
 
   private UnprocessableEntityErrorDto getErrorBodyFromApiCall() {
     return requestSpecification
-        .post(USERS_LOGIN.getEndpoint())
+        .post(USERS_LOGIN.get())
         .as(UnprocessableEntityErrorDto.class);
   }
 
   private int getStatusFromApiCall() {
-    return requestSpecification.post(USERS_LOGIN.getEndpoint()).statusCode();
+    return requestSpecification.post(USERS_LOGIN.get()).statusCode();
   }
 
   private void prepareRequestSpecification() {

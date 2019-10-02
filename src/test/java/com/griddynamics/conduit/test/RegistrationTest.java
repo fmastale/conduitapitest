@@ -35,7 +35,7 @@ public class RegistrationTest {
 
   @BeforeAll
   static void beforeAll() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -232,7 +232,7 @@ public class RegistrationTest {
     RestAssured.given()
         .contentType(APPLICATION_JSON.getDetails())
         .body(requestBody)
-        .post(USERS.getEndpoint());
+        .post(USERS.get());
 
     prepareRequestBody(testDataProvider.getValidRegistrationUser());
 
@@ -459,14 +459,14 @@ public class RegistrationTest {
   }
 
   private UserResponseDto getApiCallResponseUser() {
-    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private UnprocessableEntityErrorDto getApiCallResponseError() {
-    return requestSpecification.post(USERS.getEndpoint()).as(UnprocessableEntityErrorDto.class);
+    return requestSpecification.post(USERS.get()).as(UnprocessableEntityErrorDto.class);
   }
 
   private int getApiCallResponseStatusCode() {
-    return requestSpecification.post(USERS.getEndpoint()).getStatusCode();
+    return requestSpecification.post(USERS.get()).getStatusCode();
   }
 }

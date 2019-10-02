@@ -16,7 +16,7 @@ public class TokenProvider {
   private RequestSpecification requestSpecification;
 
   public TokenProvider() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
   public String getTokenForUser(UserRequest user) {
@@ -31,7 +31,7 @@ public class TokenProvider {
         RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
     userResponseDto =
-        requestSpecification.post(USERS_LOGIN.getEndpoint()).as(UserResponseDto.class);
+        requestSpecification.post(USERS_LOGIN.get()).as(UserResponseDto.class);
 
     return userResponseDto;
   }

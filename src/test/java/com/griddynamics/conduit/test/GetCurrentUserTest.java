@@ -35,7 +35,7 @@ public class GetCurrentUserTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(user);
@@ -97,11 +97,11 @@ public class GetCurrentUserTest {
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(USER.getEndpoint()).statusCode();
+    return requestSpecification.get(USER.get()).statusCode();
   }
 
   private UserResponseDto getUserFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(USER.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.get(USER.get()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestSpecification(String token) {

@@ -39,7 +39,7 @@ public class CreateArticleTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(user);
@@ -102,6 +102,6 @@ public class CreateArticleTest {
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.post(ARTICLES.getEndpoint()).statusCode();
+    return requestSpecification.post(ARTICLES.get()).statusCode();
   }
 }

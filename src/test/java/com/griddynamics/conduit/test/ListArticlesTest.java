@@ -27,7 +27,7 @@ public class ListArticlesTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -69,7 +69,7 @@ public class ListArticlesTest {
   }
 
   private ArticlesDto getListArticlesFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(ARTICLES_LIMIT.getEndpoint()).as(ArticlesDto.class);
+    return requestSpecification.get(ARTICLES_LIMIT.get()).as(ArticlesDto.class);
   }
 
   private RequestSpecification prepareRequestSpecification(String path, int number) {
@@ -77,6 +77,6 @@ public class ListArticlesTest {
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(ARTICLES.getEndpoint()).statusCode();
+    return requestSpecification.get(ARTICLES.get()).statusCode();
   }
 }

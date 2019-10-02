@@ -38,7 +38,7 @@ public class FollowUserTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(registeredUser);
@@ -108,7 +108,7 @@ public class FollowUserTest {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
-    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestBody(String token, String username) {
@@ -124,21 +124,21 @@ public class FollowUserTest {
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .post(PROFILES_USERNAME_FOLLOW.get())
         .as(ProfileDto.class);
   }
 
   private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .post(PROFILES_USERNAME_FOLLOW.get())
         .as(GenericError.class);
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .post(PROFILES_USERNAME_FOLLOW.get())
         .statusCode();
   }
 }
