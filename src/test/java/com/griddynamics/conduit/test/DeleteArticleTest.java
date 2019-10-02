@@ -6,6 +6,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
@@ -26,18 +27,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 @Epic("Smoke tests")
-@Feature("Get Article")
-public class GetArticleTest {
-  // todo:
-  //  4. Add after all and remove article created in BeforeAll
-  //  5. add test with invalid slug
-
-  private String slug;
+@Feature("Delete Article")
+public class DeleteArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUser();
+
+  private String slug;
+
+  // todo: check if article was removed by checking if article can by found using slug
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -49,29 +48,39 @@ public class GetArticleTest {
 
   @BeforeEach
   void prepareSlug() {
-    Article article =
-        new Article("Title", "Description", "Body");
+    Article article = new Article("Title", "Description", "Body");
 
     slug = getSlugFromCreatedArticle(article);
   }
 
   @Severity(SeverityLevel.NORMAL)
-  @Description("Get already created article, check if slug match slug from path parameter")
+  @Description("Delete article, check if status code is 200")
   @Test
-  @DisplayName("Get article article, check if slug is same as slug from path parameter")
-  void getArticleCheckSlug() {
+  @DisplayName("Delete article, check status code")
+  void deleteArticleCheckStatusCode() {
     // GIVEN
-    RequestSpecification requestSpecification =
-        RestAssured.given().pathParam(SLUG.getDetails(), slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
 
     // WHEN
-    ArticleDto dto = requestSpecification.get(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
-        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(slug));
+        "Actual status code is different than expected",
+        statusCode,
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
+
+  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
+  }
+
+  private RequestSpecification prepareRequestSpecification(String token, String slug) {
+    return RestAssured.given()
+        .header(AUTHORIZATION.getDetails(), token)
+        .pathParam(SLUG.getDetails(), slug);
+  }
 
   private static String getSlugFromCreatedArticle(Article article) {
     Response response = createArticle(article);

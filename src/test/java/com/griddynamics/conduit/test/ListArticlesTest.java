@@ -3,7 +3,7 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES_LIMIT;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.LIMIT_NUMBER;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
+import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.jsonsdtos.ArticlesListDto;
@@ -52,7 +52,7 @@ public class ListArticlesTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)

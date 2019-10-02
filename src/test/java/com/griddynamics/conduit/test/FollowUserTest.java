@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_401;
+import static com.griddynamics.conduit.helpers.StatusCode._401;
 
 @Epic("Smoke tests")
 @Feature("Follow User")
@@ -99,7 +99,7 @@ public class FollowUserTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_401.getValue()));
+        Matchers.equalTo(_401.get()));
   }
 
   private static UserResponseDto registerUser(RegistrationRequestUser user) {

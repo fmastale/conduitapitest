@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.griddynamics.conduit.helpers.Endpoint.*;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_401;
+import static com.griddynamics.conduit.helpers.StatusCode._401;
 
 @Epic("Smoke tests")
 @Feature("Unfollow User")
@@ -99,7 +99,7 @@ public class UnfollowUserTest {
     MatcherAssert.assertThat(
         "'Follow' field should be set to 'false', but was 'true'",
         statusCode,
-        Matchers.equalTo(CODE_401.getValue()));
+        Matchers.equalTo(_401.get()));
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {

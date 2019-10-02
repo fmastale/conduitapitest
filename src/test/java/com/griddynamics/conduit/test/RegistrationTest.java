@@ -2,7 +2,7 @@ package com.griddynamics.conduit.test;
 
 import static com.griddynamics.conduit.helpers.Endpoint.USERS;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
+import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -299,7 +299,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -374,7 +374,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -412,7 +412,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -430,7 +430,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)

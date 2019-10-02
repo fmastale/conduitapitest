@@ -3,7 +3,7 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
+import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -17,7 +17,6 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
-import junit.framework.Assert;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,7 +61,7 @@ public class CreateArticleTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -83,7 +82,7 @@ public class CreateArticleTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(_200.get()));
   }
 
   private RequestSpecification prepareRequestSpecification(Article article, String token) {
