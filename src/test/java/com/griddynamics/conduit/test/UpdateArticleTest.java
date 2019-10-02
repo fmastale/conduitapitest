@@ -19,8 +19,6 @@ import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,16 +26,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
-@Feature("Get Article")
-public class GetArticleTest {
-  // todo:
-  //  5. add test with invalid slug
-  //  6. add loggers
+@Feature("Update Article")
+public class UpdateArticleTest {
+  /*
+  * todo:
+  *  4. update article
+  *  5. check if updated
+  * */
 
-  private String slug;
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUser();
+
+  private String slug;
+
+  // todo: check if article was removed by checking if article can by found using slug
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -63,31 +66,35 @@ public class GetArticleTest {
     checkIfRemoved(statusCode != 200, "Article was not removed");
   }
 
-
   @Severity(SeverityLevel.NORMAL)
-  @Description("Get already created article, check if slug match slug from path parameter")
+  @Description("Update article, check if updated bio is different than the old one")
   @Test
-  @DisplayName("Get article article, check if slug is same as slug from path parameter")
-  void getArticleCheckSlug() {
-    // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug);
+  @DisplayName("Update article, check if bio is updated")
+  void updateArticleCheckBio() {
+    //GIVEN
 
-    // WHEN
-    ArticleDto dto = requestSpecification.get(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
+    //WHEN
 
-    // THEN
-    MatcherAssert.assertThat(
-        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(slug));
+    //THEN
+
   }
 
-  private RequestSpecification prepareRequestSpecification(String slug) {
-    return RestAssured.given().pathParam(SLUG.getDetails(), slug);
-  }
+
 
   private RequestSpecification prepareRequestSpecification(String token, String slug) {
     return RestAssured.given()
         .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(SLUG.getDetails(), slug);
+        .pathParam(SLUG.getDetails(), this.slug);
+  }
+
+  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
+  }
+
+  private void checkIfRemoved(boolean isCode200, String message) {
+    if (isCode200) {
+      throw new IllegalStateException(message);
+    }
   }
 
   private static String getSlugFromCreatedArticle(Article article) {
@@ -114,15 +121,5 @@ public class GetArticleTest {
 
   private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
     return !createdArticle.article.title.equals(article.title);
-  }
-
-  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
-  }
-
-  private void checkIfRemoved(boolean isCode200, String message) {
-    if (isCode200) {
-      throw new IllegalStateException(message);
-    }
   }
 }

@@ -71,7 +71,6 @@ public class DeleteArticleTest {
         Matchers.equalTo(StatusCode._200.get()));
   }
 
-
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
   }
