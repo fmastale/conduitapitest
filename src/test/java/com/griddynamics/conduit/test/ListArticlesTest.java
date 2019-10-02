@@ -3,9 +3,9 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES_LIMIT;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.LIMIT_NUMBER;
-import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.jsonsdtos.ArticlesListDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -52,7 +52,7 @@ public class ListArticlesTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)

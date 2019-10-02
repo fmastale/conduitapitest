@@ -3,9 +3,10 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.USER;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.helpers.StatusCode._401;
+
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
@@ -75,7 +76,7 @@ public class GetCurrentUserTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_401.get()));
+        Matchers.equalTo(StatusCode._401.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -93,7 +94,7 @@ public class GetCurrentUserTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_401.get()));
+        Matchers.equalTo(StatusCode._401.get()));
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {

@@ -3,9 +3,9 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
@@ -61,7 +61,7 @@ public class CreateArticleTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -82,7 +82,7 @@ public class CreateArticleTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   private RequestSpecification prepareRequestSpecification(Article article, String token) {

@@ -2,9 +2,9 @@ package com.griddynamics.conduit.test;
 
 import static com.griddynamics.conduit.helpers.Endpoint.USERS;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.StatusCode._200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
@@ -299,7 +299,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -374,7 +374,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -412,7 +412,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -430,7 +430,7 @@ public class RegistrationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_200.get()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -451,6 +451,7 @@ public class RegistrationTest {
         errorBody.errors.email,
         Matchers.hasItemInArray("can't be blank"));
   }
+
 
   private void prepareRequestBody(RegistrationRequestUser user) {
     requestBody = new RegistrationRequestUserDto(user);

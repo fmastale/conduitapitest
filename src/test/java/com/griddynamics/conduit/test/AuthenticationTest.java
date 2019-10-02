@@ -2,9 +2,9 @@ package com.griddynamics.conduit.test;
 
 import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.StatusCode._422;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
@@ -73,7 +73,7 @@ public class AuthenticationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_422.get()));
+        Matchers.equalTo(StatusCode._422.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -91,7 +91,7 @@ public class AuthenticationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_422.get()));
+        Matchers.equalTo(StatusCode._422.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -109,7 +109,7 @@ public class AuthenticationTest {
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(_422.get()));
+        Matchers.equalTo(StatusCode._422.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
