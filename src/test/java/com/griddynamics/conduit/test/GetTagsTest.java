@@ -27,49 +27,34 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 @Epic("Smoke tests")
 @Feature("Get Tags")
 public class GetTagsTest {
-    private static String token;
-    private static TestDataProvider testDataProvider = new TestDataProvider();
-    private static UserRequest user = testDataProvider.getTestUser();
+  private static TestDataProvider testDataProvider = new TestDataProvider();
+  private static UserRequest user = testDataProvider.getTestUser();
 
+  // if I add tag to article it isn't shown in tag list, so probably list contains only
+  // not all tags, but those which are most popular
+  @BeforeAll
+  static void prepareEnvironment() {
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    // 3. get list of tags
-    // 4. check if our tag is on the list
+    TokenProvider tokenProvider = new TokenProvider();
+    String token = tokenProvider.getTokenForUser(user);
+  }
 
-    @BeforeAll
-    static void prepareEnvironment() {
-        RestAssured.baseURI = Endpoint.BASE_URI.get();
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Get list of tags, check if list contains 20 elements")
+  @Test
+  @DisplayName("Get tags list, check length")
+  void getTagsCheckLength() {
+    // GIVEN
+    RequestSpecification requestSpecification = RestAssured.given();
 
-        TokenProvider tokenProvider = new TokenProvider();
-        token = tokenProvider.getTokenForUser(user);
+    // WHEN
+    Tags tagsList = requestSpecification.get(Endpoint.TAGS.get()).as(Tags.class);
 
-
-    }
-
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Get list of tags, check if list contains 20 elements")
-    @Test
-    @DisplayName("Get tags list, check length")
-    void getTagsCheckLength() {
-        // GIVEN
-        /* I've tried to create article with a given tag and check it on the list, but list don't contain all the tags!
-        String[] tags = new String[]{"FancyTestTag", "AndAnother"};
-        Article article = new Article("This is article title", "This is description", "This is body", tags);
-
-        RequestSpecification articleRequestSpecification = RestAssured.given()
-                .contentType(APPLICATION_JSON.getDetails())
-                .header(AUTHORIZATION.getDetails(), token)
-                .body(article);
-        Response response = articleRequestSpecification.post(ARTICLES.get());
-        response.prettyPrint();*/
-
-
-        RequestSpecification requestSpecification = RestAssured.given();
-
-        // WHEN
-        Tags tagsList = requestSpecification.get(Endpoint.TAGS.get()).as(Tags.class);
-
-        System.out.println(tagsList.tags.toString());
-        // THEN
-        MatcherAssert.assertThat("Actual tags list length is different than expected", tagsList.tags.length, Matchers.equalTo(20));
-    }
+    // THEN
+    MatcherAssert.assertThat(
+        "Actual tags list length is different than expected",
+        tagsList.tags.length,
+        Matchers.equalTo(20));
+  }
 }
