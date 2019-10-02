@@ -63,7 +63,7 @@ public class TestDataProvider {
   }
 
   public RegistrationRequestUser getValidRegistrationUser() {
-    return new RegistrationRequestUser(username, email, password);
+    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), getNewPassword());
   }
 
   public RegistrationRequestUser getUserWithDuplicatedName() {

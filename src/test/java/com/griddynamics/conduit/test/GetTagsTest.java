@@ -3,7 +3,6 @@ package com.griddynamics.conduit.test;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
-import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.Tags;
 import com.griddynamics.conduit.jsons.UserRequest;
 import io.qameta.allure.Description;
@@ -12,17 +11,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 
 @Epic("Smoke tests")
 @Feature("Get Tags")

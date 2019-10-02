@@ -47,10 +47,8 @@ public class DeleteArticleTest {
   }
 
   @BeforeEach
-  void prepareSlug() {
-    Article article = new Article("Title", "Description", "Body");
-
-    slug = getSlugFromCreatedArticle(article);
+  void getSlugFromArticle() {
+    slug = getSlugFromCreatedArticle(new Article("Title", "Description", "Body"));
   }
 
   @Severity(SeverityLevel.NORMAL)
