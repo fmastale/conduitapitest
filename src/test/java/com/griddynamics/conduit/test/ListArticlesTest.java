@@ -3,10 +3,10 @@ package com.griddynamics.conduit.test;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES_LIMIT;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.LIMIT_NUMBER;
-import static com.griddynamics.conduit.helpers.StatusCode.CODE_200;
 
 import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.jsonsdtos.ArticlesDto;
+import com.griddynamics.conduit.helpers.StatusCode;
+import com.griddynamics.conduit.jsonsdtos.ArticlesListDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -30,6 +30,13 @@ public class ListArticlesTest {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
+
+  // todo: 1. create article
+  //       2. get article slug - GET Article
+  //       3. search for this article - GET Article
+  //       4. check if exists
+  //       5. remove article - DELTE Article
+
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")
   @Test
@@ -42,11 +49,10 @@ public class ListArticlesTest {
     int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
-    // todo: better way of validating list of articles?!
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
         statusCode,
-        Matchers.equalTo(CODE_200.getValue()));
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -59,7 +65,7 @@ public class ListArticlesTest {
     requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.getDetails(), number);
 
     // WHEN
-    ArticlesDto articles = getListArticlesFromApiCall(requestSpecification);
+    ArticlesListDto articles = getListArticlesFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -68,8 +74,8 @@ public class ListArticlesTest {
         Matchers.equalTo(true));
   }
 
-  private ArticlesDto getListArticlesFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(ARTICLES_LIMIT.get()).as(ArticlesDto.class);
+  private ArticlesListDto getListArticlesFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.get(ARTICLES_LIMIT.get()).as(ArticlesListDto.class);
   }
 
   private RequestSpecification prepareRequestSpecification(String path, int number) {

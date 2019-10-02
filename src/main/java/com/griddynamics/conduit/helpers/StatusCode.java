@@ -2,10 +2,10 @@ package com.griddynamics.conduit.helpers;
 
 public enum StatusCode {
 
-  CODE_200(200),
-  CODE_401(401),
-  CODE_422(422),
-  CODE_404(404);
+  _200(200),
+  _401(401),
+  _422(422),
+  _404(404);
 
   private final int value;
 
@@ -13,7 +13,7 @@ public enum StatusCode {
     this.value = value;
   }
 
-  public int getValue() {
+  public int get() {
     return value;
   }
 }
