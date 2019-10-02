@@ -10,7 +10,8 @@ public enum Endpoint {
   PROFILES_USERNAME_FOLLOW("/profiles/{username}/follow"),
   ARTICLES("/articles"),
   ARTICLES_LIMIT("/articles?limit={number}"),
-  ARTICLES_SLUG("/articles/{slug}");
+  ARTICLES_SLUG("/articles/{slug}"),
+  TAGS("/tags");
 
   private final String endpoint;
 
@@ -18,7 +19,7 @@ public enum Endpoint {
     this.endpoint = endpoint;
   }
 
-  public String getEndpoint() {
+  public String get() {
     return endpoint;
   }
 }

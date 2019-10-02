@@ -34,7 +34,7 @@ public class UpdateUserTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     prepareRandomBioAndImage(user);
 
@@ -98,6 +98,6 @@ public class UpdateUserTest {
   }
 
   private UserResponseDto getUserFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.put(USER.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.put(USER.get()).as(UserResponseDto.class);
   }
 }

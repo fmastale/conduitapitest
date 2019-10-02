@@ -38,7 +38,7 @@ public class GetProfileTest {
   // todo: special chars, space inside
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     regularUser = registerUser(new TestDataProvider().getValidRegistrationUser());
     maxLengthNameUser = registerUser(new TestDataProvider().getUserWithMaxName());
@@ -126,7 +126,7 @@ public class GetProfileTest {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
-    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestSpecification(String username) {
@@ -134,16 +134,16 @@ public class GetProfileTest {
   }
 
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(PROFILES_USERNAME.getEndpoint()).as(ProfileDto.class);
+    return requestSpecification.get(PROFILES_USERNAME.get()).as(ProfileDto.class);
   }
 
   private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.get(PROFILES_USERNAME.getEndpoint()).as(GenericError.class);
+    return requestSpecification.get(PROFILES_USERNAME.get()).as(GenericError.class);
   }
 
   private Response getResponseFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType(APPLICATION_JSON.getDetails())
-        .get(PROFILES_USERNAME.getEndpoint());
+        .get(PROFILES_USERNAME.get());
   }
 }

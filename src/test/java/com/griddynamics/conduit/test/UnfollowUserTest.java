@@ -38,7 +38,7 @@ public class UnfollowUserTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+    RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     TokenProvider tokenProvider = new TokenProvider();
     token = tokenProvider.getTokenForUser(registeredUser);
@@ -105,21 +105,21 @@ public class UnfollowUserTest {
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .delete(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .delete(PROFILES_USERNAME_FOLLOW.get())
         .statusCode();
   }
 
   private GenericError getErrorFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .delete(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .delete(PROFILES_USERNAME_FOLLOW.get())
         .as(GenericError.class);
   }
 
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .delete(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .delete(PROFILES_USERNAME_FOLLOW.get())
         .as(ProfileDto.class);
   }
 
@@ -129,7 +129,7 @@ public class UnfollowUserTest {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
 
-    return requestSpecification.post(USERS.getEndpoint()).as(UserResponseDto.class);
+    return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private static RequestSpecification prepareRequestBody(String token, UserResponseDto user) {
@@ -151,7 +151,7 @@ public class UnfollowUserTest {
   private static ProfileDto followUserApiCall(RequestSpecification requestSpecification) {
     return requestSpecification
         .contentType("application/json")
-        .post(PROFILES_USERNAME_FOLLOW.getEndpoint())
+        .post(PROFILES_USERNAME_FOLLOW.get())
         .as(ProfileDto.class);
   }
 

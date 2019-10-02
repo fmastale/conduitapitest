@@ -12,7 +12,7 @@ public class FeedArticlesTest {
 
     @BeforeAll
     static void prepareEnvironment() {
-        RestAssured.baseURI = Endpoint.BASE_URI.getEndpoint();
+        RestAssured.baseURI = Endpoint.BASE_URI.get();
     }
 
     // 1. create user follower
