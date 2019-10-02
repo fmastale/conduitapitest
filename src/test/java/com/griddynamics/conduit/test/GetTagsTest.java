@@ -51,7 +51,8 @@ public class GetTagsTest {
     @DisplayName("Get tags list, check length")
     void getTagsCheckLength() {
         // GIVEN
-        String[] tags = new String[]{"FancyTestTag"};
+        /* I've tried to create article with a given tag and check it on the list, but list don't contain all the tags!
+        String[] tags = new String[]{"FancyTestTag", "AndAnother"};
         Article article = new Article("This is article title", "This is description", "This is body", tags);
 
         RequestSpecification articleRequestSpecification = RestAssured.given()
@@ -59,7 +60,7 @@ public class GetTagsTest {
                 .header(AUTHORIZATION.getDetails(), token)
                 .body(article);
         Response response = articleRequestSpecification.post(ARTICLES.get());
-        response.prettyPrint();
+        response.prettyPrint();*/
 
 
         RequestSpecification requestSpecification = RestAssured.given();
@@ -69,6 +70,6 @@ public class GetTagsTest {
 
         System.out.println(tagsList.tags.toString());
         // THEN
-        //MatcherAssert.assertThat("Actual tags list length is different than expected", tagsList.tags.contains("FancyTestTag"), Matchers.equalTo(true));
+        MatcherAssert.assertThat("Actual tags list length is different than expected", tagsList.tags.length, Matchers.equalTo(20));
     }
 }
