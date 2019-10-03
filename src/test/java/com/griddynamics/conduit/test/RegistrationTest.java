@@ -228,13 +228,17 @@ public class RegistrationTest {
   @DisplayName("Register user with taken email, check error message")
   void cantRegisterUserWithTakenEmail() {
     // GIVEN
-    requestBody = new RegistrationRequestUserDto(testDataProvider.getValidRegistrationUser());
+
+    // todo: clean this up
+    RegistrationRequestUser registrationRequestUser= testDataProvider.getValidRegistrationUser();
+
+    requestBody = new RegistrationRequestUserDto(registrationRequestUser);
     RestAssured.given()
         .contentType(APPLICATION_JSON.getDetails())
         .body(requestBody)
         .post(USERS.get());
 
-    prepareRequestBody(testDataProvider.getValidRegistrationUser());
+    prepareRequestBody(registrationRequestUser);
 
     // WHEN
     errorBody = getApiCallResponseError();
