@@ -26,14 +26,8 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Authentication")
 public class AuthenticationTest {
-  private static RequestSpecification requestSpecification;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest registeredUser = testDataProvider.getTestUser();
-
-  private int statusCode;
-
-  private UserRequest userBody;
-  private UserRequestDto requestBody;
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -46,10 +40,14 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with valid credentials, check ID")
   void authenticateValidUser() {
     // GIVEN
-    prepareRequest(registeredUser.email, registeredUser.password);
+    UserRequestDto requestBody =
+        new UserRequestDto(
+            new UserRequest(registeredUser.email, registeredUser.password));
+
+    RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN
-    UserResponseDto responseBody = makeApiCall();
+    UserResponseDto responseBody = makeApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -64,10 +62,14 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with incorrect password, check status code")
   void cantAuthenticateUserWithIncorrectPass() {
     // GIVEN
-    prepareRequest(registeredUser.email, testDataProvider.getIncorrectPassword());
+    UserRequestDto requestBody =
+        new UserRequestDto(
+            new UserRequest(registeredUser.email, testDataProvider.getIncorrectPassword()));
+
+    RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN
-    statusCode = getStatusFromApiCall();
+    int statusCode = getStatusFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -82,10 +84,14 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with empty password, check status code")
   void cantAuthenticateUserWithEmptyPass() {
     // GIVEN
-    prepareRequest(registeredUser.email, "");
+    UserRequestDto requestBody =
+        new UserRequestDto(
+            new UserRequest(registeredUser.email, ""));
+
+    RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN
-    statusCode = getStatusFromApiCall();
+    int statusCode = getStatusFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -100,10 +106,14 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user without password, check status code")
   void cantAuthenticateUserWithoutPass() {
     // GIVEN
-    prepareRequest(registeredUser.email);
+    UserRequestDto requestBody =
+        new UserRequestDto(
+            new UserRequest(registeredUser.email));
+
+    RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN
-    statusCode = getStatusFromApiCall();
+    int statusCode = getStatusFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -118,10 +128,14 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with empty body, check error message")
   void checkErrorMessageForUserWithEmptyBody() {
     // GIVEN
-    prepareRequest();
+    UserRequestDto requestBody =
+        new UserRequestDto(
+            new UserRequest());
+    
+    RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN
-    UnprocessableEntityErrorDto errorBody = getErrorBodyFromApiCall();
+    UnprocessableEntityErrorDto errorBody = getErrorBodyFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -130,52 +144,20 @@ public class AuthenticationTest {
         Matchers.hasItemInArray("is invalid"));
   }
 
-  private void prepareRequest(String email, String password) {
-    prepareRequestBody(email, password);
-    prepareRequestSpecification();
-  }
-
-  private void prepareRequest(String email) {
-    prepareRequestBody(email);
-    prepareRequestSpecification();
-  }
-
-  private void prepareRequest() {
-    prepareRequestBody();
-    prepareRequestSpecification();
-  }
-
-  private UserResponseDto makeApiCall() {
+  private UserResponseDto makeApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.post(USERS_LOGIN.get()).as(UserResponseDto.class);
   }
 
-  private void prepareRequestBody(String email, String password) {
-    userBody = new UserRequest(email, password);
-    requestBody = new UserRequestDto(userBody);
+  private UnprocessableEntityErrorDto getErrorBodyFromApiCall(
+      RequestSpecification requestSpecification) {
+    return requestSpecification.post(USERS_LOGIN.get()).as(UnprocessableEntityErrorDto.class);
   }
 
-  private void prepareRequestBody(String email) {
-    userBody = new UserRequest(email);
-    requestBody = new UserRequestDto(userBody);
-  }
-
-  private void prepareRequestBody() {
-    userBody = new UserRequest();
-    requestBody = new UserRequestDto(userBody);
-  }
-
-  private UnprocessableEntityErrorDto getErrorBodyFromApiCall() {
-    return requestSpecification
-        .post(USERS_LOGIN.get())
-        .as(UnprocessableEntityErrorDto.class);
-  }
-
-  private int getStatusFromApiCall() {
+  private int getStatusFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.post(USERS_LOGIN.get()).statusCode();
   }
 
-  private void prepareRequestSpecification() {
-    requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+  private RequestSpecification prepareRequestSpecification(UserRequestDto requestBody) {
+    return RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
   }
 }

@@ -19,6 +19,7 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,16 +33,18 @@ public class CreateArticleTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUser();
 
-  private int statusCode;
   private Article article;
-  private RequestSpecification requestSpecification;
 
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    TokenProvider tokenProvider = new TokenProvider();
-    token = tokenProvider.getTokenForUser(user);
+    token = new TokenProvider().getTokenForUser(user);
+  }
+
+  @AfterEach
+  void removeArticle() {
+    // todo: remove article here
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -52,10 +55,10 @@ public class CreateArticleTest {
     // GIVEN
     article = prepareArticle();
 
-    requestSpecification = prepareRequestSpecification(article, token);
+    RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 
     // WHEN
-    statusCode = getStatusCodeFromApiCall(requestSpecification);
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -73,10 +76,10 @@ public class CreateArticleTest {
     String[] tags = {"tag1", "tag2"};
     article = prepareArticle(tags);
 
-    requestSpecification = prepareRequestSpecification(article, token);
+    RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 
     // WHEN
-    statusCode = getStatusCodeFromApiCall(requestSpecification);
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
