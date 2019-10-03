@@ -50,8 +50,10 @@ public class FeedArticlesTest {
                 .header(AUTHORIZATION.getDetails(), follower.user.token);
 
         // WHEN
-        ArticlesListDto articles = requestSpecification.get("/articles/feed").as(ArticlesListDto.class);
-        System.out.println(articles.articles);
+        Response response = requestSpecification.get("/articles/feed");
+        System.out.println(response.statusCode());
+        ArticlesListDto articles = response.as(ArticlesListDto.class);
+
         // THEN
         MatcherAssert.assertThat("", articles.articles.contains(article), Matchers.equalTo(true));
     }
@@ -59,8 +61,9 @@ public class FeedArticlesTest {
 
     private static void startFollowingAuthor(UserResponseDto follower, UserResponseDto author) {
         RequestSpecification requestSpecification = RestAssured.given()
-                .header(AUTHORIZATION.getDetails(), follower.user.token)
+                .header(AUTHORIZATION.getDetails(), "Token " + follower.user.token)
                 .pathParam(USERNAME.getDetails(), author.user.username);
+
 
         ProfileDto profileDto = requestSpecification
                 .contentType("application/json")
@@ -70,14 +73,13 @@ public class FeedArticlesTest {
 
     private static ArticleDto createArticle(UserResponseDto author) {
 
+        System.out.println(author.user.token);
         RequestSpecification requestSpecification = RestAssured.given()
                 .contentType(APPLICATION_JSON.getDetails())
-                .header(AUTHORIZATION.getDetails(), author.user.token)
+                .header(AUTHORIZATION.getDetails(), "Token " + author.user.token)
                 .body(new Article("This is article title", "This is description", "This is body"));
 
         Response response =  requestSpecification.post(ARTICLES.get());
-        System.out.println(response.statusCode());
-        System.out.println(response.prettyPrint());
         return response.as(ArticleDto.class);
     }
 
@@ -88,8 +90,4 @@ public class FeedArticlesTest {
 
         return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
     }
-
-
-    // 5. follower check if got on feed list authors article with given tag
-
 }
