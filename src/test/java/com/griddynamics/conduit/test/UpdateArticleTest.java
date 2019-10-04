@@ -6,10 +6,10 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
-import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -19,6 +19,8 @@ import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,32 +30,23 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Update Article")
 public class UpdateArticleTest {
-  /*
-  * todo:
-  *  4. update article
-  *  5. check if updated
-  * */
+
+  // todo: read about parallel test running, think how it will work here (slug)
+  // todo: check if article was removed by checking if article can by found using slug
 
   private static String token;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUser();
-
   private String slug;
-
-  // todo: check if article was removed by checking if article can by found using slug
 
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    TokenProvider tokenProvider = new TokenProvider();
-    token = tokenProvider.getTokenForUser(user);
+    token = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUser());
   }
 
   @BeforeEach
   void prepareSlug() {
     Article article = new Article("Title", "Description", "Body");
-
     slug = getSlugFromCreatedArticle(article);
   }
 
@@ -71,20 +64,34 @@ public class UpdateArticleTest {
   @Test
   @DisplayName("Update article, check if bio is updated")
   void updateArticleCheckBio() {
-    //GIVEN
+    // GIVEN
+    Article updatedArticle = new Article("Title", "Updated description", "Body");
 
-    //WHEN
+    RequestSpecification requestSpecification = prepareRequestSpecification(updatedArticle, token, slug);
 
-    //THEN
+    // WHEN
+    ArticleDto responseArticle = requestSpecification.put(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
 
+    // THEN
+    MatcherAssert.assertThat(
+        "Actual description is different than expected",
+        responseArticle.article.description,
+        Matchers.equalTo(updatedArticle.description));
   }
-
 
 
   private RequestSpecification prepareRequestSpecification(String token, String slug) {
     return RestAssured.given()
         .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(SLUG.getDetails(), this.slug);
+        .pathParam(SLUG.getDetails(), slug);
+  }
+
+  private RequestSpecification prepareRequestSpecification(Article article, String token, String slug) {
+    return RestAssured.given()
+        .contentType(APPLICATION_JSON.getDetails())
+        .header(RequestSpecificationDetails.AUTHORIZATION.getDetails(), token)
+        .pathParam(RequestSpecificationDetails.SLUG.getDetails(), slug)
+        .body(article);
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
