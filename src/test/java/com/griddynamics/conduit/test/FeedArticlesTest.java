@@ -41,7 +41,7 @@ public class FeedArticlesTest {
   }
 
   @BeforeEach
-  void createAuthorArticleFollower(){
+  void createAuthorArticleFollower() {
     author = registerUser(new TestDataProvider().getValidRegistrationUser());
     article = createArticle(author);
 
@@ -72,7 +72,6 @@ public class FeedArticlesTest {
         Matchers.equalTo(getRequestAuthorName(article)));
   }
 
-
   private String getRequestAuthorName(ArticleDto articles) {
     return articles.article.author.username;
   }
@@ -94,7 +93,8 @@ public class FeedArticlesTest {
   private void startFollowingAuthor(String token, UserResponseDto author) {
     RequestSpecification requestSpecification = prepareRequestSpecification(token, author);
 
-    int statusCode = requestSpecification
+    int statusCode =
+        requestSpecification
             .contentType("application/json")
             .post(PROFILES_USERNAME_FOLLOW.get())
             .statusCode();
@@ -130,6 +130,7 @@ public class FeedArticlesTest {
 
   private static RequestSpecification prepareRequestSpecification(
       String followersToken, UserResponseDto author) {
+
     return RestAssured.given()
         .header(AUTHORIZATION.getDetails(), followersToken)
         .pathParam(USERNAME.getDetails(), author.user.username);
@@ -139,13 +140,14 @@ public class FeedArticlesTest {
     return statusCode != 200;
   }
 
-  private void stopFollowingUser(String  followersToken, UserResponseDto author) {
+  private void stopFollowingUser(String followersToken, UserResponseDto author) {
     RequestSpecification requestSpecification = prepareRequestSpecification(followersToken, author);
 
-    int statusCode = requestSpecification
-        .contentType("application/json")
-        .delete(PROFILES_USERNAME_FOLLOW.get())
-        .statusCode();
+    int statusCode =
+        requestSpecification
+            .contentType("application/json")
+            .delete(PROFILES_USERNAME_FOLLOW.get())
+            .statusCode();
 
     if (not200(statusCode)) {
       throw new IllegalStateException("Author is still followed");

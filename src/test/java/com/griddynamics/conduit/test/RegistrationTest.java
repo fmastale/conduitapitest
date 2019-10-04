@@ -230,7 +230,7 @@ public class RegistrationTest {
     // GIVEN
 
     // todo: clean this up
-    RegistrationRequestUser registrationRequestUser= testDataProvider.getValidRegistrationUser();
+    RegistrationRequestUser registrationRequestUser = testDataProvider.getValidRegistrationUser();
 
     requestBody = new RegistrationRequestUserDto(registrationRequestUser);
     RestAssured.given()
@@ -455,7 +455,6 @@ public class RegistrationTest {
         errorBody.errors.email,
         Matchers.hasItemInArray("can't be blank"));
   }
-
 
   private void prepareRequestBody(RegistrationRequestUser user) {
     requestBody = new RegistrationRequestUserDto(user);

@@ -33,8 +33,6 @@ public class CreateArticleTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUser();
 
-  private Article article;
-
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
@@ -53,7 +51,7 @@ public class CreateArticleTest {
   @DisplayName("Create article, check status code")
   void createArticle() {
     // GIVEN
-    article = prepareArticle();
+    Article article = prepareArticle();
 
     RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 
@@ -74,7 +72,7 @@ public class CreateArticleTest {
   void createArticleWithAdditionalFieldCheckStatus() {
     // GIVEN
     String[] tags = {"tag1", "tag2"};
-    article = prepareArticle(tags);
+    Article article = prepareArticle(tags);
 
     RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 

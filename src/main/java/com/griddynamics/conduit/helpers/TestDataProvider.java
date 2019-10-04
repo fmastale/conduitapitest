@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-// todo: split this class to couple different classes, make user (not string) argument of requestSpecification()
+// todo: split this class to couple different classes, make user (not string) argument of
+//  requestSpecification()
 public class TestDataProvider {
 
   private String username;
@@ -23,7 +24,6 @@ public class TestDataProvider {
   private FakeValuesService fakeValuesService =
       new FakeValuesService(new Locale("en-US"), new RandomService());
 
-
   public TestDataProvider() {
     this.username = getNewUsername();
     this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
@@ -35,7 +35,6 @@ public class TestDataProvider {
     this.password = getNewPassword();
     this.incorrectPassword = fakeValuesService.regexify("[a-zA-Z1-9]{7}");
   }
-
 
   public String getTestUserUsername() {
     return "adam1234io";
@@ -127,7 +126,8 @@ public class TestDataProvider {
   }
 
   public RegistrationRequestUser getUserWithTooLongPass() {
-    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{73}"));
+    return new RegistrationRequestUser(
+        getNewUsername(), getNewEmail(), fakeValuesService.regexify("[a-zA-Z1-9]{73}"));
   }
 
   public RegistrationRequestUser getUserWithSpecCharsInPass() {
@@ -135,9 +135,9 @@ public class TestDataProvider {
   }
 
   public RegistrationRequestUser getUserInSpaceInPass() {
-    return new RegistrationRequestUser(getNewUsername(), getNewEmail(), fakeValuesService.bothify("##### ?????"));
+    return new RegistrationRequestUser(
+        getNewUsername(), getNewEmail(), fakeValuesService.bothify("##### ?????"));
   }
-
 
   public List<RegistrationRequestUser> getValidUsers() {
 
