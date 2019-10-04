@@ -57,7 +57,7 @@ public class FavoriteArticleTest {
   @Description("Favorite article, check if field 'favorited' is set to true")
   @Test
   @DisplayName("Favorite article, check if favorited")
-  void favoriteArticleChcekFavorited() {
+  void favoriteArticleCheckFavorited() {
     // GIVEN
     RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
 
