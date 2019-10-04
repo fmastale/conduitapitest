@@ -41,13 +41,13 @@ public class UpdateArticleTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    token = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUser());
+    token = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
   }
 
   @BeforeEach
   void prepareSlug() {
     Article article = new Article("Title", "Description", "Body");
-    slug = getSlugFromCreatedArticle(article);
+    slug = getSlugFromCreatedArticle(article, token);
   }
 
   @AfterEach
@@ -82,15 +82,15 @@ public class UpdateArticleTest {
 
   private RequestSpecification prepareRequestSpecification(String token, String slug) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(SLUG.getDetails(), slug);
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug);
   }
 
   private RequestSpecification prepareRequestSpecification(Article article, String token, String slug) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetails())
-        .header(RequestSpecificationDetails.AUTHORIZATION.getDetails(), token)
-        .pathParam(RequestSpecificationDetails.SLUG.getDetails(), slug)
+        .contentType(APPLICATION_JSON.get())
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(RequestSpecificationDetails.SLUG.get(), slug)
         .body(article);
   }
 
@@ -104,8 +104,8 @@ public class UpdateArticleTest {
     }
   }
 
-  private static String getSlugFromCreatedArticle(Article article) {
-    Response response = createArticle(article);
+  private static String getSlugFromCreatedArticle(Article article, String token) {
+    Response response = createArticle(article, token);
     ArticleDto createdArticle = response.as(ArticleDto.class);
 
     if (titlesNotEqual(article, createdArticle)) {
@@ -116,11 +116,11 @@ public class UpdateArticleTest {
     return createdArticle.article.slug;
   }
 
-  private static Response createArticle(Article article) {
+  private static Response createArticle(Article article, String token) {
     RequestSpecification requestSpecification =
         RestAssured.given()
-            .contentType(APPLICATION_JSON.getDetails())
-            .header(AUTHORIZATION.getDetails(), token)
+            .contentType(APPLICATION_JSON.get())
+            .header(AUTHORIZATION.get(), token)
             .body(article);
 
     return requestSpecification.post(ARTICLES.get());

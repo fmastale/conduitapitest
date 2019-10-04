@@ -32,7 +32,7 @@ public class UnfollowUserTest {
 
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUser();
+  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
   private static RequestSpecification requestSpecification;
   private static UserResponseDto user;
 
@@ -127,25 +127,25 @@ public class UnfollowUserTest {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
 
     return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private static RequestSpecification prepareRequestBody(String token, UserResponseDto user) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(USERNAME.getDetails(), user.user.username);
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(USERNAME.get(), user.user.username);
   }
 
   private static RequestSpecification prepareRequestBody(UserResponseDto user) {
-    return RestAssured.given().pathParam(USERNAME.getDetails(), user.user.username);
+    return RestAssured.given().pathParam(USERNAME.get(), user.user.username);
   }
 
   private static RequestSpecification prepareRequestBody(String token, String username) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(USERNAME.getDetails(), username);
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(USERNAME.get(), username);
   }
 
   private static ProfileDto followUserApiCall(RequestSpecification requestSpecification) {

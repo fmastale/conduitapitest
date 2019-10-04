@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 @Feature("Authentication")
 public class AuthenticationTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUser();
+  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -158,6 +158,6 @@ public class AuthenticationTest {
   }
 
   private RequestSpecification prepareRequestSpecification(UserRequestDto requestBody) {
-    return RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+    return RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
   }
 }

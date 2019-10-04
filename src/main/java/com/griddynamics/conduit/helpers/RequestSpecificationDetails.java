@@ -14,7 +14,7 @@ public enum RequestSpecificationDetails {
     this.detail = detail;
   }
 
-  public String getDetails() {
+  public String get() {
     return detail;
   }
 }

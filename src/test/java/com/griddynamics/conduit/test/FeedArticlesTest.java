@@ -86,8 +86,8 @@ public class FeedArticlesTest {
 
   private RequestSpecification prepareRequestSpecification(String followersToken) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetails())
-        .header(AUTHORIZATION.getDetails(), followersToken);
+        .contentType(APPLICATION_JSON.get())
+        .header(AUTHORIZATION.get(), followersToken);
   }
 
   private void startFollowingAuthor(String token, UserResponseDto author) {
@@ -108,8 +108,8 @@ public class FeedArticlesTest {
   private ArticleDto createArticle(UserResponseDto author) {
     RequestSpecification requestSpecification =
         RestAssured.given()
-            .contentType(APPLICATION_JSON.getDetails())
-            .header(AUTHORIZATION.getDetails(), "Token " + author.user.token)
+            .contentType(APPLICATION_JSON.get())
+            .header(AUTHORIZATION.get(), "Token " + author.user.token)
             .body(new Article("This is article title", "This is description", "This is body"));
 
     Response response = requestSpecification.post(ARTICLES.get());
@@ -119,21 +119,21 @@ public class FeedArticlesTest {
   private UserResponseDto registerUser(RegistrationRequestUser author) {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(author);
     RequestSpecification requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
 
     return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private String getFollowersToken() {
-    return new TokenProvider().getTokenForUser(new TestDataProvider().getTestUser());
+    return new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
   }
 
   private static RequestSpecification prepareRequestSpecification(
       String followersToken, UserResponseDto author) {
 
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), followersToken)
-        .pathParam(USERNAME.getDetails(), author.user.username);
+        .header(AUTHORIZATION.get(), followersToken)
+        .pathParam(USERNAME.get(), author.user.username);
   }
 
   private boolean not200(int statusCode) {

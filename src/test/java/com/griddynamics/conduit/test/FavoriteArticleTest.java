@@ -6,10 +6,10 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
-import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -28,81 +28,69 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
-@Feature("Get Article")
-public class GetArticleTest {
-  // todo:
-  //  5. add test with invalid slug
-  //  6. add loggers
-
+@Feature("Favorite Article Test")
+public class FavoriteArticleTest {
+  private static String authorsToken;
+  private static String followerToken;
   private String slug;
-  private static String token;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUserOne();
 
   @BeforeAll
-  static void prepareEnvironment() {
+  static void prepareRequest() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    TokenProvider tokenProvider = new TokenProvider();
-    token = tokenProvider.getTokenForUser(user);
+    authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
+    followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void prepareSlug() {
     Article article = new Article("Title", "Description", "Body");
-
-    slug = getSlugFromCreatedArticle(article);
+    slug = getSlugFromCreatedArticle(article, authorsToken);
   }
 
   @AfterEach
-  void removeArticle() {
-    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
-
-    int statusCode = getStatusCodeFromApiCall(requestSpecification);
-
-    checkIfRemoved(statusCode != 200, "Article was not removed");
+  void cleanup() {
+    removeArticle(slug, authorsToken);
   }
-
 
   @Severity(SeverityLevel.NORMAL)
-  @Description("Get already created article, check if slug match slug from path parameter")
+  @Description("Favorite article, check if field 'favorited' is set to true")
   @Test
-  @DisplayName("Get article article, check if slug is same as slug from path parameter")
-  void getArticleCheckSlug() {
+  @DisplayName("Favorite article, check if favorited")
+  void favoriteArticleChcekFavorited() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
 
     // WHEN
-    ArticleDto dto = requestSpecification.get(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
+    ArticleDto response = getArticleFromApiCall(requestSpecification);
 
     // THEN
-    MatcherAssert.assertThat(
-        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(slug));
+    MatcherAssert.assertThat("", response.article.favorited, Matchers.equalTo(true));
   }
 
-  private RequestSpecification prepareRequestSpecification(String slug) {
-    return RestAssured.given().pathParam(SLUG.get(), slug);
+
+  private ArticleDto getArticleFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.post(Endpoint.ARTICLES_SLUG_FAVORITE.get()).as(ArticleDto.class);
   }
 
-  private RequestSpecification prepareRequestSpecification(String token, String slug) {
+  private RequestSpecification prepareRequestSpecification(String slug, String token) {
     return RestAssured.given()
-        .header(AUTHORIZATION.get(), token)
-        .pathParam(SLUG.get(), slug);
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(RequestSpecificationDetails.SLUG.get(), slug);
   }
 
-  private static String getSlugFromCreatedArticle(Article article) {
-    Response response = createArticle(article);
+  private static String getSlugFromCreatedArticle(Article article, String token) {
+    Response response = createArticle(article, token);
     ArticleDto createdArticle = response.as(ArticleDto.class);
 
     if (titlesNotEqual(article, createdArticle)) {
       throw new IllegalStateException(
           "Response article title is different than request article title ");
     }
-
     return createdArticle.article.slug;
   }
 
-  private static Response createArticle(Article article) {
+  private static Response createArticle(Article article, String token) {
     RequestSpecification requestSpecification =
         RestAssured.given()
             .contentType(APPLICATION_JSON.get())
@@ -116,13 +104,15 @@ public class GetArticleTest {
     return !createdArticle.article.title.equals(article.title);
   }
 
-  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
-  }
+  private void removeArticle(String slug, String token) {
+    RequestSpecification requestSpecification = RestAssured.given()
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug);
 
-  private void checkIfRemoved(boolean isCode200, String message) {
-    if (isCode200) {
-      throw new IllegalStateException(message);
+    int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
+
+    if (statusCode != 200) {
+      throw new IllegalStateException("Article wasn't removed");
     }
   }
 }

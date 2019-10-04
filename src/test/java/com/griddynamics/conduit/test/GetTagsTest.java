@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 @Feature("Get Tags")
 public class GetTagsTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUser();
+  private static UserRequest user = testDataProvider.getTestUserOne();
 
   // if I add tag to article it isn't shown in tag list, so probably list contains only
   // not all tags, but those which are most popular

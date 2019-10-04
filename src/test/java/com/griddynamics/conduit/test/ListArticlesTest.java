@@ -62,7 +62,7 @@ public class ListArticlesTest {
   void getLimitedListOfArticlesCheckSize() {
     // GIVEN
     int number = 5;
-    requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.getDetails(), number);
+    requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.get(), number);
 
     // WHEN
     ArticlesListDto articles = getListArticlesFromApiCall(requestSpecification);

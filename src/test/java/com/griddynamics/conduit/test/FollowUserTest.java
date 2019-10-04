@@ -33,7 +33,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
 public class FollowUserTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUser();
+  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
   private static RequestSpecification requestSpecification;
   private static UserResponseDto userToFollow;
 
@@ -107,19 +107,19 @@ public class FollowUserTest {
     RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(user);
 
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
 
     return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
   }
 
   private RequestSpecification prepareRequestBody(String token, String username) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(USERNAME.getDetails(), username);
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(USERNAME.get(), username);
   }
 
   private RequestSpecification prepareRequestBody(String username) {
-    return RestAssured.given().pathParam(USERNAME.getDetails(), username);
+    return RestAssured.given().pathParam(USERNAME.get(), username);
   }
 
   private ProfileDto getProfileFromApiCall(RequestSpecification requestSpecification) {

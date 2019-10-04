@@ -234,7 +234,7 @@ public class RegistrationTest {
 
     requestBody = new RegistrationRequestUserDto(registrationRequestUser);
     RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetails())
+        .contentType(APPLICATION_JSON.get())
         .body(requestBody)
         .post(USERS.get());
 
@@ -459,7 +459,7 @@ public class RegistrationTest {
   private void prepareRequestBody(RegistrationRequestUser user) {
     requestBody = new RegistrationRequestUserDto(user);
     requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.getDetails()).body(requestBody);
+        RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
   }
 
   private UserResponseDto getApiCallResponseUser() {

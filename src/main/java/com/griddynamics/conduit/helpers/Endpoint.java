@@ -15,6 +15,7 @@ public enum Endpoint {
   ARTICLES_LIMIT("/articles?limit={number}"),
   ARTICLES_SLUG("/articles/{slug}"),
   ARTICLES_FEED("/articles/feed"),
+  ARTICLES_SLUG_FAVORITE("/articles/{slug}/favorite"),
 
 
   TAGS("/tags");

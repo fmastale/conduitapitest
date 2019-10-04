@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 public class DeleteArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUser();
+  private static UserRequest user = testDataProvider.getTestUserOne();
 
   private String slug;
 
@@ -75,8 +75,8 @@ public class DeleteArticleTest {
 
   private RequestSpecification prepareRequestSpecification(String token, String slug) {
     return RestAssured.given()
-        .header(AUTHORIZATION.getDetails(), token)
-        .pathParam(SLUG.getDetails(), slug);
+        .header(AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug);
   }
 
   private static String getSlugFromCreatedArticle(Article article) {
@@ -94,8 +94,8 @@ public class DeleteArticleTest {
   private static Response createArticle(Article article) {
     RequestSpecification requestSpecification =
         RestAssured.given()
-            .contentType(APPLICATION_JSON.getDetails())
-            .header(AUTHORIZATION.getDetails(), token)
+            .contentType(APPLICATION_JSON.get())
+            .header(AUTHORIZATION.get(), token)
             .body(article);
 
     return requestSpecification.post(ARTICLES.get());

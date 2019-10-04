@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class CreateArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUser();
+  private static UserRequest user = testDataProvider.getTestUserOne();
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -88,8 +88,8 @@ public class CreateArticleTest {
 
   private RequestSpecification prepareRequestSpecification(Article article, String token) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetails())
-        .header(AUTHORIZATION.getDetails(), token)
+        .contentType(APPLICATION_JSON.get())
+        .header(AUTHORIZATION.get(), token)
         .body(article);
   }
 

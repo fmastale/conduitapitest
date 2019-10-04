@@ -40,9 +40,14 @@ public class TestDataProvider {
     return "adam1234io";
   }
 
-  public UserRequest getTestUser() {
+  public UserRequest getTestUserOne() {
     return new UserRequest(
         "adam@mail.com", "adam1234", "adam1234io", "I like to eat cookies", "no img");
+  }
+
+  public UserRequest getTestUserTwo() {
+    return new UserRequest(
+        "jan@mail.com", "jan12345", "jan12345io", "I like to eat cookies", "no img");
   }
 
   public String getIncorrectPassword() {

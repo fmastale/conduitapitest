@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class GetCurrentUserTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUser();
+  private static UserRequest user = testDataProvider.getTestUserOne();
 
   private RequestSpecification requestSpecification;
   private String username = testDataProvider.getTestUserUsername();
@@ -107,11 +107,11 @@ public class GetCurrentUserTest {
 
   private RequestSpecification prepareRequestSpecification(String token) {
     return RestAssured.given()
-        .contentType(APPLICATION_JSON.getDetails())
-        .header(AUTHORIZATION.getDetails(), token);
+        .contentType(APPLICATION_JSON.get())
+        .header(AUTHORIZATION.get(), token);
   }
 
   private RequestSpecification prepareRequestSpecification() {
-    return RestAssured.given().contentType(APPLICATION_JSON.getDetails());
+    return RestAssured.given().contentType(APPLICATION_JSON.get());
   }
 }
