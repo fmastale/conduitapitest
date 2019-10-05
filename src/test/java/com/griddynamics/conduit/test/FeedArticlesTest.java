@@ -99,7 +99,7 @@ public class FeedArticlesTest {
             .post(PROFILES_USERNAME_FOLLOW.get())
             .statusCode();
 
-    // todo: extract this method
+    // todo: refactor this method
     if (not200(statusCode)) {
       throw new IllegalStateException("Author is not followed");
     }
