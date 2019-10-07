@@ -16,6 +16,7 @@ public enum Endpoint {
   ARTICLES_SLUG("/articles/{slug}"),
   ARTICLES_FEED("/articles/feed"),
   ARTICLES_SLUG_FAVORITE("/articles/{slug}/favorite"),
+  ARTICLES_SLUG_COMMENTS("/articles/{slug}/comments"),
 
 
   TAGS("/tags");

@@ -6,14 +6,18 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.Comment;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import com.griddynamics.conduit.jsonsdtos.CommentDto;
+import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -42,7 +46,9 @@ public class AddCommentsTest {
 
   @BeforeEach
   void setup() {
-    Article article = new Article("Some Article", "Comment here", "You can comment this article");
+    Article article =
+        new Article("Some Article", "Comment here", "You can comment this article");
+
     slug = getSlugFromCreatedArticle(article, authorsToken);
   }
 
@@ -51,25 +57,39 @@ public class AddCommentsTest {
     removeArticle(slug, authorsToken);
   }
 
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Add comment to an article, check if response comment body is same as in request")
   @Test
-  @DisplayName("Add comment to an article, check something")
-  void addCommentToAnArticle() {
+  @DisplayName("Add comment to an article, check body")
+  void addCommentToAnArticleCheckBody() {
     // GIVEN
-    Comment comment = new Comment("This is sample comment");
-    CommentDto commentDto = new CommentDto(comment);
+    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
 
-    RequestSpecification requestSpecification = RestAssured.given()
-        .contentType(APPLICATION_JSON.get())
-        .header(AUTHORIZATION.get(), commenterToken)
-        .pathParam(SLUG.get(), slug)
-        .body(commentDto);
+    RequestSpecification requestSpecification =
+        prepareRequestSpecification(requestComment, slug, commenterToken);
 
     // WHEN
-    CommentDto response = requestSpecification.post("/articles/{slug}/comments").as(CommentDto.class);
+    CommentDto responseComment = getCommentFromApiCall(requestSpecification);
 
     // THEN
-    MatcherAssert.assertThat("", response.comment.body, Matchers.equalTo(commentDto.comment.body));
+    MatcherAssert.assertThat(
+        "Actual comment body is different than expected",
+        responseComment.comment.body,
+        Matchers.equalTo(requestComment.comment.body));
+  }
 
+  private CommentDto getCommentFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+  }
+
+  private RequestSpecification prepareRequestSpecification(
+      CommentDto comment, String slug, String token) {
+
+    return RestAssured.given()
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON.get())
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug)
+        .body(comment);
   }
 
   private static String getSlugFromCreatedArticle(Article article, String token) {
