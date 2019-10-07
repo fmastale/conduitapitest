@@ -1,31 +1,32 @@
 package com.griddynamics.conduit.test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
+
 import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
-import io.qameta.allure.Description;
-import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
+@Epic("Smoke tests")
+@Feature("Get Comments from an Article")
+public class GetCommentsTest {
 
-public class UnfavoriteArticleTest {
   private static String authorsToken;
-  private static String followerToken;
+  private static String commenterToken;
   private String slug;
 
   @BeforeAll
@@ -33,17 +34,14 @@ public class UnfavoriteArticleTest {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
     authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
-    followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
+    commenterToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
-  void prepareArticleSlugAndFavorite() {
+  void setup() {
+    // Author create article
     Article article = new Article("Title", "Description", "Body");
     slug = getSlugFromCreatedArticle(article, authorsToken);
-
-    // Favorite article
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
-    ArticleDto response = getArticleFromApiCall(requestSpecification);
   }
 
   @AfterEach
@@ -51,34 +49,18 @@ public class UnfavoriteArticleTest {
     removeArticle(slug, authorsToken);
   }
 
-  @Severity(SeverityLevel.NORMAL)
-  @Description("Unfavorite article, check if field 'favorited' is set to false")
+
   @Test
-  @DisplayName("Unfavorite article, check if unfavorited")
-  void favoriteArticleCheckFavorited() {
-    // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
+  @DisplayName("Add comment to an article, check something")
+  void addCommentToAnArticle() {
+    //GIVEN
 
-    // WHEN
-    ArticleDto response = checkArticleFromApiCall(requestSpecification);
+    //WHEN
 
-    // THEN
-    MatcherAssert.assertThat("", response.article.favorited, Matchers.equalTo(false));
+    //THEN
+
   }
 
-  private ArticleDto getArticleFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.post(Endpoint.ARTICLES_SLUG_FAVORITE.get()).as(ArticleDto.class);
-  }
-
-  private ArticleDto checkArticleFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.delete(Endpoint.ARTICLES_SLUG_FAVORITE.get()).as(ArticleDto.class);
-  }
-
-  private RequestSpecification prepareRequestSpecification(String slug, String token) {
-    return RestAssured.given()
-        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
-        .pathParam(RequestSpecificationDetails.SLUG.get(), slug);
-  }
 
   private static String getSlugFromCreatedArticle(Article article, String token) {
     Response response = createArticle(article, token);
@@ -115,4 +97,5 @@ public class UnfavoriteArticleTest {
       throw new IllegalStateException("Article wasn't removed");
     }
   }
+
 }

@@ -68,7 +68,6 @@ public class FavoriteArticleTest {
     MatcherAssert.assertThat("", response.article.favorited, Matchers.equalTo(true));
   }
 
-
   private ArticleDto getArticleFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.post(Endpoint.ARTICLES_SLUG_FAVORITE.get()).as(ArticleDto.class);
   }
@@ -105,9 +104,8 @@ public class FavoriteArticleTest {
   }
 
   private void removeArticle(String slug, String token) {
-    RequestSpecification requestSpecification = RestAssured.given()
-        .header(AUTHORIZATION.get(), token)
-        .pathParam(SLUG.get(), slug);
+    RequestSpecification requestSpecification =
+        RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
 
     int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
 
