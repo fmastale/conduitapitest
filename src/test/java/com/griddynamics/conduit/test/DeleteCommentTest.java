@@ -38,7 +38,6 @@ public class DeleteCommentTest {
 
   @BeforeEach
   void setup() {
-    // Author create article
     Article article = new Article("Title", "Description", "Body");
     slug = getSlugFromCreatedArticle(article, authorsToken);
   }

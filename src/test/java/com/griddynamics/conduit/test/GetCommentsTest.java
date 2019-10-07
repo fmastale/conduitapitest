@@ -6,15 +6,21 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
+import com.griddynamics.conduit.jsons.Comment;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
+import com.griddynamics.conduit.jsonsdtos.CommentDto;
+import com.griddynamics.conduit.jsonsdtos.CommentsDto;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +45,23 @@ public class GetCommentsTest {
 
   @BeforeEach
   void setup() {
-    // Author create article
     Article article = new Article("Title", "Description", "Body");
     slug = getSlugFromCreatedArticle(article, authorsToken);
+
+    createCommentsForArticle(commenterToken, slug);
+  }
+
+  private void createCommentsForArticle(String token, String slug) {
+    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
+
+    RequestSpecification requestSpecification =
+        commentRequestSpecification(token, slug, requestComment);
+
+    // Create comment 1
+    requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+
+    // Create comment 2
+    requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
   }
 
   @AfterEach
@@ -49,18 +69,22 @@ public class GetCommentsTest {
     removeArticle(slug, authorsToken);
   }
 
-
   @Test
   @DisplayName("Add comment to an article, check something")
   void addCommentToAnArticle() {
-    //GIVEN
+    // GIVEN
+    RequestSpecification requestSpecification =
+        RestAssured.given()
+            .header(RequestSpecificationDetails.AUTHORIZATION.get(), authorsToken)
+            .pathParam(SLUG.get(), slug);
 
-    //WHEN
+    // WHEN
+    CommentsDto commentsDto =
+        requestSpecification.get(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentsDto.class);
 
-    //THEN
-
+    // THEN
+    MatcherAssert.assertThat("", commentsDto.comments.length, Matchers.equalTo(2));
   }
-
 
   private static String getSlugFromCreatedArticle(Article article, String token) {
     Response response = createArticle(article, token);
@@ -98,4 +122,13 @@ public class GetCommentsTest {
     }
   }
 
+  private RequestSpecification commentRequestSpecification(
+      String token, String slug, CommentDto requestComment) {
+
+    return RestAssured.given()
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON.get())
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug)
+        .body(requestComment);
+  }
 }
