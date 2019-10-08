@@ -7,6 +7,8 @@ import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
@@ -28,6 +30,8 @@ public class UnfavoriteArticleTest {
   private static String followerToken;
   private String slug;
 
+  @Epic("Smoke tests")
+  @Feature("Unfavorite Article")
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();

@@ -32,11 +32,12 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Delete comment")
 public class DeleteCommentTest {
+
   private static String authorsToken;
   private static String commenterToken;
 
   private int commentId;
-  private String slug;
+  private String articleId;
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -49,26 +50,14 @@ public class DeleteCommentTest {
   @BeforeEach
   void setup() {
     Article article = new Article("Title", "Description", "Body");
-    slug = getSlugFromCreatedArticle(article, authorsToken);
+    articleId = getSlugFromCreatedArticle(article, authorsToken);
 
-    commentId = createCommentsForArticle(commenterToken, slug);
-  }
-
-  private int createCommentsForArticle(String token, String slug) {
-    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
-
-    RequestSpecification requestSpecification =
-        commentRequestSpecification(token, slug, requestComment);
-
-    CommentDto comment =
-        requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
-
-    return comment.comment.id;
+    commentId = commentArticle(commenterToken, articleId);
   }
 
   @AfterEach
   void cleanup() {
-    removeArticle(slug, authorsToken);
+    removeArticle(articleId, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -78,18 +67,27 @@ public class DeleteCommentTest {
   void deleteArticleCheckStatusCode() {
     // GIVEN
     RequestSpecification requestSpecification =
-        RestAssured.given()
-            .header(AUTHORIZATION.get(), commenterToken)
-            .pathParam(RequestSpecificationDetails.SLUG.get(), slug)
-            .pathParam(RequestSpecificationDetails.ID.get(), commentId);
+        removeCommentSpecification(commenterToken, articleId, commentId);
 
     // WHEN
-    int statusCode =
-        requestSpecification.delete(Endpoint.ARTICLES_SLUG_COMMENTS_ID.get()).statusCode();
+    int statusCode = getStatusCode(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
         "Actual status code is different than expected", statusCode, Matchers.equalTo(200));
+  }
+
+
+  private RequestSpecification removeCommentSpecification(
+      String commenterToken, String articleId, int commentId) {
+    return RestAssured.given()
+        .header(AUTHORIZATION.get(), commenterToken)
+        .pathParam(RequestSpecificationDetails.SLUG.get(), articleId)
+        .pathParam(RequestSpecificationDetails.ID.get(), commentId);
+  }
+
+  private int getStatusCode(RequestSpecification requestSpecification) {
+    return requestSpecification.delete(Endpoint.ARTICLES_SLUG_COMMENTS_ID.get()).statusCode();
   }
 
   private static String getSlugFromCreatedArticle(Article article, String token) {
@@ -136,5 +134,17 @@ public class DeleteCommentTest {
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
         .pathParam(SLUG.get(), slug)
         .body(requestComment);
+  }
+
+  private int commentArticle(String token, String slug) {
+    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
+
+    RequestSpecification requestSpecification =
+        commentRequestSpecification(token, slug, requestComment);
+
+    CommentDto comment =
+        requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+
+    return comment.comment.id;
   }
 }
