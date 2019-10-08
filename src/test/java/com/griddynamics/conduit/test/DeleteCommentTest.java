@@ -6,15 +6,23 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
+import com.griddynamics.conduit.jsons.Comment;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
+import com.griddynamics.conduit.jsonsdtos.CommentDto;
+import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +34,8 @@ import org.junit.jupiter.api.Test;
 public class DeleteCommentTest {
   private static String authorsToken;
   private static String commenterToken;
+
+  private int commentId;
   private String slug;
 
   @BeforeAll
@@ -40,6 +50,20 @@ public class DeleteCommentTest {
   void setup() {
     Article article = new Article("Title", "Description", "Body");
     slug = getSlugFromCreatedArticle(article, authorsToken);
+
+    commentId = createCommentsForArticle(commenterToken, slug);
+  }
+
+  private int createCommentsForArticle(String token, String slug) {
+    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
+
+    RequestSpecification requestSpecification =
+        commentRequestSpecification(token, slug, requestComment);
+
+    CommentDto comment =
+        requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+
+    return comment.comment.id;
   }
 
   @AfterEach
@@ -47,18 +71,26 @@ public class DeleteCommentTest {
     removeArticle(slug, authorsToken);
   }
 
-
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Delete article, check if status code is 200")
   @Test
-  @DisplayName("Add comment to an article, check something")
-  void addCommentToAnArticle() {
-    //GIVEN
+  @DisplayName("Delete article, check status code")
+  void deleteArticleCheckStatusCode() {
+    // GIVEN
+    RequestSpecification requestSpecification =
+        RestAssured.given()
+            .header(AUTHORIZATION.get(), commenterToken)
+            .pathParam(RequestSpecificationDetails.SLUG.get(), slug)
+            .pathParam(RequestSpecificationDetails.ID.get(), commentId);
 
-    //WHEN
+    // WHEN
+    int statusCode =
+        requestSpecification.delete(Endpoint.ARTICLES_SLUG_COMMENTS_ID.get()).statusCode();
 
-    //THEN
-
+    // THEN
+    MatcherAssert.assertThat(
+        "Actual status code is different than expected", statusCode, Matchers.equalTo(200));
   }
-
 
   private static String getSlugFromCreatedArticle(Article article, String token) {
     Response response = createArticle(article, token);
@@ -96,4 +128,13 @@ public class DeleteCommentTest {
     }
   }
 
+  private RequestSpecification commentRequestSpecification(
+      String token, String slug, CommentDto requestComment) {
+
+    return RestAssured.given()
+        .contentType(RequestSpecificationDetails.APPLICATION_JSON.get())
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), slug)
+        .body(requestComment);
+  }
 }

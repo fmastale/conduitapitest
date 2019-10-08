@@ -46,8 +46,7 @@ public class AddCommentsTest {
 
   @BeforeEach
   void setup() {
-    Article article =
-        new Article("Some Article", "Comment here", "You can comment this article");
+    Article article = new Article("Some Article", "Comment here", "You can comment this article");
 
     slug = getSlugFromCreatedArticle(article, authorsToken);
   }
