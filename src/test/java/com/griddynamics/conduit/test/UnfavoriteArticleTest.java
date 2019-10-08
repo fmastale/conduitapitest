@@ -1,5 +1,6 @@
 package com.griddynamics.conduit.test;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -22,13 +23,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
 
 public class UnfavoriteArticleTest {
   private static String authorsToken;
   private static String followerToken;
-  private String slug;
+
+  private String articleId;
+  private ArticleHelper articleHelper = new ArticleHelper();
 
   @Epic("Smoke tests")
   @Feature("Unfavorite Article")
@@ -42,32 +44,36 @@ public class UnfavoriteArticleTest {
 
   @BeforeEach
   void prepareArticleSlugAndFavorite() {
-    Article article = new Article("Title", "Description", "Body");
-    slug = getSlugFromCreatedArticle(article, authorsToken);
+    articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
 
-    // Favorite article
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
+    RequestSpecification requestSpecification =
+        prepareRequestSpecification(articleId, followerToken);
+
     ArticleDto response = getArticleFromApiCall(requestSpecification);
   }
 
   @AfterEach
   void cleanup() {
-    removeArticle(slug, authorsToken);
+    articleHelper.removeArticle(articleId, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Unfavorite article, check if field 'favorited' is set to false")
   @Test
   @DisplayName("Unfavorite article, check if unfavorited")
-  void favoriteArticleCheckFavorited() {
+  void unfavoriteArticleCheckFavorited() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
+    RequestSpecification requestSpecification =
+        prepareRequestSpecification(articleId, followerToken);
 
     // WHEN
     ArticleDto response = checkArticleFromApiCall(requestSpecification);
 
     // THEN
-    MatcherAssert.assertThat("", response.article.favorited, Matchers.equalTo(false));
+    MatcherAssert.assertThat(
+        "Favorited field expect to be false, but was true",
+        response.article.favorited,
+        Matchers.equalTo(false));
   }
 
   private ArticleDto getArticleFromApiCall(RequestSpecification requestSpecification) {
@@ -82,41 +88,5 @@ public class UnfavoriteArticleTest {
     return RestAssured.given()
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
         .pathParam(RequestSpecificationDetails.SLUG.get(), slug);
-  }
-
-  private static String getSlugFromCreatedArticle(Article article, String token) {
-    Response response = createArticle(article, token);
-    ArticleDto createdArticle = response.as(ArticleDto.class);
-
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
-    return createdArticle.article.slug;
-  }
-
-  private static Response createArticle(Article article, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), token)
-            .body(article);
-
-    return requestSpecification.post(ARTICLES.get());
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
-  }
-
-  private void removeArticle(String slug, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
-
-    int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
-
-    if (statusCode != 200) {
-      throw new IllegalStateException("Article wasn't removed");
-    }
   }
 }

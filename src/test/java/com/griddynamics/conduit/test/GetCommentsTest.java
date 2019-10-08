@@ -99,7 +99,7 @@ public class GetCommentsTest {
     RequestSpecification requestSpecification =
         commentRequestSpecification(token, slug, requestComment);
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
       requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
     }
   }
