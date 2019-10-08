@@ -1,17 +1,13 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
+import com.griddynamics.conduit.helpers.CommentHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
-import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.Comment;
-import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import com.griddynamics.conduit.jsonsdtos.CommentDto;
 import com.griddynamics.conduit.jsonsdtos.CommentsDto;
 import io.qameta.allure.Description;
@@ -20,7 +16,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -36,7 +31,9 @@ public class GetCommentsTest {
 
   private static String authorsToken;
   private static String commenterToken;
-  private String slug;
+
+  private String articleId;
+  private CommentHelper commentHelper = new CommentHelper();
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -48,15 +45,13 @@ public class GetCommentsTest {
 
   @BeforeEach
   void setup() {
-    Article article = new Article("Title", "Description", "Body");
-    slug = getSlugFromCreatedArticle(article, authorsToken);
-
-    createCommentsForArticle(commenterToken, slug);
+    articleId = commentHelper.getSlugFromCreatedArticle(authorsToken);
+    createCommentsForArticle(commenterToken, articleId);
   }
 
   @AfterEach
   void cleanup() {
-    removeArticle(slug, authorsToken);
+    commentHelper.removeArticle(articleId, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -65,14 +60,10 @@ public class GetCommentsTest {
   @DisplayName("Get comments from article, check amount")
   void getCommentFromArticleCheckAmount() {
     // GIVEN
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .header(RequestSpecificationDetails.AUTHORIZATION.get(), authorsToken)
-            .pathParam(SLUG.get(), slug);
+    RequestSpecification requestSpecification = getCommentRequest(authorsToken, articleId);
 
     // WHEN
-    CommentsDto commentsDto =
-        requestSpecification.get(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentsDto.class);
+    CommentsDto commentsDto = getCommentsFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
@@ -81,40 +72,15 @@ public class GetCommentsTest {
         Matchers.equalTo(2));
   }
 
-  private static String getSlugFromCreatedArticle(Article article, String token) {
-    Response response = createArticle(article, token);
-    ArticleDto createdArticle = response.as(ArticleDto.class);
 
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
-    return createdArticle.article.slug;
+  private CommentsDto getCommentsFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.get(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentsDto.class);
   }
 
-  private static Response createArticle(Article article, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), token)
-            .body(article);
-
-    return requestSpecification.post(ARTICLES.get());
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
-  }
-
-  private void removeArticle(String slug, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
-
-    int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
-
-    if (statusCode != 200) {
-      throw new IllegalStateException("Article wasn't removed");
-    }
+  private RequestSpecification getCommentRequest(String token, String articleId) {
+    return RestAssured.given()
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), articleId);
   }
 
   private RequestSpecification commentRequestSpecification(
@@ -133,7 +99,8 @@ public class GetCommentsTest {
     RequestSpecification requestSpecification =
         commentRequestSpecification(token, slug, requestComment);
 
-    requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
-    requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+    for (int i = 0; i < 1; i++) {
+      requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+    }
   }
 }
