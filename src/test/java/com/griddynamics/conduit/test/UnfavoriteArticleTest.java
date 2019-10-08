@@ -5,7 +5,6 @@ import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
-import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -13,7 +12,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -23,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
-
+@Epic("Smoke tests")
+@Feature("Unfavorite Article")
 public class UnfavoriteArticleTest {
   private static String authorsToken;
   private static String followerToken;
@@ -32,8 +30,6 @@ public class UnfavoriteArticleTest {
   private String articleId;
   private ArticleHelper articleHelper = new ArticleHelper();
 
-  @Epic("Smoke tests")
-  @Feature("Unfavorite Article")
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
