@@ -16,7 +16,9 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,12 +32,15 @@ public class ListArticlesTest {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
+  @BeforeEach
+  void setup() {
+    // todo: create specific article - later we will be searching for it
+  }
 
-  // todo: 1. create article
-  //       2. get article slug - GET Article
-  //       3. search for this article - GET Article
-  //       4. check if exists
-  //       5. remove article - DELETE Article
+  @AfterEach
+  void cleanup(){
+    // todo: remove article
+  }
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")

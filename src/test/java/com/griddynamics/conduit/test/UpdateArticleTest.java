@@ -32,7 +32,7 @@ public class UpdateArticleTest {
   // todo: check if article was removed by checking if article can by found using articleId
 
   private static String authorsToken;
-  private String articleId;
+  private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
@@ -44,12 +44,12 @@ public class UpdateArticleTest {
 
   @BeforeEach
   void prepareSlug() {
-    articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
+    slug = articleHelper.getSlugFromCreatedArticle(authorsToken);
   }
 
   @AfterEach
   void removeArticle() {
-    articleHelper.removeArticle(articleId, authorsToken);
+    articleHelper.removeArticle(slug, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -60,7 +60,7 @@ public class UpdateArticleTest {
     // GIVEN
     Article updatedArticle = new Article("Title", "Updated description", "Body");
 
-    RequestSpecification requestSpecification = prepareRequestSpecification(updatedArticle, authorsToken, articleId);
+    RequestSpecification requestSpecification = prepareRequestSpecification(updatedArticle, authorsToken, slug);
 
     // WHEN
     ArticleDto responseArticle = requestSpecification.put(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);

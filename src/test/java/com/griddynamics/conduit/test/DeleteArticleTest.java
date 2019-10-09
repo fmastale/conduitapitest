@@ -29,9 +29,9 @@ public class DeleteArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
-  private ArticleHelper articleHelper = new ArticleHelper();
 
-  private String articleId;
+  private String slug;
+  private ArticleHelper articleHelper = new ArticleHelper();
 
   // todo: check if article was removed by checking if article can by found using slug
 
@@ -45,7 +45,7 @@ public class DeleteArticleTest {
 
   @BeforeEach
   void getSlugFromArticle() {
-    articleId = articleHelper.getSlugFromCreatedArticle(token);
+    slug = articleHelper.getSlugFromCreatedArticle(token);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -54,7 +54,7 @@ public class DeleteArticleTest {
   @DisplayName("Delete article, check status code")
   void deleteArticleCheckStatusCode() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(token, articleId);
+    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
 
     // WHEN
     int statusCode = getStatusCodeFromApiCall(requestSpecification);
