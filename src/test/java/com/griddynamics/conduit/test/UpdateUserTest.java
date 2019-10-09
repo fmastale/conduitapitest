@@ -73,8 +73,6 @@ public class UpdateUserTest {
     userResponse = getUserFromApiCall(requestSpecification);
 
     // THEN
-    // todo: 2x assertion for checking two different fields - ok, or should do this in different
-    //  way? eg. make a method to compare bio & image from 2 different user-objects
     MatcherAssert.assertThat(
         "Actual user bio is different than expected",
         userResponse.user.bio,

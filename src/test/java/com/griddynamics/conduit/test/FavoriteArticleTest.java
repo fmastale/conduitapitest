@@ -1,8 +1,5 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
-
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
