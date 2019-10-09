@@ -35,6 +35,7 @@ public class FeedArticlesTest {
   private static UserResponseDto author;
   private static ArticleDto article;
 
+  //todo: refactor create article here
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
@@ -43,6 +44,7 @@ public class FeedArticlesTest {
   @BeforeEach
   void createAuthorArticleFollower() {
     author = registerUser(new TestDataProvider().getValidRegistrationUser());
+
     article = createArticle(author);
 
     followersToken = getFollowersToken();

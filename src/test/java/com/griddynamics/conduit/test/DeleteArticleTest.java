@@ -1,24 +1,20 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
-import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.UserRequest;
-import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -33,8 +29,9 @@ public class DeleteArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
+  private ArticleHelper articleHelper = new ArticleHelper();
 
-  private String slug;
+  private String articleId;
 
   // todo: check if article was removed by checking if article can by found using slug
 
@@ -48,7 +45,7 @@ public class DeleteArticleTest {
 
   @BeforeEach
   void getSlugFromArticle() {
-    slug = getSlugFromCreatedArticle(new Article("Title", "Description", "Body"));
+    articleId = articleHelper.getSlugFromCreatedArticle(token);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -57,7 +54,7 @@ public class DeleteArticleTest {
   @DisplayName("Delete article, check status code")
   void deleteArticleCheckStatusCode() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(token, articleId);
 
     // WHEN
     int statusCode = getStatusCodeFromApiCall(requestSpecification);
@@ -77,31 +74,5 @@ public class DeleteArticleTest {
     return RestAssured.given()
         .header(AUTHORIZATION.get(), token)
         .pathParam(SLUG.get(), slug);
-  }
-
-  private static String getSlugFromCreatedArticle(Article article) {
-    Response response = createArticle(article);
-    ArticleDto createdArticle = response.as(ArticleDto.class);
-
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
-
-    return createdArticle.article.slug;
-  }
-
-  private static Response createArticle(Article article) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), token)
-            .body(article);
-
-    return requestSpecification.post(ARTICLES.get());
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
   }
 }

@@ -1,10 +1,9 @@
 package com.griddynamics.conduit.test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -17,7 +16,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -32,7 +30,9 @@ import org.junit.jupiter.api.Test;
 public class FavoriteArticleTest {
   private static String authorsToken;
   private static String followerToken;
-  private String slug;
+
+  private String articleId;
+  private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
   static void prepareRequest() {
@@ -45,12 +45,12 @@ public class FavoriteArticleTest {
   @BeforeEach
   void prepareSlug() {
     Article article = new Article("Title", "Description", "Body");
-    slug = getSlugFromCreatedArticle(article, authorsToken);
+    articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
   }
 
   @AfterEach
   void cleanup() {
-    removeArticle(slug, authorsToken);
+    articleHelper.removeArticle(articleId, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -59,7 +59,7 @@ public class FavoriteArticleTest {
   @DisplayName("Favorite article, check if favorited")
   void favoriteArticleCheckFavorited() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
+    RequestSpecification requestSpecification = prepareRequestSpecification(articleId, followerToken);
 
     // WHEN
     ArticleDto response = getArticleFromApiCall(requestSpecification);
@@ -76,41 +76,5 @@ public class FavoriteArticleTest {
     return RestAssured.given()
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
         .pathParam(RequestSpecificationDetails.SLUG.get(), slug);
-  }
-
-  private static String getSlugFromCreatedArticle(Article article, String token) {
-    Response response = createArticle(article, token);
-    ArticleDto createdArticle = response.as(ArticleDto.class);
-
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
-    return createdArticle.article.slug;
-  }
-
-  private static Response createArticle(Article article, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), token)
-            .body(article);
-
-    return requestSpecification.post(ARTICLES.get());
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
-  }
-
-  private void removeArticle(String slug, String token) {
-    RequestSpecification requestSpecification =
-        RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
-
-    int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
-
-    if (statusCode != 200) {
-      throw new IllegalStateException("Article wasn't removed");
-    }
   }
 }

@@ -35,7 +35,7 @@ public class ArticleHelper {
   }
 
   public String getSlugFromCreatedArticle(String token) {
-    Article article = new Article("Title", "Description", "Body");
+    Article article = new Article("Title", "Description", "Another body");
 
     Response response = createArticle(article, token);
     ArticleDto createdArticle = response.as(ArticleDto.class);

@@ -5,6 +5,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLI
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
@@ -32,12 +33,13 @@ import org.junit.jupiter.api.Test;
 public class GetArticleTest {
   // todo:
   //  5. add test with invalid slug
-  //  6. add loggers
 
-  private String slug;
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
+
+  private String articleId;
+  private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -49,14 +51,12 @@ public class GetArticleTest {
 
   @BeforeEach
   void prepareSlug() {
-    Article article = new Article("Title", "Description", "Body");
-
-    slug = getSlugFromCreatedArticle(article);
+    articleId = articleHelper.getSlugFromCreatedArticle(token);
   }
 
   @AfterEach
   void removeArticle() {
-    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(token, articleId);
 
     int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
@@ -70,14 +70,14 @@ public class GetArticleTest {
   @DisplayName("Get article article, check if slug is same as slug from path parameter")
   void getArticleCheckSlug() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(articleId);
 
     // WHEN
     ArticleDto dto = requestSpecification.get(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
 
     // THEN
     MatcherAssert.assertThat(
-        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(slug));
+        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(articleId));
   }
 
   private RequestSpecification prepareRequestSpecification(String slug) {
@@ -88,32 +88,6 @@ public class GetArticleTest {
     return RestAssured.given()
         .header(AUTHORIZATION.get(), token)
         .pathParam(SLUG.get(), slug);
-  }
-
-  private static String getSlugFromCreatedArticle(Article article) {
-    Response response = createArticle(article);
-    ArticleDto createdArticle = response.as(ArticleDto.class);
-
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
-
-    return createdArticle.article.slug;
-  }
-
-  private static Response createArticle(Article article) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), token)
-            .body(article);
-
-    return requestSpecification.post(ARTICLES.get());
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
   }
 
   private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {

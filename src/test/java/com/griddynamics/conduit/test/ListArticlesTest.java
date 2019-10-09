@@ -35,7 +35,7 @@ public class ListArticlesTest {
   //       2. get article slug - GET Article
   //       3. search for this article - GET Article
   //       4. check if exists
-  //       5. remove article - DELTE Article
+  //       5. remove article - DELETE Article
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")
