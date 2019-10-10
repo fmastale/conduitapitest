@@ -8,6 +8,7 @@ import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
+import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 public class UpdateArticleTest {
 
   private static String authorsToken;
+  private static UserRequest author = new TestDataProvider().getTestUserOne();
 
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
@@ -37,7 +39,7 @@ public class UpdateArticleTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
+    authorsToken = new TokenProvider().getTokenForUser(author);
   }
 
   @BeforeEach

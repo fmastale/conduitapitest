@@ -40,7 +40,7 @@ public class UnfavoriteArticleTest {
   }
 
   @BeforeEach
-  void prepareArticleSlugAndFavorite() {
+  void setup() {
     articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
 
     RequestSpecification requestSpecification =

@@ -41,7 +41,7 @@ public class DeleteArticleTest {
   }
 
   @BeforeEach
-  void getSlugFromArticle() {
+  void setup() {
     slug = articleHelper.getSlugFromCreatedArticle(token);
   }
 

@@ -46,7 +46,7 @@ public class FeedArticlesTest {
   }
 
   @BeforeEach
-  void createAuthorArticleFollower() {
+  void setup() {
     Response response = articleHelper.createArticle(new Article("Title", "Description", "Body"), authorsToken);
     articleHelper.checkIfSucceeded(response);
 
@@ -54,7 +54,7 @@ public class FeedArticlesTest {
   }
 
   @AfterEach
-  void stopFollowing() {
+  void cleanup() {
     stopFollowingUser(followersToken, author);
   }
 

@@ -28,7 +28,7 @@ public class FavoriteArticleTest {
   private static String authorsToken;
   private static String followerToken;
 
-  private String articleId;
+  private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
@@ -40,14 +40,14 @@ public class FavoriteArticleTest {
   }
 
   @BeforeEach
-  void prepareSlug() {
+  void setup() {
     Article article = new Article("Title", "Description", "Body");
-    articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
+    slug = articleHelper.getSlugFromCreatedArticle(authorsToken);
   }
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(articleId, authorsToken);
+    articleHelper.removeArticle(slug, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -56,7 +56,7 @@ public class FavoriteArticleTest {
   @DisplayName("Favorite article, check if favorited")
   void favoriteArticleCheckFavorited() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(articleId, followerToken);
+    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
 
     // WHEN
     ArticleDto response = getArticleFromApiCall(requestSpecification);

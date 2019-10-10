@@ -29,8 +29,7 @@ public class GetTagsTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    TokenProvider tokenProvider = new TokenProvider();
-    String token = tokenProvider.getTokenForUser(user);
+    String token = new TokenProvider().getTokenForUser(user);
   }
 
   @Severity(SeverityLevel.NORMAL)

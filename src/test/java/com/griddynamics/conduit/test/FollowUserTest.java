@@ -41,8 +41,7 @@ public class FollowUserTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    TokenProvider tokenProvider = new TokenProvider();
-    token = tokenProvider.getTokenForUser(registeredUser);
+    token = new TokenProvider().getTokenForUser(registeredUser);
 
     // for every new user 'follow' is set to: false
     userToFollow = registerUser(testDataProvider.getValidRegistrationUser());

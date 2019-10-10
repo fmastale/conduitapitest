@@ -32,16 +32,6 @@ public class ListArticlesTest {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
 
-  @BeforeEach
-  void setup() {
-    // todo: create specific article - later we will be searching for it
-  }
-
-  @AfterEach
-  void cleanup(){
-    // todo: remove article
-  }
-
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")
   @Test
