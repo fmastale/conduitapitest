@@ -48,9 +48,7 @@ public class ArticleHelper {
   }
 
   public void checkIfSucceeded(Response response) {
-    int statusCode = response.statusCode();
-
-    if (statusCode != 200) {
+    if (response.statusCode() != 200) {
       throw new IllegalStateException("Status code is not 200");
     }
   }

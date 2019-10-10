@@ -5,6 +5,7 @@ public enum RequestSpecificationDetails {
   AUTHORIZATION("Authorization"),
   USERNAME("username"),
   LIMIT_NUMBER("number"),
+  TAG("tag"),
   SLUG("slug"),
   ID("id");
 
