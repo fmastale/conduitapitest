@@ -230,10 +230,7 @@ public class RegistrationTest {
     RegistrationRequestUser registrationRequestUser = testDataProvider.getValidRegistrationUser();
 
     requestBody = new RegistrationRequestUserDto(registrationRequestUser);
-    RestAssured.given()
-        .contentType(APPLICATION_JSON.get())
-        .body(requestBody)
-        .post(USERS.get());
+    RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody).post(USERS.get());
 
     prepareRequestBody(registrationRequestUser);
 

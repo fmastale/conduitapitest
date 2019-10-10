@@ -9,7 +9,6 @@ import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
-
 public class TokenProvider {
   private UserRequestDto requestBody;
   private UserResponseDto userResponseDto;
@@ -30,8 +29,7 @@ public class TokenProvider {
     requestSpecification =
         RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
 
-    userResponseDto =
-        requestSpecification.post(USERS_LOGIN.get()).as(UserResponseDto.class);
+    userResponseDto = requestSpecification.post(USERS_LOGIN.get()).as(UserResponseDto.class);
 
     return userResponseDto;
   }

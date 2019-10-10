@@ -4,7 +4,6 @@ import static com.griddynamics.conduit.helpers.Endpoint.USER;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 
-
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;

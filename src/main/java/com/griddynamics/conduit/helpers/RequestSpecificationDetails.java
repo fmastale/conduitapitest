@@ -1,7 +1,6 @@
 package com.griddynamics.conduit.helpers;
 
 public enum RequestSpecificationDetails {
-
   APPLICATION_JSON("application/json"),
   AUTHORIZATION("Authorization"),
   USERNAME("username"),

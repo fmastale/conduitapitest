@@ -68,8 +68,6 @@ public class DeleteArticleTest {
   }
 
   private RequestSpecification prepareRequestSpecification(String token, String slug) {
-    return RestAssured.given()
-        .header(AUTHORIZATION.get(), token)
-        .pathParam(SLUG.get(), slug);
+    return RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
   }
 }

@@ -1,7 +1,5 @@
 package com.griddynamics.conduit.jsons;
 
-import java.util.Arrays;
-
 public class Article {
   public String slug;
   public String title;
@@ -27,21 +25,5 @@ public class Article {
     this.description = description;
     this.body = body;
     this.tagList = tagList;
-  }
-
-  @Override
-  public String toString() {
-    return "Article{" +
-            "slug='" + slug + '\'' +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", body='" + body + '\'' +
-            ", tagList=" + Arrays.toString(tagList) +
-            ", createdAt='" + createdAt + '\'' +
-            ", updatedAt='" + updatedAt + '\'' +
-            ", favorited=" + favorited +
-            ", favoritesCount=" + favoritesCount +
-            ", author=" + author +
-            '}';
   }
 }

@@ -69,7 +69,6 @@ public class DeleteCommentTest {
         "Actual status code is different than expected", statusCode, Matchers.equalTo(200));
   }
 
-
   private RequestSpecification removeCommentSpecification(
       String commenterToken, String articleId, int commentId) {
     return RestAssured.given()

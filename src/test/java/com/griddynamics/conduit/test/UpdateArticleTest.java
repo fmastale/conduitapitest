@@ -60,10 +60,12 @@ public class UpdateArticleTest {
     // GIVEN
     Article updatedArticle = new Article("Title", "Updated description", "Body");
 
-    RequestSpecification requestSpecification = prepareRequestSpecification(updatedArticle, authorsToken, slug);
+    RequestSpecification requestSpecification =
+        prepareRequestSpecification(updatedArticle, authorsToken, slug);
 
     // WHEN
-    ArticleDto responseArticle = requestSpecification.put(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
+    ArticleDto responseArticle =
+        requestSpecification.put(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
 
     // THEN
     MatcherAssert.assertThat(
@@ -72,7 +74,8 @@ public class UpdateArticleTest {
         Matchers.equalTo(updatedArticle.description));
   }
 
-  private RequestSpecification prepareRequestSpecification(Article article, String token, String slug) {
+  private RequestSpecification prepareRequestSpecification(
+      Article article, String token, String slug) {
     return RestAssured.given()
         .contentType(APPLICATION_JSON.get())
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)

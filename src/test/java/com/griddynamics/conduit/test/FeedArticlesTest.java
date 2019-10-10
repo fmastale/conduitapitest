@@ -1,5 +1,10 @@
 package com.griddynamics.conduit.test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
+
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -23,9 +28,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.griddynamics.conduit.helpers.Endpoint.*;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
-
 @Epic("Smoke tests")
 @Feature("Feed Articles")
 public class FeedArticlesTest {
@@ -47,7 +49,8 @@ public class FeedArticlesTest {
 
   @BeforeEach
   void setup() {
-    Response response = articleHelper.createArticle(new Article("Title", "Description", "Body"), authorsToken);
+    Response response =
+        articleHelper.createArticle(new Article("Title", "Description", "Body"), authorsToken);
     articleHelper.checkIfSucceeded(response);
 
     startFollowingAuthor(followersToken, author);
@@ -90,7 +93,8 @@ public class FeedArticlesTest {
   }
 
   private void checkIfFollowed(RequestSpecification requestSpecification) {
-    Response response = requestSpecification.contentType("application/json").post(PROFILES_USERNAME_FOLLOW.get());
+    Response response =
+        requestSpecification.contentType("application/json").post(PROFILES_USERNAME_FOLLOW.get());
 
     articleHelper.checkIfSucceeded(response);
   }
@@ -98,17 +102,22 @@ public class FeedArticlesTest {
   private static RequestSpecification prepareRequestSpecification(
       String followersToken, UserRequest author) {
 
-    return RestAssured.given().header(AUTHORIZATION.get(), followersToken).pathParam(USERNAME.get(), author.username);
+    return RestAssured.given()
+        .header(AUTHORIZATION.get(), followersToken)
+        .pathParam(USERNAME.get(), author.username);
   }
 
   private RequestSpecification prepareRequestSpecification(String followersToken) {
-    return RestAssured.given().contentType(APPLICATION_JSON.get()).header(AUTHORIZATION.get(), followersToken);
+    return RestAssured.given()
+        .contentType(APPLICATION_JSON.get())
+        .header(AUTHORIZATION.get(), followersToken);
   }
 
   private void stopFollowingUser(String followersToken, UserRequest author) {
     RequestSpecification requestSpecification = prepareRequestSpecification(followersToken, author);
 
-    Response response = requestSpecification.contentType("application/json").delete(PROFILES_USERNAME_FOLLOW.get());
+    Response response =
+        requestSpecification.contentType("application/json").delete(PROFILES_USERNAME_FOLLOW.get());
 
     articleHelper.checkIfSucceeded(response);
   }

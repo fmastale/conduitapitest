@@ -7,8 +7,7 @@ public class Comment {
   public String body;
   public Author author;
 
-  public Comment() {
-  }
+  public Comment() {}
 
   public Comment(String body) {
     this.body = body;

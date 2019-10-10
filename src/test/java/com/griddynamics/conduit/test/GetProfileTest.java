@@ -141,8 +141,6 @@ public class GetProfileTest {
   }
 
   private Response getResponseFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification
-        .contentType(APPLICATION_JSON.get())
-        .get(PROFILES_USERNAME.get());
+    return requestSpecification.contentType(APPLICATION_JSON.get()).get(PROFILES_USERNAME.get());
   }
 }

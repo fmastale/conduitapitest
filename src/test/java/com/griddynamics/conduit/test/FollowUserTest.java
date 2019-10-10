@@ -1,5 +1,11 @@
 package com.griddynamics.conduit.test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
+import static com.griddynamics.conduit.helpers.Endpoint.USERS;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
+
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
@@ -22,11 +28,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
-import static com.griddynamics.conduit.helpers.Endpoint.USERS;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
-
 
 @Epic("Smoke tests")
 @Feature("Follow User")

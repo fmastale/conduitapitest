@@ -41,8 +41,7 @@ public class AuthenticationTest {
   void authenticateValidUser() {
     // GIVEN
     UserRequestDto requestBody =
-        new UserRequestDto(
-            new UserRequest(registeredUser.email, registeredUser.password));
+        new UserRequestDto(new UserRequest(registeredUser.email, registeredUser.password));
 
     RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
@@ -84,9 +83,7 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with empty password, check status code")
   void cantAuthenticateUserWithEmptyPass() {
     // GIVEN
-    UserRequestDto requestBody =
-        new UserRequestDto(
-            new UserRequest(registeredUser.email, ""));
+    UserRequestDto requestBody = new UserRequestDto(new UserRequest(registeredUser.email, ""));
 
     RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
@@ -106,9 +103,7 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user without password, check status code")
   void cantAuthenticateUserWithoutPass() {
     // GIVEN
-    UserRequestDto requestBody =
-        new UserRequestDto(
-            new UserRequest(registeredUser.email));
+    UserRequestDto requestBody = new UserRequestDto(new UserRequest(registeredUser.email));
 
     RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
@@ -128,10 +123,8 @@ public class AuthenticationTest {
   @DisplayName("Authenticate user with empty body, check error message")
   void checkErrorMessageForUserWithEmptyBody() {
     // GIVEN
-    UserRequestDto requestBody =
-        new UserRequestDto(
-            new UserRequest());
-    
+    UserRequestDto requestBody = new UserRequestDto(new UserRequest());
+
     RequestSpecification requestSpecification = prepareRequestSpecification(requestBody);
 
     // WHEN

@@ -63,7 +63,6 @@ public class CommentHelper {
     return requestSpecification.post(ARTICLES.get());
   }
 
-
   private boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
     return !createdArticle.article.title.equals(article.title);
   }

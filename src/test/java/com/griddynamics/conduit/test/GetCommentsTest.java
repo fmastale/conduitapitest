@@ -72,7 +72,6 @@ public class GetCommentsTest {
         Matchers.equalTo(2));
   }
 
-
   private CommentsDto getCommentsFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.get(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentsDto.class);
   }

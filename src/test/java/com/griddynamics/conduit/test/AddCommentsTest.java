@@ -72,7 +72,6 @@ public class AddCommentsTest {
         Matchers.equalTo(requestComment.comment.body));
   }
 
-
   private CommentDto getCommentFromApiCall(RequestSpecification requestSpecification) {
     return requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
   }

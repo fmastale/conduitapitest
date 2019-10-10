@@ -1,7 +1,6 @@
 package com.griddynamics.conduit.helpers;
 
 public enum Endpoint {
-
   BASE_URI("https://conduit.productionready.io/api"),
 
   USERS_LOGIN("/users/login"),
@@ -18,7 +17,6 @@ public enum Endpoint {
   ARTICLES_SLUG_FAVORITE("/articles/{slug}/favorite"),
   ARTICLES_SLUG_COMMENTS("/articles/{slug}/comments"),
   ARTICLES_SLUG_COMMENTS_ID("/articles/{slug}/comments/{id}"),
-
 
   TAGS("/tags");
 
