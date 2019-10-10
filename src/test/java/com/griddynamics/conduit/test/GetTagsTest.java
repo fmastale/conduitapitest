@@ -24,8 +24,7 @@ public class GetTagsTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
 
-  // if I add tag to article it isn't shown in tag list, so probably list contains only
-  // not all tags, but those which are most popular
+  // if I add tag to article it isn't shown in the tag list, so probably list contains only those which are most popular
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();

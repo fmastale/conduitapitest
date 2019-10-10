@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 public class AddCommentsTest {
   private static String authorsToken;
   private static String commenterToken;
+
   private String articleId;
   private CommentHelper commentHelper = new CommentHelper();
 

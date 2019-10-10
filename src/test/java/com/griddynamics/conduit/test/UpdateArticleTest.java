@@ -28,10 +28,8 @@ import org.junit.jupiter.api.Test;
 @Feature("Update Article")
 public class UpdateArticleTest {
 
-  // todo: read about parallel test running, think how it will work here (slug)
-  // todo: check if article was removed by checking if article can by found using articleId
-
   private static String authorsToken;
+
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 

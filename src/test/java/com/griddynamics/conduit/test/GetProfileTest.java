@@ -35,7 +35,6 @@ public class GetProfileTest {
 
   private ProfileDto userProfile;
 
-  // todo: special chars, space inside
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();

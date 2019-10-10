@@ -3,3 +3,9 @@
 3. get all test data from data provider - so no hardcoded data in tests
 4. get basic URI from config file
 5. get 2 valid users from config file
+6. Create article: without authorization, without all needed fields
+7. GetArticleTest with invalid slug
+8. GetProfileTest with special chars, space inside
+9. Refactoring in RegistrationTest
+10. read about parallel test running, think how it will work here (slug)
+11. rest assured + allure - how it works

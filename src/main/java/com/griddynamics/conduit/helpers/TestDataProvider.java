@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-// todo: split this class to couple different classes, make user (not string) argument of
-//  requestSpecification()
 public class TestDataProvider {
 
   private String username;
@@ -27,7 +25,6 @@ public class TestDataProvider {
   public TestDataProvider() {
     this.username = getNewUsername();
     this.maxLengthName = fakeValuesService.regexify("[a-zA-Z1-9]{20}");
-    // todo: regex with space inside
     this.usernameWithSpace = fakeValuesService.bothify("????# ????#");
 
     this.email = getNewEmail();
@@ -171,8 +168,6 @@ public class TestDataProvider {
   }
 
   public List<RegistrationRequestUser> getUsersWithUnusualEmailFormat() {
-
-    // todo: search for valid but unusual email formats
     RegistrationRequestUser[] array = {
       new RegistrationRequestUser(
           getNewUsername(), fakeValuesService.bothify("?????@???.###"), password),

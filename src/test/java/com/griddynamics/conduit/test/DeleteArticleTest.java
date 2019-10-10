@@ -33,8 +33,6 @@ public class DeleteArticleTest {
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 
-  // todo: check if article was removed by checking if article can by found using slug
-
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();

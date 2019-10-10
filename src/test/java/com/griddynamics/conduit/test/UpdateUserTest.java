@@ -19,12 +19,14 @@ import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Update User")
 public class UpdateUserTest {
+
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
@@ -36,10 +38,12 @@ public class UpdateUserTest {
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    prepareRandomBioAndImage(user);
+    token = new TokenProvider().getTokenForUser(user);
+  }
 
-    TokenProvider tokenProvider = new TokenProvider();
-    token = tokenProvider.getTokenForUser(user);
+  @BeforeEach
+  void setup() {
+    prepareRandomBioAndImage(user);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -83,7 +87,7 @@ public class UpdateUserTest {
         Matchers.equalTo(user.image));
   }
 
-  private static void prepareRandomBioAndImage(UserRequest user) {
+  private void prepareRandomBioAndImage(UserRequest user) {
     user.bio = testDataProvider.getRandomBio();
     user.image = testDataProvider.getRandomImg();
   }

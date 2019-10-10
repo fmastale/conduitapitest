@@ -167,7 +167,6 @@ public class RegistrationTest {
   @DisplayName("Register user with special characters in email, check username")
   void registerUserWithSpecialCharsInEmail() {
     // GIVEN
-    // todo: change it to 'requestBody = prepareRequestBody(user)' ?
     prepareRequestBody(testDataProvider.getUserWithSpecialCharsEmail());
 
     // WHEN
@@ -228,8 +227,6 @@ public class RegistrationTest {
   @DisplayName("Register user with taken email, check error message")
   void cantRegisterUserWithTakenEmail() {
     // GIVEN
-
-    // todo: clean this up
     RegistrationRequestUser registrationRequestUser = testDataProvider.getValidRegistrationUser();
 
     requestBody = new RegistrationRequestUserDto(registrationRequestUser);

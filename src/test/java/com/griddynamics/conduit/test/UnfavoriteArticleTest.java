@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Unfavorite Article")
 public class UnfavoriteArticleTest {
+
   private static String authorsToken;
   private static String followerToken;
 

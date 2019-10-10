@@ -32,10 +32,10 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
 @Feature("Follow User")
 public class FollowUserTest {
   private static String token;
+  private static UserResponseDto userToFollow;
+  private static RequestSpecification requestSpecification;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest registeredUser = testDataProvider.getTestUserOne();
-  private static RequestSpecification requestSpecification;
-  private static UserResponseDto userToFollow;
 
   @BeforeAll
   static void prepareEnvironment() {

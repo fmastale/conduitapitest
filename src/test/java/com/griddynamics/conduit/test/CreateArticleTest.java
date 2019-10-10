@@ -4,18 +4,21 @@ import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -24,14 +27,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// todo: add creating article without authentication, create article without all needed fields
-
 @Epic("Smoke tests")
 @Feature("Create Articles Test")
 public class CreateArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
+
+  private String slug;
+  private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
   static void prepareEnvironment() {
@@ -41,8 +45,8 @@ public class CreateArticleTest {
   }
 
   @AfterEach
-  void removeArticle() {
-    // todo: remove article here
+  void cleanup() {
+    articleHelper.removeArticle(slug, token);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -56,12 +60,13 @@ public class CreateArticleTest {
     RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 
     // WHEN
-    int statusCode = getStatusCodeFromApiCall(requestSpecification);
+    Response response = requestSpecification.post(ARTICLES.get());
+    slug = response.as(ArticleDto.class).article.slug;
 
     // THEN
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
-        statusCode,
+        response.getStatusCode(),
         Matchers.equalTo(StatusCode._200.get()));
   }
 
@@ -77,12 +82,13 @@ public class CreateArticleTest {
     RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
 
     // WHEN
-    int statusCode = getStatusCodeFromApiCall(requestSpecification);
+    Response response = requestSpecification.post(ARTICLES.get());
+    slug = response.as(ArticleDto.class).article.slug;
 
     // THEN
     MatcherAssert.assertThat(
         "Actual status code is different than expected",
-        statusCode,
+        response.getStatusCode(),
         Matchers.equalTo(StatusCode._200.get()));
   }
 
@@ -99,9 +105,5 @@ public class CreateArticleTest {
 
   private Article prepareArticle() {
     return new Article("This is article title", "This is description", "This is body");
-  }
-
-  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.post(ARTICLES.get()).statusCode();
   }
 }

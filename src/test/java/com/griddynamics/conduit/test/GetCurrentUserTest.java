@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Get Current User")
 public class GetCurrentUserTest {
+
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
