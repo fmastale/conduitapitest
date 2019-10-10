@@ -31,28 +31,20 @@ public class ArticleHelper {
     RequestSpecification requestSpecification =
         RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
 
-    int statusCode = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
+    Response response = requestSpecification.delete(Endpoint.ARTICLES_SLUG.get());
 
-    if (statusCode != 200) {
-      throw new IllegalStateException("Article wasn't removed");
-    }
+    checkIfSucceeded(response);
   }
 
   public String getSlugFromCreatedArticle(String token) {
     Article article = new Article("Title", "Description", "Another body");
 
     Response response = createArticle(article, token);
+    checkIfSucceeded(response);
+
     ArticleDto createdArticle = response.as(ArticleDto.class);
 
-    if (titlesNotEqual(article, createdArticle)) {
-      throw new IllegalStateException(
-          "Response article title is different than request article title ");
-    }
     return createdArticle.article.slug;
-  }
-
-  private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
-    return !createdArticle.article.title.equals(article.title);
   }
 
   public void checkIfSucceeded(Response response) {

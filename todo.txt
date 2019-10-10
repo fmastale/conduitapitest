@@ -1,0 +1,5 @@
+1. split test data provider
+2. add loggers
+3. get all test data from data provider - so no hardcoded data in tests
+4. get basic URI from config file
+5. get 2 valid users from config file
