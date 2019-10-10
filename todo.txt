@@ -11,3 +11,4 @@
 11. rest assured + allure - how it works
 12. solve issues with passing tags to article (need to create tagList class?)
 13. ListArticleTest - refactor this class: add setup and cleanup after solving issues with tags
+14. QA specific good/bad practices (books/articles worth knowing?)
