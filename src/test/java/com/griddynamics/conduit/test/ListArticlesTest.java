@@ -17,26 +17,25 @@ import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("List Articles")
 public class ListArticlesTest {
-  private RequestSpecification requestSpecification;
 
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
   }
-
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")
   @Test
   @DisplayName("Get list of articles, check status code")
   void getListOfArticlesCheckStatusCode() {
     // GIVEN
-    requestSpecification = RestAssured.given();
+    RequestSpecification requestSpecification = RestAssured.given();
 
     // WHEN
     int statusCode = getStatusCodeFromApiCall(requestSpecification);
@@ -55,7 +54,7 @@ public class ListArticlesTest {
   void getLimitedListOfArticlesCheckSize() {
     // GIVEN
     int number = 5;
-    requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.get(), number);
+    RequestSpecification requestSpecification = prepareRequestSpecification(LIMIT_NUMBER.get(), number);
 
     // WHEN
     ArticlesListDto articles = getListArticlesFromApiCall(requestSpecification);
