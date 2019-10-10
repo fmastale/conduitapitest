@@ -20,7 +20,11 @@ public class ArticleHelper {
             .header(AUTHORIZATION.get(), token)
             .body(article);
 
-    return requestSpecification.post(ARTICLES.get());
+    Response response = requestSpecification.post(ARTICLES.get());
+
+    checkIfSucceeded(response);
+
+    return response;
   }
 
   public void removeArticle(String slug, String token) {
@@ -49,5 +53,13 @@ public class ArticleHelper {
 
   private static boolean titlesNotEqual(Article article, ArticleDto createdArticle) {
     return !createdArticle.article.title.equals(article.title);
+  }
+
+  public void checkIfSucceeded(Response response) {
+    int statusCode = response.statusCode();
+
+    if (statusCode != 200) {
+      throw new IllegalStateException("Status code is not 200");
+    }
   }
 }

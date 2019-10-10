@@ -1,14 +1,12 @@
 package com.griddynamics.conduit.test;
 
+import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
-import com.griddynamics.conduit.jsons.RegistrationRequestUser;
-import com.griddynamics.conduit.jsonsdtos.ArticleDto;
+import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticlesListDto;
-import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
-import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -31,23 +29,27 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
 @Epic("Smoke tests")
 @Feature("Feed Articles")
 public class FeedArticlesTest {
+  private static String authorsToken;
   private static String followersToken;
-  private static UserResponseDto author;
-  private static ArticleDto article;
+  private static TestDataProvider testDataProvider = new TestDataProvider();
+  private static UserRequest author = testDataProvider.getTestUserOne();
+  private static UserRequest follower = testDataProvider.getTestUserTwo();
 
-  //todo: refactor create article here
+  private ArticleHelper articleHelper = new ArticleHelper();
+
   @BeforeAll
   static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
+
+    authorsToken = new TokenProvider().getTokenForUser(author);
+    followersToken = new TokenProvider().getTokenForUser(follower);
   }
 
   @BeforeEach
   void createAuthorArticleFollower() {
-    author = registerUser(new TestDataProvider().getValidRegistrationUser());
+    Response response = articleHelper.createArticle(new Article("Title", "Description", "Body"), authorsToken);
+    articleHelper.checkIfSucceeded(response);
 
-    article = createArticle(author);
-
-    followersToken = getFollowersToken();
     startFollowingAuthor(followersToken, author);
   }
 
@@ -71,11 +73,7 @@ public class FeedArticlesTest {
     MatcherAssert.assertThat(
         "Actual slug is different than expected",
         getResponseAuthorName(feedArticles),
-        Matchers.equalTo(getRequestAuthorName(article)));
-  }
-
-  private String getRequestAuthorName(ArticleDto articles) {
-    return articles.article.author.username;
+        Matchers.equalTo(author.username));
   }
 
   private String getResponseAuthorName(ArticlesListDto articles) {
@@ -86,73 +84,32 @@ public class FeedArticlesTest {
     return requestSpecification.get(Endpoint.ARTICLES_FEED.get()).as(ArticlesListDto.class);
   }
 
-  private RequestSpecification prepareRequestSpecification(String followersToken) {
-    return RestAssured.given()
-        .contentType(APPLICATION_JSON.get())
-        .header(AUTHORIZATION.get(), followersToken);
-  }
-
-  private void startFollowingAuthor(String token, UserResponseDto author) {
+  private void startFollowingAuthor(String token, UserRequest author) {
     RequestSpecification requestSpecification = prepareRequestSpecification(token, author);
-
-    int statusCode =
-        requestSpecification
-            .contentType("application/json")
-            .post(PROFILES_USERNAME_FOLLOW.get())
-            .statusCode();
-
-    // todo: refactor this method
-    if (not200(statusCode)) {
-      throw new IllegalStateException("Author is not followed");
-    }
+    checkIfFollowed(requestSpecification);
   }
 
-  private ArticleDto createArticle(UserResponseDto author) {
-    RequestSpecification requestSpecification =
-        RestAssured.given()
-            .contentType(APPLICATION_JSON.get())
-            .header(AUTHORIZATION.get(), "Token " + author.user.token)
-            .body(new Article("This is article title", "This is description", "This is body"));
+  private void checkIfFollowed(RequestSpecification requestSpecification) {
+    Response response = requestSpecification.contentType("application/json").post(PROFILES_USERNAME_FOLLOW.get());
 
-    Response response = requestSpecification.post(ARTICLES.get());
-    return response.as(ArticleDto.class);
-  }
-
-  private UserResponseDto registerUser(RegistrationRequestUser author) {
-    RegistrationRequestUserDto requestBody = new RegistrationRequestUserDto(author);
-    RequestSpecification requestSpecification =
-        RestAssured.given().contentType(APPLICATION_JSON.get()).body(requestBody);
-
-    return requestSpecification.post(USERS.get()).as(UserResponseDto.class);
-  }
-
-  private String getFollowersToken() {
-    return new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
+    articleHelper.checkIfSucceeded(response);
   }
 
   private static RequestSpecification prepareRequestSpecification(
-      String followersToken, UserResponseDto author) {
+      String followersToken, UserRequest author) {
 
-    return RestAssured.given()
-        .header(AUTHORIZATION.get(), followersToken)
-        .pathParam(USERNAME.get(), author.user.username);
+    return RestAssured.given().header(AUTHORIZATION.get(), followersToken).pathParam(USERNAME.get(), author.username);
   }
 
-  private boolean not200(int statusCode) {
-    return statusCode != 200;
+  private RequestSpecification prepareRequestSpecification(String followersToken) {
+    return RestAssured.given().contentType(APPLICATION_JSON.get()).header(AUTHORIZATION.get(), followersToken);
   }
 
-  private void stopFollowingUser(String followersToken, UserResponseDto author) {
+  private void stopFollowingUser(String followersToken, UserRequest author) {
     RequestSpecification requestSpecification = prepareRequestSpecification(followersToken, author);
 
-    int statusCode =
-        requestSpecification
-            .contentType("application/json")
-            .delete(PROFILES_USERNAME_FOLLOW.get())
-            .statusCode();
+    Response response = requestSpecification.contentType("application/json").delete(PROFILES_USERNAME_FOLLOW.get());
 
-    if (not200(statusCode)) {
-      throw new IllegalStateException("Author is still followed");
-    }
+    articleHelper.checkIfSucceeded(response);
   }
 }
