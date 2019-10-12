@@ -26,27 +26,26 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Favorite Article Test")
 public class FavoriteArticleTest extends BaseTest {
-  private static String authorsToken;
+
   private static String followerToken;
 
   private String slug;
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeAll
   static void prepareRequest() {
-    authorsToken = token;
     followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void setup() {
     Article article = new Article("Title", "Description", "Body");
-    slug = articleHelper.getSlugFromCreatedArticle(authorsToken);
+    slug = articleHelper.getSlugFromCreatedArticle(token);
   }
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(slug, authorsToken);
+    articleHelper.removeArticle(slug, token);
   }
 
   @Severity(SeverityLevel.NORMAL)

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class GetArticleTest extends BaseTest {
 
   private String slug;
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeEach
   void setup() {

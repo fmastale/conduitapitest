@@ -28,7 +28,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 public class CreateArticleTest extends BaseTest {
 
   private String slug;
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @AfterEach
   void cleanup() {
@@ -43,7 +43,7 @@ public class CreateArticleTest extends BaseTest {
     // GIVEN
     Article article = prepareArticle();
 
-    RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
+    RequestSpecification requestSpecification = prepareRequestSpecification(article);
 
     // WHEN
     Response response = requestSpecification.post(ARTICLES.get());
@@ -65,7 +65,7 @@ public class CreateArticleTest extends BaseTest {
     String[] tags = {"tag1", "tag2"};
     Article article = prepareArticle(tags);
 
-    RequestSpecification requestSpecification = prepareRequestSpecification(article, token);
+    RequestSpecification requestSpecification = prepareRequestSpecification(article);
 
     // WHEN
     Response response = requestSpecification.post(ARTICLES.get());
@@ -78,7 +78,7 @@ public class CreateArticleTest extends BaseTest {
         Matchers.equalTo(StatusCode._200.get()));
   }
 
-  private RequestSpecification prepareRequestSpecification(Article article, String token) {
+  private RequestSpecification prepareRequestSpecification(Article article) {
     return RestAssured.given()
         .contentType(APPLICATION_JSON.get())
         .header(AUTHORIZATION.get(), token)

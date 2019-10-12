@@ -14,9 +14,7 @@
 14. QA specific good/bad practices (books/articles worth knowing?)
 
 16. pass token via constructor
-17. class with session information which is parent for other test classes
 18. class with common code
 19. apply double checks (do TC really perform operation)
 20. write tests similar to user stories
 21. avoid GOD OBJECT anti-pattern
-22. horizontal and vertical division of code

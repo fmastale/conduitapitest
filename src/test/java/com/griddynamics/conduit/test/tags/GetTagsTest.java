@@ -20,12 +20,9 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Get Tags")
 public class GetTagsTest extends BaseTest {
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUserOne();
 
   // if I add tag to article it isn't shown in the tag list, so probably list contains only those
   // which are most popular
-
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of tags, check if list contains 20 elements")
   @Test

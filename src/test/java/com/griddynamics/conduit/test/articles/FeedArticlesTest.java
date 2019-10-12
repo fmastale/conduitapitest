@@ -7,7 +7,6 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERN
 
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.UserRequest;
@@ -32,32 +31,29 @@ import org.junit.jupiter.api.Test;
 @Epic("Smoke tests")
 @Feature("Feed Articles")
 public class FeedArticlesTest extends BaseTest {
-  private static String authorsToken;
+
   private static String followersToken;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest author = testDataProvider.getTestUserOne();
   private static UserRequest follower = testDataProvider.getTestUserTwo();
 
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeAll
   static void prepareEnvironment() {
-    authorsToken = token;
     followersToken = new TokenProvider().getTokenForUser(follower);
   }
 
   @BeforeEach
   void setup() {
     Response response =
-        articleHelper.createArticle(new Article("Title", "Description", "Body"), authorsToken);
+        articleHelper.createArticle(new Article("Title", "Description", "Body"));
     articleHelper.checkIfSucceeded(response);
 
-    startFollowingAuthor(followersToken, author);
+    startFollowingAuthor(followersToken, user);
   }
 
   @AfterEach
   void cleanup() {
-    stopFollowingUser(followersToken, author);
+    stopFollowingUser(followersToken, user);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -75,7 +71,7 @@ public class FeedArticlesTest extends BaseTest {
     MatcherAssert.assertThat(
         "Actual slug is different than expected",
         getResponseAuthorName(feedArticles),
-        Matchers.equalTo(author.username));
+        Matchers.equalTo(user.username));
   }
 
   private String getResponseAuthorName(ArticlesListDto articles) {

@@ -5,10 +5,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLI
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
-import com.griddynamics.conduit.helpers.TestDataProvider;
-import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
-import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
@@ -30,24 +27,17 @@ import org.junit.jupiter.api.Test;
 @Feature("Update Article")
 public class UpdateArticleTest extends BaseTest {
 
-  private static String authorsToken;
-
   private String slug;
-  private ArticleHelper articleHelper = new ArticleHelper();
-
-  @BeforeAll
-  static void prepareEnvironment() {
-    authorsToken = token;
-  }
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeEach
   void prepareSlug() {
-    slug = articleHelper.getSlugFromCreatedArticle(authorsToken);
+    slug = articleHelper.getSlugFromCreatedArticle(token);
   }
 
   @AfterEach
   void removeArticle() {
-    articleHelper.removeArticle(slug, authorsToken);
+    articleHelper.removeArticle(slug, token);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -59,7 +49,7 @@ public class UpdateArticleTest extends BaseTest {
     Article updatedArticle = new Article("Title", "Updated description", "Body");
 
     RequestSpecification requestSpecification =
-        prepareRequestSpecification(updatedArticle, authorsToken, slug);
+        prepareRequestSpecification(updatedArticle, token, slug);
 
     // WHEN
     ArticleDto responseArticle =

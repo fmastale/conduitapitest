@@ -12,8 +12,13 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class ArticleHelper {
+  private final String token;
 
-  public Response createArticle(Article article, String token) {
+  public ArticleHelper(String token) {
+    this.token = token;
+  }
+
+  public Response createArticle(Article article) {
     RequestSpecification requestSpecification =
         RestAssured.given()
             .contentType(APPLICATION_JSON.get())
@@ -39,7 +44,7 @@ public class ArticleHelper {
   public String getSlugFromCreatedArticle(String token) {
     Article article = new Article("Title", "Description", "Another body");
 
-    Response response = createArticle(article, token);
+    Response response = createArticle(article);
     checkIfSucceeded(response);
 
     ArticleDto createdArticle = response.as(ArticleDto.class);

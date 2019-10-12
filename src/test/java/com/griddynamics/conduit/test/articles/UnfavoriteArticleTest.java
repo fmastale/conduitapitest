@@ -26,21 +26,20 @@ import org.junit.jupiter.api.Test;
 @Feature("Unfavorite Article")
 public class UnfavoriteArticleTest extends BaseTest {
 
-  private static String authorsToken;
+
   private static String followerToken;
 
   private String articleId;
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeAll
   static void prepareEnvironment() {
-    authorsToken = token;
     followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void setup() {
-    articleId = articleHelper.getSlugFromCreatedArticle(authorsToken);
+    articleId = articleHelper.getSlugFromCreatedArticle(token);
 
     RequestSpecification requestSpecification =
         prepareRequestSpecification(articleId, followerToken);
@@ -50,7 +49,7 @@ public class UnfavoriteArticleTest extends BaseTest {
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(articleId, authorsToken);
+    articleHelper.removeArticle(articleId, token);
   }
 
   @Severity(SeverityLevel.NORMAL)

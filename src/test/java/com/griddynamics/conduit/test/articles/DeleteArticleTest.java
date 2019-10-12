@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 @Feature("Delete Article")
 public class DeleteArticleTest extends BaseTest {
   private String slug;
-  private ArticleHelper articleHelper = new ArticleHelper();
+  private ArticleHelper articleHelper = new ArticleHelper(token);
 
   @BeforeEach
   void setup() {
