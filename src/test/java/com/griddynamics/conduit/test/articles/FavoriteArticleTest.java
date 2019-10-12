@@ -40,12 +40,12 @@ public class FavoriteArticleTest extends BaseTest {
   @BeforeEach
   void setup() {
     Article article = new Article("Title", "Description", "Body");
-    slug = articleHelper.getSlugFromCreatedArticle(token);
+    slug = articleHelper.getSlugFromCreatedArticle();
   }
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(slug, token);
+    articleHelper.removeArticle(slug);
   }
 
   @Severity(SeverityLevel.NORMAL)

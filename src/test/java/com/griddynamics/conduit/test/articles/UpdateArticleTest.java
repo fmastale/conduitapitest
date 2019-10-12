@@ -32,12 +32,12 @@ public class UpdateArticleTest extends BaseTest {
 
   @BeforeEach
   void prepareSlug() {
-    slug = articleHelper.getSlugFromCreatedArticle(token);
+    slug = articleHelper.getSlugFromCreatedArticle();
   }
 
   @AfterEach
   void removeArticle() {
-    articleHelper.removeArticle(slug, token);
+    articleHelper.removeArticle(slug);
   }
 
   @Severity(SeverityLevel.NORMAL)

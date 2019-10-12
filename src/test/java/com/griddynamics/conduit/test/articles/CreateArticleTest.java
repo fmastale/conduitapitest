@@ -32,7 +32,7 @@ public class CreateArticleTest extends BaseTest {
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(slug, token);
+    articleHelper.removeArticle(slug);
   }
 
   @Severity(SeverityLevel.NORMAL)

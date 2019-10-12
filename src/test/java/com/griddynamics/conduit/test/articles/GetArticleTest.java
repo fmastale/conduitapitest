@@ -33,12 +33,12 @@ public class GetArticleTest extends BaseTest {
 
   @BeforeEach
   void setup() {
-    slug = articleHelper.getSlugFromCreatedArticle(token);
+    slug = articleHelper.getSlugFromCreatedArticle();
   }
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(slug, token);
+    articleHelper.removeArticle(slug);
   }
 
   @Severity(SeverityLevel.NORMAL)

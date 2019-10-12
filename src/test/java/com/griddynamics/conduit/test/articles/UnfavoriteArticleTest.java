@@ -39,7 +39,7 @@ public class UnfavoriteArticleTest extends BaseTest {
 
   @BeforeEach
   void setup() {
-    articleId = articleHelper.getSlugFromCreatedArticle(token);
+    articleId = articleHelper.getSlugFromCreatedArticle();
 
     RequestSpecification requestSpecification =
         prepareRequestSpecification(articleId, followerToken);
@@ -49,7 +49,7 @@ public class UnfavoriteArticleTest extends BaseTest {
 
   @AfterEach
   void cleanup() {
-    articleHelper.removeArticle(articleId, token);
+    articleHelper.removeArticle(articleId);
   }
 
   @Severity(SeverityLevel.NORMAL)

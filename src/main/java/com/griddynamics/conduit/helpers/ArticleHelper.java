@@ -32,7 +32,7 @@ public class ArticleHelper {
     return response;
   }
 
-  public void removeArticle(String slug, String token) {
+  public void removeArticle(String slug) {
     RequestSpecification requestSpecification =
         RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
 
@@ -41,7 +41,7 @@ public class ArticleHelper {
     checkIfSucceeded(response);
   }
 
-  public String getSlugFromCreatedArticle(String token) {
+  public String getSlugFromCreatedArticle() {
     Article article = new Article("Title", "Description", "Another body");
 
     Response response = createArticle(article);

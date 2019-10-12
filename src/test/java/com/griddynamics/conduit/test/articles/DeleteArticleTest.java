@@ -32,7 +32,7 @@ public class DeleteArticleTest extends BaseTest {
 
   @BeforeEach
   void setup() {
-    slug = articleHelper.getSlugFromCreatedArticle(token);
+    slug = articleHelper.getSlugFromCreatedArticle();
   }
 
   @Severity(SeverityLevel.NORMAL)
