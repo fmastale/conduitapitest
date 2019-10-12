@@ -7,8 +7,6 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHO
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
 import static com.griddynamics.conduit.helpers.StatusCode._401;
 
-import com.griddynamics.conduit.helpers.Endpoint;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.GenericError;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
@@ -16,6 +14,7 @@ import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -26,28 +25,22 @@ import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Unfollow User")
-public class UnfollowUserTest {
+public class UnfollowUserTest extends BaseTest {
 
-  private static String token;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
   private static RequestSpecification requestSpecification;
-  private static UserResponseDto user;
+  private static UserResponseDto responseUser;
 
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    token = new TokenProvider().getTokenForUser(registeredUser);
-
+  @BeforeEach
+  void setup() {
     // for every new user 'follow' is set to: false
-    user = registerUser(testDataProvider.getValidRegistrationUser());
-    startFollowingUser(user);
+    responseUser = registerUser(testDataProvider.getValidRegistrationUser());
+    startFollowingUser(responseUser);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -56,7 +49,7 @@ public class UnfollowUserTest {
   @DisplayName("Stop following user, check 'follow' field")
   void unfollowUserCheckFollowField() {
     // GIVEN
-    requestSpecification = prepareRequestBody(token, user);
+    requestSpecification = prepareRequestBody(token, responseUser);
 
     // WHEN
     ProfileDto profile = getProfileFromApiCall(requestSpecification);
@@ -92,7 +85,7 @@ public class UnfollowUserTest {
   @DisplayName("Stop following without being authenticated, check status code")
   void unfollowUserWithoutwithoutBeingAuthenticated() {
     // GIVEN
-    requestSpecification = prepareRequestBody(user);
+    requestSpecification = prepareRequestBody(responseUser);
 
     // WHEN
     int statusCode = getStatusCodeFromApiCall(requestSpecification);

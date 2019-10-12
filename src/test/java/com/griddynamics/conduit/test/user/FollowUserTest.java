@@ -1,21 +1,13 @@
 package com.griddynamics.conduit.test.user;
 
-import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
-import static com.griddynamics.conduit.helpers.Endpoint.USERS;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
-
-import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.GenericError;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
-import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -26,24 +18,23 @@ import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
+import static com.griddynamics.conduit.helpers.Endpoint.USERS;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.*;
+
 @Epic("Smoke tests")
 @Feature("Follow User")
-public class FollowUserTest {
-  private static String token;
+public class FollowUserTest extends BaseTest {
+
   private static UserResponseDto userToFollow;
   private static RequestSpecification requestSpecification;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
 
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    token = new TokenProvider().getTokenForUser(registeredUser);
-
+  @BeforeEach
+  void setup() {
     // for every new user 'follow' is set to: false
     userToFollow = registerUser(testDataProvider.getValidRegistrationUser());
   }

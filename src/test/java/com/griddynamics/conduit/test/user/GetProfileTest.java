@@ -1,17 +1,12 @@
 package com.griddynamics.conduit.test.user;
 
-import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME;
-import static com.griddynamics.conduit.helpers.Endpoint.USERS;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
-
-import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.GenericError;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsonsdtos.ProfileDto;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,26 +17,22 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME;
+import static com.griddynamics.conduit.helpers.Endpoint.USERS;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.USERNAME;
+
 @Epic("Smoke tests")
 @Feature("Get Profile")
-public class GetProfileTest {
+public class GetProfileTest extends BaseTest {
   private static UserResponseDto regularUser;
   private static UserResponseDto maxLengthNameUser;
   private static RequestSpecification requestSpecification;
 
   private ProfileDto userProfile;
-
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    regularUser = registerUser(new TestDataProvider().getValidRegistrationUser());
-    maxLengthNameUser = registerUser(new TestDataProvider().getUserWithMaxName());
-  }
 
   @Severity(SeverityLevel.NORMAL)
   @Description(
@@ -50,6 +41,7 @@ public class GetProfileTest {
   @DisplayName("Get profile for valid user, check username")
   void getProfileForValidUsername() {
     // GIVEN
+    regularUser = registerUser(new TestDataProvider().getValidRegistrationUser());
     requestSpecification = prepareRequestSpecification(regularUser.user.username);
 
     // WHEN
@@ -69,6 +61,7 @@ public class GetProfileTest {
   @DisplayName("Get profile for username with max length, check username")
   void getProfileForValidNameWithMaxLength() {
     // GIVEN
+    maxLengthNameUser = registerUser(new TestDataProvider().getUserWithMaxName());
     requestSpecification = prepareRequestSpecification(maxLengthNameUser.user.username);
 
     // WHEN
