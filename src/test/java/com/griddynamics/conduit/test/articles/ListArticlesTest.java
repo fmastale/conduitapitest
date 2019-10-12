@@ -7,6 +7,7 @@ import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.LIMIT
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.jsonsdtos.ArticlesListDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,12 +23,7 @@ import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("List Articles")
-public class ListArticlesTest {
-
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-  }
+public class ListArticlesTest extends BaseTest {
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of articles, check if status code is equal to 200")

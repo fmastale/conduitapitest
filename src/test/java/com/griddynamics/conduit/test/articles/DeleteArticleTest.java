@@ -9,6 +9,7 @@ import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -25,20 +26,9 @@ import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Delete Article")
-public class DeleteArticleTest {
-  private static String token;
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest user = testDataProvider.getTestUserOne();
-
+public class DeleteArticleTest extends BaseTest {
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
-
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    token = new TokenProvider().getTokenForUser(user);
-  }
 
   @BeforeEach
   void setup() {

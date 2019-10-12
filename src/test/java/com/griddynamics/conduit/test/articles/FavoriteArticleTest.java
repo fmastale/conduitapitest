@@ -7,6 +7,7 @@ import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Favorite Article Test")
-public class FavoriteArticleTest {
+public class FavoriteArticleTest extends BaseTest {
   private static String authorsToken;
   private static String followerToken;
 
@@ -33,9 +34,7 @@ public class FavoriteArticleTest {
 
   @BeforeAll
   static void prepareRequest() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
+    authorsToken = token;
     followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 

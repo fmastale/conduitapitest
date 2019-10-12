@@ -2,9 +2,9 @@ package com.griddynamics.conduit.test.tags;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;
-import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Tags;
 import com.griddynamics.conduit.jsons.UserRequest;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -14,24 +14,17 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Get Tags")
-public class GetTagsTest {
+public class GetTagsTest extends BaseTest {
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
 
   // if I add tag to article it isn't shown in the tag list, so probably list contains only those
   // which are most popular
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    String token = new TokenProvider().getTokenForUser(user);
-  }
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Get list of tags, check if list contains 20 elements")

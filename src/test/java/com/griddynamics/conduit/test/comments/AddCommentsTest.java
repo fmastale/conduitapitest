@@ -9,6 +9,7 @@ import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Comment;
 import com.griddynamics.conduit.jsonsdtos.CommentDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -26,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Add Comments to an Article")
-public class AddCommentsTest {
+public class AddCommentsTest extends BaseTest {
   private static String authorsToken;
   private static String commenterToken;
 
@@ -35,9 +36,7 @@ public class AddCommentsTest {
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
+    authorsToken = token;
     commenterToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 

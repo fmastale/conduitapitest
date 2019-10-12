@@ -10,6 +10,7 @@ import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -27,19 +28,16 @@ import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
 @Feature("Update Article")
-public class UpdateArticleTest {
+public class UpdateArticleTest extends BaseTest {
 
   private static String authorsToken;
-  private static UserRequest author = new TestDataProvider().getTestUserOne();
 
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
   static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-
-    authorsToken = new TokenProvider().getTokenForUser(author);
+    authorsToken = token;
   }
 
   @BeforeEach

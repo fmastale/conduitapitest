@@ -1,15 +1,12 @@
 package com.griddynamics.conduit.test.user;
 
-import static com.griddynamics.conduit.helpers.Endpoint.USERS;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-
-import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.RegistrationRequestUser;
 import com.griddynamics.conduit.jsonsdtos.RegistrationRequestUserDto;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,24 +16,21 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.USERS;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+
 @Epic("Smoke tests")
 @Feature("Registration")
-public class RegistrationTest {
+public class RegistrationTest extends BaseTest {
   private int statusCode;
   private UserResponseDto responseBody;
   private UnprocessableEntityErrorDto errorBody;
   private RegistrationRequestUserDto requestBody;
   private RequestSpecification requestSpecification;
   private TestDataProvider testDataProvider = new TestDataProvider();
-
-  @BeforeAll
-  static void beforeAll() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-  }
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Register user with all fields valid, check if actual username is same as expected")

@@ -1,15 +1,11 @@
 package com.griddynamics.conduit.test.user;
 
-import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
-
-import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.StatusCode;
-import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.UnprocessableEntityErrorDto;
 import com.griddynamics.conduit.jsonsdtos.UserRequestDto;
 import com.griddynamics.conduit.jsonsdtos.UserResponseDto;
+import com.griddynamics.conduit.test.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,20 +15,17 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.griddynamics.conduit.helpers.Endpoint.USERS_LOGIN;
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
+
 @Epic("Smoke tests")
 @Feature("Authentication")
-public class AuthenticationTest {
-  private static TestDataProvider testDataProvider = new TestDataProvider();
-  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
+public class AuthenticationTest extends BaseTest {
 
-  @BeforeAll
-  static void prepareEnvironment() {
-    RestAssured.baseURI = Endpoint.BASE_URI.get();
-  }
+  private static UserRequest registeredUser = testDataProvider.getTestUserOne();
 
   @Severity(SeverityLevel.NORMAL)
   @Description("Authenticate user with valid credentials into app, check if ID is same as expected")

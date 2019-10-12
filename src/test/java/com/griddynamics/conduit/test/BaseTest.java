@@ -8,8 +8,8 @@ import io.restassured.RestAssured;
 
 public class BaseTest {
     protected static String token;
-    private static TestDataProvider testDataProvider = new TestDataProvider();
-    private static UserRequest user = testDataProvider.getTestUserOne();
+    protected static TestDataProvider testDataProvider = new TestDataProvider();
+    protected static UserRequest user = testDataProvider.getTestUserOne();
 
     public BaseTest() {
         RestAssured.baseURI = Endpoint.BASE_URI.get();
