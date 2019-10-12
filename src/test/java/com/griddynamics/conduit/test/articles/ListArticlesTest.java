@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.articles;
 
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES;
 import static com.griddynamics.conduit.helpers.Endpoint.ARTICLES_LIMIT;

@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.articles;
 
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;

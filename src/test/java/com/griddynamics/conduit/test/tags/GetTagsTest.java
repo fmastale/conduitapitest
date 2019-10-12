@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.tags;
 
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.TestDataProvider;

@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.comments;
 
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 

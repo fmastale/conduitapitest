@@ -1,4 +1,6 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.articles;
+
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.APPLICATION_JSON;
 
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
@@ -6,6 +8,7 @@ import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Article;
+import com.griddynamics.conduit.jsons.UserRequest;
 import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -23,55 +26,60 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
-@Feature("Favorite Article Test")
-public class FavoriteArticleTest {
+@Feature("Update Article")
+public class UpdateArticleTest {
+
   private static String authorsToken;
-  private static String followerToken;
+  private static UserRequest author = new TestDataProvider().getTestUserOne();
 
   private String slug;
   private ArticleHelper articleHelper = new ArticleHelper();
 
   @BeforeAll
-  static void prepareRequest() {
+  static void prepareEnvironment() {
     RestAssured.baseURI = Endpoint.BASE_URI.get();
 
-    authorsToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserOne());
-    followerToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
+    authorsToken = new TokenProvider().getTokenForUser(author);
   }
 
   @BeforeEach
-  void setup() {
-    Article article = new Article("Title", "Description", "Body");
+  void prepareSlug() {
     slug = articleHelper.getSlugFromCreatedArticle(authorsToken);
   }
 
   @AfterEach
-  void cleanup() {
+  void removeArticle() {
     articleHelper.removeArticle(slug, authorsToken);
   }
 
   @Severity(SeverityLevel.NORMAL)
-  @Description("Favorite article, check if field 'favorited' is set to true")
+  @Description("Update article, check if updated bio is different than the old one")
   @Test
-  @DisplayName("Favorite article, check if favorited")
-  void favoriteArticleCheckFavorited() {
+  @DisplayName("Update article, check if bio is updated")
+  void updateArticleCheckBio() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug, followerToken);
+    Article updatedArticle = new Article("Title", "Updated description", "Body");
+
+    RequestSpecification requestSpecification =
+        prepareRequestSpecification(updatedArticle, authorsToken, slug);
 
     // WHEN
-    ArticleDto response = getArticleFromApiCall(requestSpecification);
+    ArticleDto responseArticle =
+        requestSpecification.put(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
 
     // THEN
-    MatcherAssert.assertThat("", response.article.favorited, Matchers.equalTo(true));
+    MatcherAssert.assertThat(
+        "Actual description is different than expected",
+        responseArticle.article.description,
+        Matchers.equalTo(updatedArticle.description));
   }
 
-  private ArticleDto getArticleFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.post(Endpoint.ARTICLES_SLUG_FAVORITE.get()).as(ArticleDto.class);
-  }
-
-  private RequestSpecification prepareRequestSpecification(String slug, String token) {
+  private RequestSpecification prepareRequestSpecification(
+      Article article, String token, String slug) {
     return RestAssured.given()
+        .contentType(APPLICATION_JSON.get())
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
-        .pathParam(RequestSpecificationDetails.SLUG.get(), slug);
+        .pathParam(RequestSpecificationDetails.SLUG.get(), slug)
+        .body(article);
   }
 }

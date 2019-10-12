@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.user;
 
 import static com.griddynamics.conduit.helpers.Endpoint.PROFILES_USERNAME_FOLLOW;
 import static com.griddynamics.conduit.helpers.Endpoint.USERS;

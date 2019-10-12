@@ -1,4 +1,4 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.comments;
 
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
@@ -9,6 +9,7 @@ import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.Comment;
 import com.griddynamics.conduit.jsonsdtos.CommentDto;
+import com.griddynamics.conduit.jsonsdtos.CommentsDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -25,8 +26,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
-@Feature("Add Comments to an Article")
-public class AddCommentsTest {
+@Feature("Get Comments from an Article")
+public class GetCommentsTest {
+
   private static String authorsToken;
   private static String commenterToken;
 
@@ -44,6 +46,7 @@ public class AddCommentsTest {
   @BeforeEach
   void setup() {
     articleId = commentHelper.getSlugFromCreatedArticle(authorsToken);
+    createCommentsForArticle(commenterToken, articleId);
   }
 
   @AfterEach
@@ -52,37 +55,51 @@ public class AddCommentsTest {
   }
 
   @Severity(SeverityLevel.NORMAL)
-  @Description("Add comment to an article, check if response comment body is same as in request")
+  @Description("Get comments from article, check if there are two of them")
   @Test
-  @DisplayName("Add comment to an article, check body")
-  void addCommentToAnArticleCheckBody() {
+  @DisplayName("Get comments from article, check amount")
+  void getCommentFromArticleCheckAmount() {
     // GIVEN
-    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
-
-    RequestSpecification requestSpecification =
-        prepareRequestSpecification(requestComment, articleId, commenterToken);
+    RequestSpecification requestSpecification = getCommentRequest(authorsToken, articleId);
 
     // WHEN
-    CommentDto responseComment = getCommentFromApiCall(requestSpecification);
+    CommentsDto commentsDto = getCommentsFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
-        "Actual comment body is different than expected",
-        responseComment.comment.body,
-        Matchers.equalTo(requestComment.comment.body));
+        "Actual amount of comments is different than expected",
+        commentsDto.comments.length,
+        Matchers.equalTo(2));
   }
 
-  private CommentDto getCommentFromApiCall(RequestSpecification requestSpecification) {
-    return requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+  private CommentsDto getCommentsFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.get(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentsDto.class);
   }
 
-  private RequestSpecification prepareRequestSpecification(
-      CommentDto comment, String slug, String token) {
+  private RequestSpecification getCommentRequest(String token, String articleId) {
+    return RestAssured.given()
+        .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
+        .pathParam(SLUG.get(), articleId);
+  }
+
+  private RequestSpecification commentRequestSpecification(
+      String token, String slug, CommentDto requestComment) {
 
     return RestAssured.given()
         .contentType(RequestSpecificationDetails.APPLICATION_JSON.get())
         .header(RequestSpecificationDetails.AUTHORIZATION.get(), token)
         .pathParam(SLUG.get(), slug)
-        .body(comment);
+        .body(requestComment);
+  }
+
+  private void createCommentsForArticle(String token, String slug) {
+    CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
+
+    RequestSpecification requestSpecification =
+        commentRequestSpecification(token, slug, requestComment);
+
+    for (int i = 0; i < 2; i++) {
+      requestSpecification.post(Endpoint.ARTICLES_SLUG_COMMENTS.get()).as(CommentDto.class);
+    }
   }
 }

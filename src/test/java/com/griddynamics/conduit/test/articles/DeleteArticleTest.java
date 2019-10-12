@@ -1,13 +1,14 @@
-package com.griddynamics.conduit.test;
+package com.griddynamics.conduit.test.articles;
 
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.AUTHORIZATION;
 import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
 
 import com.griddynamics.conduit.helpers.ArticleHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
+import com.griddynamics.conduit.helpers.StatusCode;
 import com.griddynamics.conduit.helpers.TestDataProvider;
 import com.griddynamics.conduit.helpers.TokenProvider;
 import com.griddynamics.conduit.jsons.UserRequest;
-import com.griddynamics.conduit.jsonsdtos.ArticleDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -17,16 +18,14 @@ import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Epic("Smoke tests")
-@Feature("Get Article")
-public class GetArticleTest {
-
+@Feature("Delete Article")
+public class DeleteArticleTest {
   private static String token;
   private static TestDataProvider testDataProvider = new TestDataProvider();
   private static UserRequest user = testDataProvider.getTestUserOne();
@@ -46,28 +45,29 @@ public class GetArticleTest {
     slug = articleHelper.getSlugFromCreatedArticle(token);
   }
 
-  @AfterEach
-  void cleanup() {
-    articleHelper.removeArticle(slug, token);
-  }
-
   @Severity(SeverityLevel.NORMAL)
-  @Description("Get already created article, check if slug match slug from path parameter")
+  @Description("Delete article, check if status code is 200")
   @Test
-  @DisplayName("Get article article, check if slug is same as slug from path parameter")
-  void getArticleCheckSlug() {
+  @DisplayName("Delete article, check status code")
+  void deleteArticleCheckStatusCode() {
     // GIVEN
-    RequestSpecification requestSpecification = prepareRequestSpecification(slug);
+    RequestSpecification requestSpecification = prepareRequestSpecification(token, slug);
 
     // WHEN
-    ArticleDto dto = requestSpecification.get(Endpoint.ARTICLES_SLUG.get()).as(ArticleDto.class);
+    int statusCode = getStatusCodeFromApiCall(requestSpecification);
 
     // THEN
     MatcherAssert.assertThat(
-        "Actual article slug is different than expected", dto.article.slug, Matchers.equalTo(slug));
+        "Actual status code is different than expected",
+        statusCode,
+        Matchers.equalTo(StatusCode._200.get()));
   }
 
-  private RequestSpecification prepareRequestSpecification(String slug) {
-    return RestAssured.given().pathParam(SLUG.get(), slug);
+  private int getStatusCodeFromApiCall(RequestSpecification requestSpecification) {
+    return requestSpecification.delete(Endpoint.ARTICLES_SLUG.get()).statusCode();
+  }
+
+  private RequestSpecification prepareRequestSpecification(String token, String slug) {
+    return RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
   }
 }
