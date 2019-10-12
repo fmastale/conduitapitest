@@ -14,11 +14,16 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class CommentHelper {
+  private final String token;
 
-  public String getSlugFromCreatedArticle(String token) {
+  public CommentHelper(String token) {
+    this.token = token;
+  }
+
+  public String getSlugFromCreatedArticle() {
     Article article = new Article("Title", "Description", "Body");
 
-    Response response = createArticle(article, token);
+    Response response = createArticle(article);
 
     ArticleDto createdArticle = response.as(ArticleDto.class);
 
@@ -30,7 +35,7 @@ public class CommentHelper {
     return createdArticle.article.slug;
   }
 
-  public int commentArticle(String token, String slug) {
+  public int commentArticle(String slug) {
     CommentDto requestComment = new CommentDto(new Comment("This is sample comment"));
 
     RequestSpecification requestSpecification =
@@ -42,7 +47,7 @@ public class CommentHelper {
     return comment.comment.id;
   }
 
-  public void removeArticle(String slug, String token) {
+  public void removeArticle(String slug) {
     RequestSpecification requestSpecification =
         RestAssured.given().header(AUTHORIZATION.get(), token).pathParam(SLUG.get(), slug);
 
@@ -53,7 +58,7 @@ public class CommentHelper {
     }
   }
 
-  public Response createArticle(Article article, String token) {
+  public Response createArticle(Article article) {
     RequestSpecification requestSpecification =
         RestAssured.given()
             .contentType(APPLICATION_JSON.get())

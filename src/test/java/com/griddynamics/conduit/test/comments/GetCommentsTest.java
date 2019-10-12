@@ -30,27 +30,25 @@ import org.junit.jupiter.api.Test;
 @Feature("Get Comments from an Article")
 public class GetCommentsTest extends BaseTest {
 
-  private static String authorsToken;
   private static String commenterToken;
 
   private String articleId;
-  private CommentHelper commentHelper = new CommentHelper();
+  private CommentHelper commentHelper = new CommentHelper(token);
 
   @BeforeAll
   static void prepareEnvironment() {
-    authorsToken = token;
     commenterToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void setup() {
-    articleId = commentHelper.getSlugFromCreatedArticle(authorsToken);
+    articleId = commentHelper.getSlugFromCreatedArticle();
     createCommentsForArticle(commenterToken, articleId);
   }
 
   @AfterEach
   void cleanup() {
-    commentHelper.removeArticle(articleId, authorsToken);
+    commentHelper.removeArticle(articleId);
   }
 
   @Severity(SeverityLevel.NORMAL)
@@ -59,7 +57,7 @@ public class GetCommentsTest extends BaseTest {
   @DisplayName("Get comments from article, check amount")
   void getCommentFromArticleCheckAmount() {
     // GIVEN
-    RequestSpecification requestSpecification = getCommentRequest(authorsToken, articleId);
+    RequestSpecification requestSpecification = getCommentRequest(token, articleId);
 
     // WHEN
     CommentsDto commentsDto = getCommentsFromApiCall(requestSpecification);

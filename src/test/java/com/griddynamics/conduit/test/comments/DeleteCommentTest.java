@@ -27,28 +27,28 @@ import org.junit.jupiter.api.Test;
 @Feature("Delete comment")
 public class DeleteCommentTest extends BaseTest {
 
-  private static String authorsToken;
   private static String commenterToken;
 
   private int commentId;
   private String articleId;
-  private CommentHelper commentHelper = new CommentHelper();
+  private CommentHelper commentHelper = new CommentHelper(token);
+
 
   @BeforeAll
   static void prepareEnvironment() {
-    authorsToken = token;
     commenterToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void setup() {
-    articleId = commentHelper.getSlugFromCreatedArticle(authorsToken);
-    commentId = commentHelper.commentArticle(commenterToken, articleId);
+    articleId = commentHelper.getSlugFromCreatedArticle();
+    CommentHelper commentHelperCommenter = new CommentHelper(commenterToken);
+    commentId = commentHelperCommenter.commentArticle(articleId);
   }
 
   @AfterEach
   void cleanup() {
-    commentHelper.removeArticle(articleId, authorsToken);
+    commentHelper.removeArticle(articleId);
   }
 
   @Severity(SeverityLevel.NORMAL)

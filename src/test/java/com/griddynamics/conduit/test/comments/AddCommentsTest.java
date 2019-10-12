@@ -1,7 +1,5 @@
 package com.griddynamics.conduit.test.comments;
 
-import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
-
 import com.griddynamics.conduit.helpers.CommentHelper;
 import com.griddynamics.conduit.helpers.Endpoint;
 import com.griddynamics.conduit.helpers.RequestSpecificationDetails;
@@ -25,29 +23,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.griddynamics.conduit.helpers.RequestSpecificationDetails.SLUG;
+
 @Epic("Smoke tests")
 @Feature("Add Comments to an Article")
 public class AddCommentsTest extends BaseTest {
-  private static String authorsToken;
+
   private static String commenterToken;
 
   private String articleId;
-  private CommentHelper commentHelper = new CommentHelper();
+  private CommentHelper commentHelper = new CommentHelper(token);
 
   @BeforeAll
   static void prepareEnvironment() {
-    authorsToken = token;
     commenterToken = new TokenProvider().getTokenForUser(new TestDataProvider().getTestUserTwo());
   }
 
   @BeforeEach
   void setup() {
-    articleId = commentHelper.getSlugFromCreatedArticle(authorsToken);
+    articleId = commentHelper.getSlugFromCreatedArticle();
   }
 
   @AfterEach
   void cleanup() {
-    commentHelper.removeArticle(articleId, authorsToken);
+    commentHelper.removeArticle(articleId);
   }
 
   @Severity(SeverityLevel.NORMAL)
