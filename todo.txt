@@ -1,0 +1,20 @@
+1. split test data provider
+2. add loggers
+3. get all test data from data provider - so no hardcoded data in tests
+4. get basic URI from config file
+5. get 2 valid users from config file
+6. Create article: without authorization, without all needed fields
+7. GetArticleTest with invalid slug
+8. GetProfileTest with special chars, space inside
+9. Refactoring in RegistrationTest
+10. read about parallel test running, think how it will work here (slug)
+11. rest assured + allure - how it works
+12. solve issues with passing tags to article (need to create tagList class?)
+13. ListArticleTest - refactor this class: add setup and cleanup after solving issues with tags
+14. QA specific good/bad practices (books/articles worth knowing?)
+
+16. pass token via constructor
+18. class with common code
+19. apply double checks (do TC really perform operation)
+20. write tests similar to user stories
+21. avoid GOD OBJECT anti-pattern
